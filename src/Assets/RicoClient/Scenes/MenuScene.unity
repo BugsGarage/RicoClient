@@ -643,6 +643,7 @@ GameObject:
   - component: {fileID: 434974257}
   - component: {fileID: 434974256}
   - component: {fileID: 434974255}
+  - component: {fileID: 434974259}
   m_Layer: 5
   m_Name: ErrorModalWindow
   m_TagString: Untagged
@@ -731,6 +732,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &434974259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 434974254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44ceb91543f400c4d98135724b6016d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _errorText: {fileID: 955484416}
 --- !u!1 &548805307
 GameObject:
   m_ObjectHideFlags: 0
@@ -1914,7 +1928,7 @@ GameObject:
   - component: {fileID: 1758217850}
   - component: {fileID: 1758217849}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
