@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RicoClient.Scripts.Exceptions;
 using RicoClient.Scripts.User.Storage;
 using RicoClient.Scripts.Utils;
 using System;
@@ -17,13 +18,14 @@ namespace RicoClient.Scripts.Network.Controllers
     public class AuthController
     {
         private const string code_challenge_method = "S256";
-        private const int AuthorizationTimeoutSeconds = 300;
-
+        
         private readonly string _authorizationEndpoint;
         private readonly string _tokenEndpoint;
 
         private readonly string _clientId;
         private readonly string _clientSecret;
+
+        private readonly int _authorizationTimeoutSeconds;
 
         public AuthController(AppConfig configuration)
         {
@@ -32,6 +34,8 @@ namespace RicoClient.Scripts.Network.Controllers
 
             _clientId = configuration.ClientId;
             _clientSecret = configuration.ClientSecret;
+
+            _authorizationTimeoutSeconds = configuration.AuthorizationTimeoutSeconds;
         }
 
         /// <summary>
@@ -83,32 +87,25 @@ namespace RicoClient.Scripts.Network.Controllers
             WindowsHelper.BringAppToFront();
 
             if (queryString == null)
+                throw new OAuthException("Error during recieving authorization code! Try later..");
+            if (queryString.Count == 0)
                 return null;
 
             // Checks for errors
             string errors = queryString.Get("error");
             if (errors != null)
-            {
-                Debug.Log($"OAuth authorization error: {errors}");
-                return null;
-            }
+                throw new OAuthException($"Authorization error: {errors}.");
 
             // Extracts the code
             string code = queryString.Get("code");
             string incoming_state = queryString.Get("state");
             if (code == null || incoming_state == null)
-            {
-                Debug.Log("Malformed authorization response: " + queryString);
-                return null;
-            }
+                throw new OAuthException($"Malformed authorization response: {queryString}.");
 
             // Compares the receieved state to the expected value, to ensure that
             // this app made the request which resulted in authorization
             if (incoming_state != state)
-            {
-                Debug.Log($"Received request with invalid state ({incoming_state})!");
-                return null;
-            }
+                throw new OAuthException($"Received request with invalid state ({incoming_state}).");
 
             return code;
         }
@@ -135,7 +132,7 @@ namespace RicoClient.Scripts.Network.Controllers
                 var context = await UniTask.Run(() =>
                 {
                     return http.GetContext();
-                }).Timeout(TimeSpan.FromSeconds(AuthorizationTimeoutSeconds));
+                }).Timeout(TimeSpan.FromSeconds(_authorizationTimeoutSeconds));
                 SendResponseToBrowser(context.Response);
 
                 return context.Request.QueryString;
@@ -143,13 +140,11 @@ namespace RicoClient.Scripts.Network.Controllers
             catch (TimeoutException)
             {
                 Debug.Log("Timeout of getting OAuth authorization code");
-
-                return null;
+                return new NameValueCollection();
             }
             finally
             {
                 http.Stop();
-
                 Debug.Log("HTTP server stopped");
             }
         }
@@ -204,10 +199,7 @@ namespace RicoClient.Scripts.Network.Controllers
                 await tokenRequest.SendWebRequest();
 
                 if (tokenRequest.isNetworkError || tokenRequest.isHttpError)
-                {
-                    Debug.Log(tokenRequest.error);
-                    return new TokenInfo();
-                }
+                    throw new OAuthException($"Error during authorization: {tokenRequest.error}.");
                 else
                 {
                     Debug.Log("Recieved tokens");

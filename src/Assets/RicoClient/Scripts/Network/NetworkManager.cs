@@ -1,4 +1,5 @@
-﻿using RicoClient.Scripts.Network.Controllers;
+﻿using RicoClient.Scripts.Exceptions;
+using RicoClient.Scripts.Network.Controllers;
 using RicoClient.Scripts.User;
 using RicoClient.Scripts.User.Storage;
 using UnityEngine;
@@ -14,13 +15,25 @@ namespace RicoClient.Scripts.Network
         public NetworkManager(UserManager userManager, AuthController authController)
         {
             _userManager = userManager;
+
             _authController = authController;
         }
 
         public async void OAuth()
         {
-            TokenInfo tokens = await _authController.OAuthRequest();
-            _userManager.AuthorizeUser(tokens);
+            TokenInfo tokens;
+            try
+            {
+                tokens = await _authController.OAuthRequest();
+            }
+            catch (OAuthException e)
+            {
+                Debug.LogError(e.Message);
+                return;
+            }
+
+            if (tokens.AccessToken != null && tokens.AccessToken.Length > 0)
+                _userManager.AuthorizeUser(tokens);
         }
     }
 }
