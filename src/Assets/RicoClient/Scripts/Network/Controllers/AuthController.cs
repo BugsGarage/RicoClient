@@ -18,13 +18,14 @@ namespace RicoClient.Scripts.Network.Controllers
     public class AuthController
     {
         private const string code_challenge_method = "S256";
-        private const int AuthorizationTimeoutSeconds = 2;
-
+        
         private readonly string _authorizationEndpoint;
         private readonly string _tokenEndpoint;
 
         private readonly string _clientId;
         private readonly string _clientSecret;
+
+        private readonly int _authorizationTimeoutSeconds;
 
         public AuthController(AppConfig configuration)
         {
@@ -33,6 +34,8 @@ namespace RicoClient.Scripts.Network.Controllers
 
             _clientId = configuration.ClientId;
             _clientSecret = configuration.ClientSecret;
+
+            _authorizationTimeoutSeconds = configuration.AuthorizationTimeoutSeconds;
         }
 
         /// <summary>
@@ -129,7 +132,7 @@ namespace RicoClient.Scripts.Network.Controllers
                 var context = await UniTask.Run(() =>
                 {
                     return http.GetContext();
-                }).Timeout(TimeSpan.FromSeconds(AuthorizationTimeoutSeconds));
+                }).Timeout(TimeSpan.FromSeconds(_authorizationTimeoutSeconds));
                 SendResponseToBrowser(context.Response);
 
                 return context.Request.QueryString;
