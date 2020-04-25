@@ -9,7 +9,7 @@ namespace RicoClient.Scripts.Exceptions
     /// <summary>
     /// Exception signalizing about errors in the OAuth flow
     /// </summary>
-    public class OAuthException : Exception
+    public class OAuthException : ApplicationException
     {
         public OAuthException() : base()
         { }
