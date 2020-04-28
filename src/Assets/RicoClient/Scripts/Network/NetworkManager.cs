@@ -12,12 +12,14 @@ namespace RicoClient.Scripts.Network
         private readonly UserManager _userManager;
 
         private readonly AuthController _authController;
+        private readonly CardsController _cardsController;
 
-        public NetworkManager(UserManager userManager, AuthController authController)
+        public NetworkManager(UserManager userManager, AuthController authController, CardsController cardsController)
         {
             _userManager = userManager;
 
             _authController = authController;
+            _cardsController = cardsController;
         }
 
         public async UniTask<bool> OAuth()

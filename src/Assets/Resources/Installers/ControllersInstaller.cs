@@ -1,3 +1,4 @@
+using RicoClient.Configs;
 using RicoClient.Scripts.Network.Controllers;
 using UnityEngine;
 using Zenject;
@@ -14,9 +15,11 @@ namespace RicoClient.Installers
 
         public override void InstallBindings()
         {
-            Container.BindInstance(_configuration).AsSingle().NonLazy();
+            Container.BindInstance(new AuthorizationConfig(_configuration)).AsSingle().NonLazy();
+            Container.BindInstance(new CardsConfig(_configuration)).AsSingle().NonLazy();
 
             Container.Bind<AuthController>().AsSingle().NonLazy();
+            Container.Bind<CardsController>().AsSingle().NonLazy();
         }
     }
 }

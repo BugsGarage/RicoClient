@@ -9,7 +9,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using Zenject;
 
-namespace RicoClient.Scripts.Menu
+namespace RicoClient.Scripts.Menu.Modals
 {
     public class ModalInfo : MonoBehaviour
     {

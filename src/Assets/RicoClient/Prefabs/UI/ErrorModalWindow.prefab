@@ -615,7 +615,7 @@ GameObject:
   - component: {fileID: 6227590540201205500}
   - component: {fileID: 6227590540201205501}
   - component: {fileID: 6227590540201205474}
-  - component: {fileID: 6227590540201205502}
+  - component: {fileID: -8866209091294082140}
   m_Layer: 5
   m_Name: ErrorModalWindow
   m_TagString: Untagged
@@ -704,7 +704,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &6227590540201205502
+--- !u!114 &-8866209091294082140
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -713,7 +713,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6227590540201205475}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44ceb91543f400c4d98135724b6016d4, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a54a2ad41bd66d48bb72d653b190a63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _errorText: {fileID: 6227590539648711117}

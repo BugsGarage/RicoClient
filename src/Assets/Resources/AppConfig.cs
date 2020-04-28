@@ -7,7 +7,10 @@ namespace RicoClient
     [CreateAssetMenu]
     public class AppConfig : ScriptableObject
     {
+        #region Authorization Configuration
+
         [Header("Authorization Configuration")]
+
         [SerializeField]
         private string _authServerURL = null;
         [SerializeField]
@@ -32,5 +35,18 @@ namespace RicoClient
         public string ClientSecret { get { return _clientSecret; } }
 
         public int AuthorizationTimeoutSeconds { get { return _authorizationTimeoutSeconds; } }
+
+        #endregion
+
+        #region Cards Configuration
+
+        [Header("Cards Configuration")]
+
+        [SerializeField]
+        private string _cardsServerURL = null;
+
+        public string CardsServerURL { get { return _cardsServerURL; } }
+
+        #endregion
     }
 }

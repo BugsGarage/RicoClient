@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
-namespace RicoClient.Scripts.Menu
+namespace RicoClient.Scripts.Menu.Main
 {
     public class MainMenuScript : MonoBehaviour
     {

@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using Zenject;
 
-namespace RicoClient.Scripts.Menu
+namespace RicoClient.Scripts.Menu.Modals
 {
     public class ModalError : MonoBehaviour
     {

@@ -1,3 +1,4 @@
+using RicoClient.Scripts.Cards;
 using RicoClient.Scripts.Network;
 using RicoClient.Scripts.User;
 using UnityEngine;
@@ -12,8 +13,9 @@ namespace RicoClient.Installers
     {
         public override void InstallBindings()
         {
-            Container.Bind<NetworkManager>().AsSingle().NonLazy();
             Container.Bind<UserManager>().AsSingle().NonLazy();
+            Container.Bind<NetworkManager>().AsSingle().NonLazy();
+            Container.Bind<CardsManager>().AsSingle().NonLazy();
         }
     }
 }

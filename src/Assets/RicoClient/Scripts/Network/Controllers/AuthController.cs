@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RicoClient.Configs;
 using RicoClient.Scripts.Exceptions;
 using RicoClient.Scripts.User.Storage;
 using RicoClient.Scripts.Utils;
@@ -27,7 +28,7 @@ namespace RicoClient.Scripts.Network.Controllers
 
         private readonly int _authorizationTimeoutSeconds;
 
-        public AuthController(AppConfig configuration)
+        public AuthController(AuthorizationConfig configuration)
         {
             _authorizationEndpoint = configuration.AuthorizationEndpoint;
             _tokenEndpoint = configuration.TokenEndpoint;

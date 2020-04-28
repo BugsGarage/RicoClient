@@ -1,8 +1,10 @@
-﻿using RicoClient.Scripts.Network;
+﻿using RicoClient.Scripts.Menu.Main;
+using RicoClient.Scripts.Menu.Modals;
+using RicoClient.Scripts.Network;
 using UnityEngine;
 using Zenject;
 
-namespace RicoClient.Scripts.Menu
+namespace RicoClient.Scripts.Menu.Auth
 {
     public class AuthorizationMenuScript : MonoBehaviour
     {
