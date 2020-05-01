@@ -9,15 +9,15 @@ namespace RicoClient.Scripts.Exceptions
     /// <summary>
     /// Base exception for client
     /// </summary>
-    public class ApplicationException : Exception
+    public class RicoException : Exception
     {
-        public ApplicationException() : base()
+        public RicoException() : base()
         { }
 
-        public ApplicationException(string message) : base(message)
+        public RicoException(string message) : base(message)
         { }
 
-        public ApplicationException(string message, Exception innerException) : base(message, innerException)
+        public RicoException(string message, Exception innerException) : base(message, innerException)
         { }
     }
 }

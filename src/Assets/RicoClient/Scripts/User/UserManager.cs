@@ -1,7 +1,10 @@
 ﻿using Assets.RicoClient.Scripts.Utils;
 using RicoClient.Scripts.Exceptions;
+using RicoClient.Scripts.Network;
 using RicoClient.Scripts.User.Storage;
 using System;
+using System.Timers;
+using UniRx.Async;
 using UnityEngine;
 
 namespace RicoClient.Scripts.User
@@ -22,12 +25,12 @@ namespace RicoClient.Scripts.User
                 throw new AuthorizeException("Wrong JWT recieved!");
 
             _userStorage.Username = decodedJWT["name"].ToString();
-            UpdateTokens(tokens);
+            _userStorage.Tokens = tokens;
         }
 
-        public void UpdateTokens(TokenInfo tokens)
+        public TokenInfo GetTokensInfo()
         {
-            _userStorage.Tokens = tokens;
+            return _userStorage.Tokens;
         }
     }
 }

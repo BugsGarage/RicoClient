@@ -16,6 +16,9 @@ namespace RicoClient.Scripts.Network.Controllers
             _cardsServerUrl = configuration.CardsServerURL;
         }
 
+        public void GetAllCardsRequest()
+        {
 
+        }
     }
 }

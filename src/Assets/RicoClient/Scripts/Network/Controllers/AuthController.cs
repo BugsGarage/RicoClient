@@ -63,6 +63,49 @@ namespace RicoClient.Scripts.Network.Controllers
         }
 
         /// <summary>
+        /// Making a refresh code request
+        /// </summary>
+        /// <param name="refresh_token"></param>
+        /// <returns>User tokens</returns>
+        public async UniTask<TokenInfo> RefreshTokenRequest(string refresh_token)
+        {
+            // Build request for token
+            string tokenRequestBody = string.Format("refresh_token={0}&client_id={1}&client_secret={2}&scope=&grant_type=refresh_token",
+                refresh_token,
+                _clientId,
+                _clientSecret
+            );
+
+            // Send the request
+            using (UnityWebRequest tokenRequest = new UnityWebRequest(_tokenEndpoint, "POST"))
+            {
+                byte[] byteBody = Encoding.ASCII.GetBytes(tokenRequestBody);
+                tokenRequest.uploadHandler = new UploadHandlerRaw(byteBody);
+                tokenRequest.uploadHandler.contentType = "application/x-www-form-urlencoded";
+                tokenRequest.downloadHandler = new DownloadHandlerBuffer();
+
+                await tokenRequest.SendWebRequest();
+
+                if (tokenRequest.isNetworkError || tokenRequest.isHttpError)
+                    throw new OAuthException($"Error during getting refreshed tokens: {tokenRequest.error}. Restart app please!");
+                else
+                {
+                    Debug.Log("Recieved refreshed tokens");
+
+                    Dictionary<string, string> tokenEndpointDecoded = JsonConvert.DeserializeObject<Dictionary<string, string>>(tokenRequest.downloadHandler.text);
+
+                    return new TokenInfo()
+                    {
+                        TokenType = tokenEndpointDecoded["token_type"],
+                        AccessToken = tokenEndpointDecoded["access_token"],
+                        ExpiresIn = int.Parse(tokenEndpointDecoded["expires_in"]),
+                        RefreshToken = tokenEndpointDecoded["refresh_token"]
+                    };
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets authorization code from server
         /// </summary>
         /// <param name="redirectURI"></param>
@@ -95,18 +138,18 @@ namespace RicoClient.Scripts.Network.Controllers
             // Checks for errors
             string errors = queryString.Get("error");
             if (errors != null)
-                throw new OAuthException($"Authorization error: {errors}.");
+                throw new OAuthException($"Authorization error: {errors}. Restart app please!");
 
             // Extracts the code
             string code = queryString.Get("code");
             string incoming_state = queryString.Get("state");
             if (code == null || incoming_state == null)
-                throw new OAuthException($"Malformed authorization response: {queryString}.");
+                throw new OAuthException($"Malformed authorization response: {queryString}. Restart app please!");
 
             // Compares the receieved state to the expected value, to ensure that
             // this app made the request which resulted in authorization
             if (incoming_state != state)
-                throw new OAuthException($"Received request with invalid state ({incoming_state}).");
+                throw new OAuthException($"Received request with invalid state ({incoming_state}). Restart app please!");
 
             return code;
         }
@@ -162,10 +205,7 @@ namespace RicoClient.Scripts.Network.Controllers
 
             using (var responseOutput = response.OutputStream)
             {
-                await UniTask.Run(() =>
-                {
-                    responseOutput.Write(buffer, 0, buffer.Length);
-                });
+                await responseOutput.WriteAsync(buffer, 0, buffer.Length);
             }
         }
 
@@ -200,7 +240,7 @@ namespace RicoClient.Scripts.Network.Controllers
                 await tokenRequest.SendWebRequest();
 
                 if (tokenRequest.isNetworkError || tokenRequest.isHttpError)
-                    throw new OAuthException($"Error during authorization: {tokenRequest.error}.");
+                    throw new OAuthException($"Error during authorization: {tokenRequest.error}. Restart app please!");
                 else
                 {
                     Debug.Log("Recieved tokens");

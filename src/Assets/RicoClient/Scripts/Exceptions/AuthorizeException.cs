@@ -9,7 +9,7 @@ namespace RicoClient.Scripts.Exceptions
     /// <summary>
     /// In-app authorization exception
     /// </summary>
-    public class AuthorizeException : ApplicationException
+    public class AuthorizeException : RicoException
     {
         public AuthorizeException() : base()
         { }
