@@ -10,42 +10,50 @@ namespace RicoClient.Scripts.Network
 {
     public class NetworkManager
     {
-        private readonly UserManager _userManager;
-
         private readonly AuthController _authController;
         private readonly CardsController _cardsController;
 
-        public NetworkManager(UserManager userManager, AuthController authController, CardsController cardsController)
+        public NetworkManager(AuthController authController, CardsController cardsController)
         {
-            _userManager = userManager;
-
             _authController = authController;
             _cardsController = cardsController;
         }
 
-        public async UniTask<bool> OAuth()
+        /// <summary>
+        /// OAuth request
+        /// </summary>
+        /// <returns>Tokens</returns>
+        public async UniTask<TokenInfo> OAuth()
         {
             try
             {
                 TokenInfo tokens = await _authController.OAuthRequest();
-                if (tokens.AccessToken != null && tokens.AccessToken.Length > 0)
-                    _userManager.AuthorizeUser(tokens);
+                return tokens;
             }
-            catch (RicoException e)
+            catch (OAuthException e)
             {
                 Debug.LogError(e.Message);
-                return false;
+                return new TokenInfo();
             }
-
-            RefreshTokensSetup();
-            return true;
         }
 
-        public void RefreshTokensSetup()
+        /// <summary>
+        /// Refresh token request
+        /// </summary>
+        /// <param name="refresh_token"></param>
+        /// <returns>Tokens</returns>
+        public async UniTask<TokenInfo> RefreshTokens(string refresh_token)
         {
-            TokenInfo currTokenInfo = _userManager.GetTokensInfo();
-            int expires_inMs = (currTokenInfo.ExpiresIn - 5) * 1000;
-            RefreshTokens(currTokenInfo.RefreshToken, expires_inMs).Forget((Exception e) => Debug.LogError(e.Message));
+            try
+            {
+                TokenInfo tokens = await _authController.RefreshTokenRequest(refresh_token);
+                return tokens;
+            }
+            catch (OAuthException)
+            {
+                // Cause it calls usually from non-unity thread we should not handle exception here
+                throw;  
+            }
         }
 
         public async UniTask<bool> GetAllCards()
@@ -53,17 +61,6 @@ namespace RicoClient.Scripts.Network
             _cardsController.GetAllCardsRequest();
 
             return true;
-        }
-
-        private async UniTask RefreshTokens(string refresh_token, int expires_inMs)
-        {
-            await UniTask.Delay(expires_inMs);
-
-            TokenInfo tokens = await _authController.RefreshTokenRequest(refresh_token);
-            if (tokens.AccessToken != null && tokens.AccessToken.Length > 0)
-                _userManager.AuthorizeUser(tokens);
-
-            RefreshTokensSetup();
         }
     }
 }

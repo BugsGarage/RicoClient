@@ -1,6 +1,6 @@
 ﻿using RicoClient.Scripts.Menu.Main;
 using RicoClient.Scripts.Menu.Modals;
-using RicoClient.Scripts.Network;
+using RicoClient.Scripts.User;
 using UnityEngine;
 using Zenject;
 
@@ -8,7 +8,7 @@ namespace RicoClient.Scripts.Menu.Auth
 {
     public class AuthorizationMenuScript : MonoBehaviour
     {
-        private NetworkManager _network;
+        private UserManager _user;
 
         [SerializeField]
         private ModalInfo _modalInfo = null;
@@ -16,18 +16,23 @@ namespace RicoClient.Scripts.Menu.Auth
         private MainMenuScript _mainMenu = null;
 
         [Inject]
-        public void Initialize(NetworkManager network)
+        public void Initialize(UserManager user)
         {
-            _network = network;
+            _user = user;
         }
 
         public async void OnAuthClick()
         {
-            bool res = await _network.OAuth();
+            gameObject.SetActive(false);
+
+            bool res = await _user.AuthorizeUser();
             if (res)
             {
                 _modalInfo.SetInfoDialog("You've been completly authorized!", _mainMenu.SetMainMenuActive);
-                gameObject.SetActive(false);
+            }
+            else
+            {
+                gameObject.SetActive(true);
             }
         }
     }
