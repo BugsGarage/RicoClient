@@ -1,4 +1,5 @@
-﻿using RicoClient.Scripts.Menu.Main;
+﻿using RicoClient.Scripts.Exceptions;
+using RicoClient.Scripts.Menu.Main;
 using RicoClient.Scripts.Menu.Modals;
 using RicoClient.Scripts.User;
 using UnityEngine;
@@ -25,15 +26,19 @@ namespace RicoClient.Scripts.Menu.Auth
         {
             gameObject.SetActive(false);
 
-            bool res = await _user.AuthorizeUser();
-            if (res)
+            try
             {
-                _modalInfo.SetInfoDialog("You've been completly authorized!", _mainMenu.SetMainMenuActive);
+                await _user.AuthorizeUser();
             }
-            else
+            catch (AuthorizeException e)
             {
+                Debug.LogError(e.Message);
                 gameObject.SetActive(true);
+
+                return;
             }
+
+            _modalInfo.SetInfoDialog("You've been completly authorized!", _mainMenu.SetMainMenuActive);
         }
     }
 }

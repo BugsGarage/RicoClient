@@ -45,7 +45,13 @@ namespace RicoClient
         [SerializeField]
         private string _cardsServerURL = null;
 
+        [SerializeField]
+        [Tooltip("Must be in StreamingAssests folder")]
+        private string _cardLocalDBPath = null;
+
         public string CardsServerURL { get { return _cardsServerURL; } }
+
+        public string CardLocalDBPath { get { return _cardLocalDBPath; } }
 
         #endregion
     }

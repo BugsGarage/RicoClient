@@ -1,8 +1,10 @@
-﻿using RicoClient.Scripts.Exceptions;
+﻿using RicoClient.Scripts.Cards;
+using RicoClient.Scripts.Exceptions;
 using RicoClient.Scripts.Network.Controllers;
 using RicoClient.Scripts.User;
 using RicoClient.Scripts.User.Storage;
 using System;
+using System.Collections.Generic;
 using UniRx.Async;
 using UnityEngine;
 
@@ -30,10 +32,9 @@ namespace RicoClient.Scripts.Network
                 TokenInfo tokens = await _authController.OAuthRequest();
                 return tokens;
             }
-            catch (OAuthException e)
+            catch (OAuthException)
             {
-                Debug.LogError(e.Message);
-                return new TokenInfo();
+                throw;
             }
         }
 
@@ -56,11 +57,13 @@ namespace RicoClient.Scripts.Network
             }
         }
 
-        public async UniTask<bool> GetAllCards()
+        /// <summary>
+        /// Get all in-game cards from server
+        /// </summary>
+        /// <returns>List with all in-game cards</returns>
+        public async UniTask<List<Card>> GetAllCards()
         {
-            _cardsController.GetAllCardsRequest();
-
-            return true;
+            return await _cardsController.GetAllCardsRequest(UserManager.GetFullAccessToken());
         }
     }
 }

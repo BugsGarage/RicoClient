@@ -218,7 +218,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
@@ -252,7 +252,7 @@ MonoBehaviour:
   m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
-  m_fontSizeMin: 24
+  m_fontSizeMin: 0
   m_fontSizeMax: 32
   m_fontStyle: 1
   m_HorizontalAlignment: 1
@@ -317,6 +317,7 @@ GameObject:
   - component: {fileID: 8964170562367204096}
   - component: {fileID: 8964170562367204110}
   - component: {fileID: 8964170562367204111}
+  - component: {fileID: 8051862867001187741}
   m_Layer: 5
   m_Name: CardHolder
   m_TagString: Untagged
@@ -385,6 +386,22 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &8051862867001187741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8964170562367204097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df7ce343a3c6d4144b23f6b5df72d882, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _unitCard: {fileID: 1554668037800915469}
+  _buildingCard: {fileID: 7095261106447769770}
+  _spellCard: {fileID: 1765190503387805762}
+  _cardAmount: {fileID: 8964170562026791117}
 --- !u!1 &8964170562507152021
 GameObject:
   m_ObjectHideFlags: 0
@@ -592,6 +609,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7618037720710875499, guid: 06cdce92378e3b44684f436bcb92a5bd, type: 3}
   m_PrefabInstance: {fileID: 2067174941965975132}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1765190503387805762 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 346535009696007710, guid: 06cdce92378e3b44684f436bcb92a5bd, type: 3}
+  m_PrefabInstance: {fileID: 2067174941965975132}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: feb1294abcbb492418e28b43b7be7fd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4815090532146996979
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -770,6 +798,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7618037720710875499, guid: dde46d66741023b40a21d07448e82517, type: 3}
   m_PrefabInstance: {fileID: 4815090532146996979}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7095261106447769770 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2352511993249859161, guid: dde46d66741023b40a21d07448e82517, type: 3}
+  m_PrefabInstance: {fileID: 4815090532146996979}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca980b067865b1941980bb6c2decff89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8964170562146791436
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -807,7 +846,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1034497285325004884, guid: a941f378bbde88b46aab26e994843658, type: 3}
       propertyPath: m_Name
-      value: Card
+      value: CardUnit
       objectReference: {fileID: 0}
     - target: {fileID: 1034497285325004884, guid: a941f378bbde88b46aab26e994843658, type: 3}
       propertyPath: m_IsActive
@@ -964,3 +1003,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7618037720710875499, guid: a941f378bbde88b46aab26e994843658, type: 3}
   m_PrefabInstance: {fileID: 8964170562146791436}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1554668037800915469 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -1588526063611084287, guid: a941f378bbde88b46aab26e994843658, type: 3}
+  m_PrefabInstance: {fileID: 8964170562146791436}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13a98e33bcaa77244a7f225208d76923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

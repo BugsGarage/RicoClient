@@ -165,8 +165,9 @@ GameObject:
   - component: {fileID: 3521468621594207938}
   - component: {fileID: 7637433952156869939}
   - component: {fileID: 4026535454343522337}
+  - component: {fileID: -1588526063611084287}
   m_Layer: 0
-  m_Name: Card
+  m_Name: CardUnit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -250,6 +251,26 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &-1588526063611084287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1034497285325004884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13a98e33bcaa77244a7f225208d76923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _name: {fileID: 7567146868590619187}
+  _image: {fileID: 6896092051866806325}
+  _rarity: {fileID: 8222971858360429020}
+  _cost: {fileID: 4785143487859637698}
+  _description: {fileID: 3513134141424506329}
+  _health: {fileID: 2285526577267763565}
+  _attack: {fileID: 281262300490701522}
+  _initiative: {fileID: 4056182586193752878}
 --- !u!1 &4383633079841163963
 GameObject:
   m_ObjectHideFlags: 0

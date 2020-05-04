@@ -12,7 +12,7 @@ namespace RicoClient.Scripts.User
 {
     public class UserManager : IDisposable
     {
-        private UserStorage _userStorage;
+        private static UserStorage _userStorage = new UserStorage();
 
         private CancellationTokenSource _cancellationToken;
 
@@ -21,8 +21,6 @@ namespace RicoClient.Scripts.User
 
         public UserManager(NetworkManager network, CardsManager cards)
         {
-            _userStorage = new UserStorage();
-
             _cancellationToken = new CancellationTokenSource();
 
             _network = network;
@@ -30,14 +28,29 @@ namespace RicoClient.Scripts.User
         }
 
         /// <summary>
+        /// Builds the whole authorization header (type + access_token)
+        /// </summary>
+        /// <returns>Token type with access token</returns>
+        public static string GetFullAccessToken()
+        {
+            return $"{_userStorage.Tokens.TokenType} {_userStorage.Tokens.AccessToken}";
+        }
+
+        /// <summary>
         /// OAuth request and tokens updating
         /// </summary>
         /// <returns>Result of the authorization</returns>
-        public async UniTask<bool> AuthorizeUser()
+        public async UniTask AuthorizeUser()
         {
-            TokenInfo tokens = await _network.OAuth();
-            if (tokens.AccessToken == null || tokens.AccessToken.Length <= 0)
-                return false;
+            TokenInfo tokens;
+            try
+            {
+                tokens = await _network.OAuth();
+            }
+            catch (OAuthException e)
+            {
+                throw new AuthorizeException("Error during making OAuth!", e);
+            }
 
             var decodedJWT = JWTDecoder.Decode(tokens.AccessToken);
             if (decodedJWT == null)
@@ -46,7 +59,7 @@ namespace RicoClient.Scripts.User
             _userStorage.Username = decodedJWT["name"].ToString();
             UpdateTokens(tokens);
 
-            return true;
+            await _cards.UpdateLocalCardsDB();
         }
 
         private void UpdateTokens(TokenInfo tokens)

@@ -11,9 +11,12 @@ namespace RicoClient.Configs
     {
         public string CardsServerURL { get; }
 
+        public string CardLocalDBPath { get; }
+
         public CardsConfig(AppConfig config)
         {
             CardsServerURL = config.CardsServerURL;
+            CardLocalDBPath = config.CardLocalDBPath;
         }
     }
 }

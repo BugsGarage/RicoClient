@@ -16,12 +16,12 @@ namespace RicoClient.Scripts.Menu.Modals
         [SerializeField]
         private TMP_Text _infoText = null;
         [SerializeField]
-        private Button okButton = null;
+        private Button _okButton = null;
 
         public void SetInfoDialog(string text, Action okAction)
         {
             _infoText.text = text;
-            okButton.onClick.AddListener(new UnityAction(okAction));
+            _okButton.onClick.AddListener(new UnityAction(okAction));
 
             gameObject.SetActive(true);
         }

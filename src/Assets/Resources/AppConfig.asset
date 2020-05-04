@@ -17,3 +17,6 @@ MonoBehaviour:
   _tokenEndpoint: connect/token
   _clientId: client
   _clientSecret: secret_client
+  _authorizationTimeoutSeconds: 300
+  _cardsServerURL: http://localhost:5100/
+  _cardLocalDBPath: StreamingAssets/localcards.bytes

@@ -1,7 +1,6 @@
 using RicoClient.Scripts.Cards;
 using RicoClient.Scripts.Network;
 using RicoClient.Scripts.User;
-using UnityEngine;
 using Zenject;
 
 namespace RicoClient.Installers
@@ -13,9 +12,9 @@ namespace RicoClient.Installers
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<UserManager>().AsSingle().NonLazy();
             Container.Bind<NetworkManager>().AsSingle().NonLazy();
-            Container.Bind<CardsManager>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<CardsManager>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<UserManager>().AsSingle().NonLazy();
         }
     }
 }
