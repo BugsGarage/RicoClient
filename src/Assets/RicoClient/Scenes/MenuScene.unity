@@ -1763,7 +1763,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &677870949
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1847,6 +1847,7 @@ MonoBehaviour:
   - {fileID: 118369723}
   _leftArrowButton: {fileID: 396262402}
   _rightArrowButton: {fileID: 41839805}
+  _ownedFilterButtonText: {fileID: 1789604367}
 --- !u!1 &690393580
 GameObject:
   m_ObjectHideFlags: 0
@@ -3573,7 +3574,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1343064885}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 677870952}
+        m_TargetAssemblyTypeName: RicoClient.Scripts.Menu.Collection.CollectionMenuScript,
+          Assembly-CSharp
+        m_MethodName: OnOwnedCardsFilterClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1343064885
 MonoBehaviour:
   m_ObjectHideFlags: 0
