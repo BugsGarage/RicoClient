@@ -1,9 +1,11 @@
 ﻿using RicoClient.Scripts.Cards;
+using RicoClient.Scripts.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TMPro;
 using UniRx.Async;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,28 +23,37 @@ namespace RicoClient.Scripts.Menu.Collection
         private Button _leftArrowButton = null;
         [SerializeField]
         private Button _rightArrowButton = null;
+        [SerializeField]
+        private TMP_Text _ownedFilterButtonText = null;
+
+        private bool _isOwnedCards;
 
         private int _allCardsCount;
         private int _currPageNum;
         private int _maxPageNum;
+
+        private List<int> _playerCards; 
 
         [Inject]
         public void Initialize(CardsManager cards)
         {
             _cards = cards;
 
+            _isOwnedCards = false;
             _allCardsCount = 0;
             _currPageNum = 0;
             _maxPageNum = 0;
         }
 
-        protected async void OnEnable()
+        protected void OnEnable()
         {
-            _allCardsCount = await _cards.CardsCount();
+            _playerCards = UserManager.PlayerCards.Keys.ToList();
             _currPageNum = 0;
-            _maxPageNum = _allCardsCount / _cardHolders.Length;
+            _isOwnedCards = false;
 
-            await CurrPageUpdate();
+            OnOwnedCardsFilterClick();
+
+            CurrPageUpdate();
         }
 
         protected void OnDisable()
@@ -53,21 +64,43 @@ namespace RicoClient.Scripts.Menu.Collection
             }
         }
 
-        public async void OnLeftClick()
+        public void OnOwnedCardsFilterClick()
+        {
+            _isOwnedCards = !_isOwnedCards;
+
+            if (_isOwnedCards)
+            {
+                _allCardsCount = _playerCards.Count;
+                _ownedFilterButtonText.text = "All cards";
+            }
+            else
+            {
+                _allCardsCount = _cards.AllCards.Count;
+                _ownedFilterButtonText.text = "My cards";
+            }
+
+            _maxPageNum = _allCardsCount / _cardHolders.Length;
+            if (_currPageNum > _maxPageNum)
+                _currPageNum = 0;
+
+            CurrPageUpdate();
+        }
+
+        public void OnLeftClick()
         {
             if (_currPageNum > 0)
             {
                 _currPageNum--;
-                await CurrPageUpdate();
+                CurrPageUpdate();
             }
         }
 
-        public async void OnRightClick()
+        public void OnRightClick()
         {
             if (_currPageNum < _maxPageNum)
             {
                 _currPageNum++;
-                await CurrPageUpdate();
+                CurrPageUpdate();
             }
         }
 
@@ -75,16 +108,31 @@ namespace RicoClient.Scripts.Menu.Collection
         /// Reads another page of cards from local db and set it up
         /// </summary>
         /// <returns></returns>
-        private async UniTask CurrPageUpdate()
+        private void CurrPageUpdate()
         {
             int holdersCount = _cardHolders.Length;
-            Card[] currPageCards = await _cards.GetCardsRange(_currPageNum * holdersCount + 1, holdersCount);
+
+            int firstCardOnPageId = _currPageNum * holdersCount + 1;
+            int diff = _allCardsCount - firstCardOnPageId + 1;
+            int cardsOnPage = diff > holdersCount ? holdersCount : diff;
+
+            Card[] currPageCards;
+            if (_isOwnedCards)
+                currPageCards = _cards.GetCardsRangeFrom(_playerCards, firstCardOnPageId, cardsOnPage);
+            else
+                currPageCards = _cards.GetAllCardsRange(firstCardOnPageId, cardsOnPage);
 
             for (int i = 0; i < holdersCount; i++)
             {
                 _cardHolders[i].SetActive(false);
+
                 if (i < currPageCards.Length)
-                    _cardHolders[i].PlaceCard(currPageCards[i]);
+                {
+                    if (!UserManager.PlayerCards.TryGetValue(currPageCards[i].CardId, out int amount))
+                        amount = 0;
+
+                    _cardHolders[i].PlaceCard(currPageCards[i], amount);
+                }
             }
 
             if (_currPageNum == 0)

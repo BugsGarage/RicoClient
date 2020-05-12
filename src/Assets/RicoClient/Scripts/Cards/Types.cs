@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace RicoClient.Scripts.Cards
 {
+    [Flags]
     public enum CardType
     {
         None = 0,
@@ -31,11 +32,13 @@ namespace RicoClient.Scripts.Cards
         Warcry
     }
 
+    [Flags]
     public enum AbilityTargetType
     {
         None = 0,
-        Ally = 1,
-        Enemy = 2
+        Self = 1,
+        Ally = 2,
+        Enemy = 4
     }
 
     public enum AbilityTargetnessType

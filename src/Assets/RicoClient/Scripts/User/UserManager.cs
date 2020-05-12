@@ -4,6 +4,7 @@ using RicoClient.Scripts.Exceptions;
 using RicoClient.Scripts.Network;
 using RicoClient.Scripts.User.Storage;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using UniRx.Async;
 using UnityEngine;
@@ -13,6 +14,16 @@ namespace RicoClient.Scripts.User
     public class UserManager : IDisposable
     {
         private static UserStorage _userStorage = new UserStorage();
+
+        /// <summary>
+        /// Builds the whole authorization header (type + access_token)
+        /// </summary>
+        public static string FullAccessToken { get { return $"{_userStorage.Tokens.TokenType} {_userStorage.Tokens.AccessToken}"; } } 
+
+        /// <summary>
+        /// Cards owned by player
+        /// </summary>
+        public static Dictionary<int, int> PlayerCards { get { return _userStorage.OwnedCards; } }
 
         private CancellationTokenSource _cancellationToken;
 
@@ -25,15 +36,6 @@ namespace RicoClient.Scripts.User
 
             _network = network;
             _cards = cards;
-        }
-
-        /// <summary>
-        /// Builds the whole authorization header (type + access_token)
-        /// </summary>
-        /// <returns>Token type with access token</returns>
-        public static string GetFullAccessToken()
-        {
-            return $"{_userStorage.Tokens.TokenType} {_userStorage.Tokens.AccessToken}";
         }
 
         /// <summary>
@@ -59,7 +61,16 @@ namespace RicoClient.Scripts.User
             _userStorage.Username = decodedJWT["name"].ToString();
             UpdateTokens(tokens);
 
-            await _cards.UpdateLocalCardsDB();
+            await _cards.UpdateLocalCards();
+        }
+
+        public async UniTask UpdatePlayerInfo()
+        {
+            var data = await _network.GetPlayerInfo();
+
+            _userStorage.BalanceValue = data.Balance;
+            _userStorage.OwnedCards = data.OwnedCards;
+            _userStorage.Decks = data.Decks;
         }
 
         private void UpdateTokens(TokenInfo tokens)

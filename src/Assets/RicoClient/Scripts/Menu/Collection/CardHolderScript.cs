@@ -30,7 +30,7 @@ namespace RicoClient.Scripts.Menu.Collection
                 _activeCard.SetActive(active);
         }
 
-        public void PlaceCard(Card card)
+        public void PlaceCard(Card card, int amount)
         {
             switch (card.Type)
             {
@@ -47,8 +47,10 @@ namespace RicoClient.Scripts.Menu.Collection
                     _activeCard = _spellCard;
                     break;
                 default:
-                    throw new NotSupportedException("Some not supported card type arrived!");
+                    throw new NotSupportedException($"Some not supported cards type ({card.Type}) arrived!");
             }
+
+            _cardAmount.text = amount.ToString();
 
             SetActive(true);
         }

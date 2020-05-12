@@ -1,6 +1,7 @@
 ﻿using RicoClient.Scripts.Cards;
 using RicoClient.Scripts.Exceptions;
 using RicoClient.Scripts.Network.Controllers;
+using RicoClient.Scripts.Network.Entities;
 using RicoClient.Scripts.User;
 using RicoClient.Scripts.User.Storage;
 using System;
@@ -14,11 +15,13 @@ namespace RicoClient.Scripts.Network
     {
         private readonly AuthController _authController;
         private readonly CardsController _cardsController;
+        private readonly PlayerController _playerController;
 
-        public NetworkManager(AuthController authController, CardsController cardsController)
+        public NetworkManager(AuthController authController, CardsController cardsController, PlayerController playerController)
         {
             _authController = authController;
             _cardsController = cardsController;
+            _playerController = playerController;
         }
 
         /// <summary>
@@ -63,7 +66,16 @@ namespace RicoClient.Scripts.Network
         /// <returns>List with all in-game cards</returns>
         public async UniTask<List<Card>> GetAllCards()
         {
-            return await _cardsController.GetAllCardsRequest(UserManager.GetFullAccessToken());
+            return await _cardsController.GetAllCardsRequest(UserManager.FullAccessToken);
+        }
+
+        /// <summary>
+        /// Get current player info
+        /// </summary>
+        /// <returns>Player info about his cards and decks</returns>
+        public async UniTask<PlayerData> GetPlayerInfo()
+        {
+            return await _playerController.GetPlayerInfoRequest(UserManager.FullAccessToken);
         }
     }
 }

@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace RicoClient.Configs
 {
-    public class CardsConfig
+    public class PlayerConfig
     {
-        public string CardsServerURL { get; }
+        public string PlayerServerURL { get; }
 
-        public CardsConfig(AppConfig config)
+        public PlayerConfig(AppConfig config)
         {
-            CardsServerURL = config.CardsServerURL;
+            PlayerServerURL = config.PlayerServerURL;
         }
     }
 }

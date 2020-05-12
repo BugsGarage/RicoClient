@@ -21,9 +21,9 @@ namespace RicoClient.Scripts.Cards
         {
             base.FillCard(card);
 
-            _health.text = card.Health.ToString();
-            _attack.text = card.Attack.ToString();
-            _initiative.text = card.Initiative.ToString();
+            _health.text = card.Properties.Health.ToString();
+            _attack.text = card.Properties.Attack.ToString();
+            _initiative.text = card.Properties.Initiative.ToString();
         }
     }
 }

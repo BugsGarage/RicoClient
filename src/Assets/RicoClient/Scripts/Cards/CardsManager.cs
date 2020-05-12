@@ -11,70 +11,50 @@ using UnityEngine;
 
 namespace RicoClient.Scripts.Cards
 {
-    public class CardsManager : IDisposable
+    public class CardsManager 
     {
         private readonly NetworkManager _network;
 
-        private readonly SQLiteConnection _db;
+        public List<Card> AllCards { get; private set; } 
 
-        public CardsManager(NetworkManager network, CardsConfig config)
+        public CardsManager(NetworkManager network)
         {
             _network = network;
-
-            var databasePath = Path.Combine(Application.dataPath, config.CardLocalDBPath);
-            _db = new SQLiteConnection(databasePath);
-            DBSetup();
+            AllCards = new List<Card>();
         }
 
         /// <summary>
         /// Updating local cards database from the cards server
         /// </summary>
-        public async UniTask UpdateLocalCardsDB()
+        public async UniTask UpdateLocalCards()
         {
-            List<Card> cards = await _network.GetAllCards();
-            await UniTask.Run(() => _db.InsertAll(cards));
+            AllCards = await _network.GetAllCards();
         }
 
-        public async UniTask<int> CardsCount()
+        public Card[] GetCardsRangeFrom(List<int> ids, int startId, int count)
         {
-            return await UniTask.Run(() => _db.Table<Card>().Count());
-        }
-
-        public async UniTask<Card[]> GetCardsRange(int startId, int count)
-        {
-            int endId = startId + count;
-            return await UniTask.Run(() => _db.Table<Card>().Where(c => c.CardId >= startId && c.CardId < endId).ToArray());
-        }
-
-        private async void DBSetup()
-        {
-            await UniTask.Run(() => _db.CreateTable<Card>());
-        }
-
-        #region IDisposable Support
-
-        private bool _disposed = false; 
-
-        protected virtual async void Dispose(bool disposing)
-        {
-            if (!_disposed)
+            Card[] cards = new Card[count];
+            for (int i = 0, j = 1; i < count; j++)
             {
-                if (disposing)
+                if (j == ids[i + startId - 1])
                 {
-                    await UniTask.Run(() => _db.DropTable<Card>());
-                    _db.Dispose();
+                    cards[i] = AllCards[j - 1];
+                    i++;
                 }
-
-                _disposed = true;
             }
+
+            return cards;
         }
 
-        public void Dispose()
+        public Card[] GetAllCardsRange(int startId, int count)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+            Card[] cards = new Card[count];
+            for (int i = 0; i < count; i++)
+            {
+                cards[i] = AllCards[startId + i - 1];
+            }
 
-        #endregion
+            return cards;
+        }
     }
 }

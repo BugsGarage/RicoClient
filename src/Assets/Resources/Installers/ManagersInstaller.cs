@@ -13,7 +13,7 @@ namespace RicoClient.Installers
         public override void InstallBindings()
         {
             Container.Bind<NetworkManager>().AsSingle().NonLazy();
-            Container.BindInterfacesAndSelfTo<CardsManager>().AsSingle().NonLazy();
+            Container.Bind<CardsManager>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<UserManager>().AsSingle().NonLazy();
         }
     }
