@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using RicoClient.Scripts.Cards.Converters;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RicoClient.Scripts.Cards
+namespace RicoClient.Scripts.Cards.Entities
 {
     [JsonObject]
     public class Card

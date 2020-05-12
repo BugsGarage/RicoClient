@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using RicoClient.Configs;
 using RicoClient.Scripts.Cards;
+using RicoClient.Scripts.Cards.Entities;
 using System;
 using System.Collections.Generic;
 using System.IO;

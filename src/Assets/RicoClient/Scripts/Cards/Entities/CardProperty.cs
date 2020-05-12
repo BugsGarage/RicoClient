@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RicoClient.Scripts.Cards
+namespace RicoClient.Scripts.Cards.Entities
 {
     [JsonObject]
     public class CardProperty

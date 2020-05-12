@@ -1,4 +1,5 @@
 ﻿using RicoClient.Scripts.Cards;
+using RicoClient.Scripts.Cards.Entities;
 using RicoClient.Scripts.Exceptions;
 using RicoClient.Scripts.Network.Controllers;
 using RicoClient.Scripts.Network.Entities;

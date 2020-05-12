@@ -1,4 +1,5 @@
 ﻿using RicoClient.Configs;
+using RicoClient.Scripts.Cards.Entities;
 using RicoClient.Scripts.Network;
 using SQLite;
 using System;
