@@ -23,6 +23,8 @@ namespace RicoClient.Scripts.Cards
         [SerializeField]
         protected TMP_Text _description = null;
 
+        protected int _id;
+
         public void SetActive(bool active)
         {
             gameObject.SetActive(active);
@@ -30,6 +32,8 @@ namespace RicoClient.Scripts.Cards
 
         public virtual void FillCard(Card card)
         {
+            _id = card.CardId;
+
             _name.text = card.Name;
             _rarity.text = card.Rarity;
             _cost.text = card.Cost.ToString();
