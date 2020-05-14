@@ -1230,7 +1230,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2352271541076168816}
-  - component: {fileID: 2982888564056853032}
+  - component: {fileID: 7335588077467543799}
   m_Layer: 5
   m_Name: UnitCard
   m_TagString: Untagged
@@ -1266,7 +1266,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 315, y: 430}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2982888564056853032
+--- !u!114 &7335588077467543799
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

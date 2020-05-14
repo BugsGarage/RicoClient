@@ -1849,6 +1849,7 @@ MonoBehaviour:
   _leftArrowButton: {fileID: 396262402}
   _rightArrowButton: {fileID: 41839805}
   _ownedFilterButtonText: {fileID: 1789604367}
+  _modalCard: {fileID: 1054358649}
 --- !u!1 &690393580
 GameObject:
   m_ObjectHideFlags: 0
@@ -3105,6 +3106,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6819667995716543032, guid: fc045c3332b69ce44b3acfa6ed00d971, type: 3}
   m_PrefabInstance: {fileID: 1748659292}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1054358649 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 273618838874736502, guid: fc045c3332b69ce44b3acfa6ed00d971, type: 3}
+  m_PrefabInstance: {fileID: 1748659292}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cb54ce19cd1d834bb2259d96cfcf6c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1072540539 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8051862867001187741, guid: 900cc5a897ae79c4abab32ca3df00171, type: 3}
@@ -4473,6 +4485,42 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5518744806750881674, guid: fc045c3332b69ce44b3acfa6ed00d971, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5518744806750881674, guid: fc045c3332b69ce44b3acfa6ed00d971, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5518744806750881674, guid: fc045c3332b69ce44b3acfa6ed00d971, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5518744806750881674, guid: fc045c3332b69ce44b3acfa6ed00d971, type: 3}
+      propertyPath: m_Colors.m_PressedColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5518744806750881674, guid: fc045c3332b69ce44b3acfa6ed00d971, type: 3}
+      propertyPath: m_Colors.m_PressedColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5518744806750881674, guid: fc045c3332b69ce44b3acfa6ed00d971, type: 3}
+      propertyPath: m_Colors.m_PressedColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5518744806750881674, guid: fc045c3332b69ce44b3acfa6ed00d971, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5518744806750881674, guid: fc045c3332b69ce44b3acfa6ed00d971, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5518744806750881674, guid: fc045c3332b69ce44b3acfa6ed00d971, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.b
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5864913488957697989, guid: fc045c3332b69ce44b3acfa6ed00d971, type: 3}
       propertyPath: m_textInfo.characterCount
       value: 0
@@ -4695,7 +4743,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 1755342929
+  m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!224 &1758217852
@@ -6587,6 +6635,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1480318324}
     m_Modifications:
+    - target: {fileID: 528032323764801763, guid: 900cc5a897ae79c4abab32ca3df00171, type: 3}
+      propertyPath: m_UseSpriteMesh
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 961405718523040349, guid: 900cc5a897ae79c4abab32ca3df00171, type: 3}
       propertyPath: m_textInfo.characterCount
       value: 0
@@ -6943,5 +6995,6 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1324985778964336108, guid: 900cc5a897ae79c4abab32ca3df00171, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 900cc5a897ae79c4abab32ca3df00171, type: 3}

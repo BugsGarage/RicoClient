@@ -1,7 +1,6 @@
 ﻿using RicoClient.Configs;
 using RicoClient.Scripts.Cards.Entities;
 using RicoClient.Scripts.Network;
-using SQLite;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -56,6 +55,17 @@ namespace RicoClient.Scripts.Cards
             }
 
             return cards;
+        }
+
+        public Card GetByCardId(int id)
+        {
+            for (int i = 0; i < AllCards.Count; i++)
+            {
+                if (AllCards[i].CardId == id)
+                    return AllCards[i];
+            }
+
+            return null;
         }
     }
 }

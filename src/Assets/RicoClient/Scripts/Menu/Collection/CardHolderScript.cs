@@ -12,6 +12,8 @@ namespace RicoClient.Scripts.Menu.Collection
 {
     public class CardHolderScript : MonoBehaviour
     {
+        public event Action<BaseCardScript> OnCardClick;
+
         [SerializeField]
         private UnitCardScript _unitCard = null;
         [SerializeField]
@@ -22,6 +24,20 @@ namespace RicoClient.Scripts.Menu.Collection
         private TMP_Text _cardAmount = null;
 
         private BaseCardScript _activeCard;
+
+        public void OnEnable()
+        {
+            _unitCard.OnCardClick += OnCardClicked;
+            _buildingCard.OnCardClick += OnCardClicked;
+            _spellCard.OnCardClick += OnCardClicked;
+        }
+
+        public void OnDisable()
+        {
+            _unitCard.OnCardClick -= OnCardClicked;
+            _buildingCard.OnCardClick -= OnCardClicked;
+            _spellCard.OnCardClick -= OnCardClicked;
+        }
 
         public void SetActive(bool active)
         {
@@ -54,6 +70,11 @@ namespace RicoClient.Scripts.Menu.Collection
             _cardAmount.text = amount.ToString();
 
             SetActive(true);
+        }
+
+        private void OnCardClicked(BaseCardScript card)
+        {
+            OnCardClick?.Invoke(card);
         }
     }
 }

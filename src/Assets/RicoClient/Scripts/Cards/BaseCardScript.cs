@@ -6,12 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Zenject;
 
 namespace RicoClient.Scripts.Cards
 {
-    public abstract class BaseCardScript : MonoBehaviour
+    public abstract class BaseCardScript : MonoBehaviour, IPointerClickHandler
     {
+        public event Action<BaseCardScript> OnCardClick;
+
         [SerializeField]
         protected TMP_Text _name = null;
         [SerializeField]
@@ -24,6 +28,8 @@ namespace RicoClient.Scripts.Cards
         protected TMP_Text _description = null;
 
         protected int _id;
+
+        public int CardId { get { return _id; } }
 
         public void SetActive(bool active)
         {
@@ -40,6 +46,14 @@ namespace RicoClient.Scripts.Cards
 
             // ToDo find image and description by cardId
             _description.text = "Your beatiful description";
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                OnCardClick?.Invoke(this);
+            }
         }
     }
 }

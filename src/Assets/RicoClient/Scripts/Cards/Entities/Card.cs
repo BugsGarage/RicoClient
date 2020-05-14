@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,6 @@ namespace RicoClient.Scripts.Cards.Entities
         /// </summary>
         [JsonProperty("card_id")]
         [JsonRequired]
-        [PrimaryKey]
         public int CardId { get; set; }
 
         /// <summary>
@@ -44,14 +42,14 @@ namespace RicoClient.Scripts.Cards.Entities
         /// Card cost to be played
         /// </summary>
         [JsonProperty("cost")]
-        public uint Cost { get; set; }
+        public int Cost { get; set; }
 
         /// <summary>
         /// Card price in gold
         /// </summary>
         [JsonRequired]
         [JsonProperty("gold_cost")]
-        public uint GoldCost { get; set; }
+        public int GoldCost { get; set; }
 
         /// <summary>
         /// Card's properties (health, attack, etc.)

@@ -26,6 +26,9 @@ namespace RicoClient.Scripts.Menu.Collection
         [SerializeField]
         private TMP_Text _ownedFilterButtonText = null;
 
+        [SerializeField]
+        private ModalCardScript _modalCard = null;
+
         private bool _isOwnedCards;
 
         private int _allCardsCount;
@@ -47,6 +50,11 @@ namespace RicoClient.Scripts.Menu.Collection
 
         protected void OnEnable()
         {
+            foreach (var cardHolder in _cardHolders)
+            {
+                cardHolder.OnCardClick += ModalCardShow;
+            }
+
             _playerCards = UserManager.PlayerCards.Keys.ToList();
             _currPageNum = 0;
             _isOwnedCards = false;
@@ -60,6 +68,7 @@ namespace RicoClient.Scripts.Menu.Collection
         {
             foreach (var cardHolder in _cardHolders)
             {
+                cardHolder.OnCardClick -= ModalCardShow;
                 cardHolder.SetActive(false);
             }
         }
@@ -144,6 +153,12 @@ namespace RicoClient.Scripts.Menu.Collection
                 _rightArrowButton.interactable = false;
             else
                 _rightArrowButton.interactable = true;
+        }
+
+        private void ModalCardShow(BaseCardScript card)
+        {
+            int price = _cards.GetByCardId(card.CardId).GoldCost;
+            _modalCard.SetModalCard(card, price);
         }
     }
 }

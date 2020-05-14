@@ -398,7 +398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df7ce343a3c6d4144b23f6b5df72d882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitCard: {fileID: 1142868570128807358}
+  _unitCard: {fileID: 4860562456199059297}
   _buildingCard: {fileID: 2534754964909357414}
   _spellCard: {fileID: 6869907518320280036}
   _cardAmount: {fileID: 8964170562026791117}
@@ -697,9 +697,9 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2352271541076168816, guid: 42e4949de1417604f8c7e6cd2512b61e, type: 3}
   m_PrefabInstance: {fileID: 2790280894333812630}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1142868570128807358 stripped
+--- !u!114 &4860562456199059297 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2982888564056853032, guid: 42e4949de1417604f8c7e6cd2512b61e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 7335588077467543799, guid: 42e4949de1417604f8c7e6cd2512b61e, type: 3}
   m_PrefabInstance: {fileID: 2790280894333812630}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

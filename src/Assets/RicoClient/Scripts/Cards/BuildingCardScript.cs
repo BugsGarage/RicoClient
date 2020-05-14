@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace RicoClient.Scripts.Cards
 {
