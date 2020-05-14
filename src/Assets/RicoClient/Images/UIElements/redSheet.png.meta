@@ -203,10 +203,10 @@ TextureImporter:
       name: red_boxCross.png
       rect:
         serializedVersion: 2
-        x: 380
-        y: 184
+        x: 381
+        y: 185
         width: 38
-        height: 36
+        height: 35
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
