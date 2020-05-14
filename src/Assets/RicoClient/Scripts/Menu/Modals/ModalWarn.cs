@@ -27,5 +27,14 @@ namespace RicoClient.Scripts.Menu.Modals
 
             gameObject.SetActive(true);
         }
+
+        public void SetWarnDialog(string text, Action okAction, Action cancelAction)
+        {
+            _warnText.text = text;
+            _okButton.onClick.AddListener(new UnityAction(okAction));
+            _cancelButton.onClick.AddListener(new UnityAction(cancelAction));
+
+            gameObject.SetActive(true);
+        }
     }
 }

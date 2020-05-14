@@ -25,6 +25,11 @@ namespace RicoClient.Scripts.User
         /// </summary>
         public static Dictionary<int, int> PlayerCards { get { return _userStorage.OwnedCards; } }
 
+        /// <summary>
+        /// Player balance
+        /// </summary>
+        public static int Balance { get { return _userStorage.BalanceValue; } }
+
         private CancellationTokenSource _cancellationToken;
 
         private readonly NetworkManager _network;

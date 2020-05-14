@@ -1,4 +1,5 @@
 ﻿using RicoClient.Scripts.Cards;
+using RicoClient.Scripts.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,15 @@ namespace RicoClient.Scripts.Menu.Collection
         private GameObject _bigCardHolder = null;
         [SerializeField]
         private TMP_Text _price = null;
+        [SerializeField]
+        private TMP_Text _playerBalance = null;
 
         private GameObject _bigCard;
+
+        public void OnEnable()
+        {
+            _playerBalance.text = UserManager.Balance.ToString();
+        }
 
         public void OnDisable()
         {

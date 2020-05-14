@@ -24,7 +24,7 @@ namespace RicoClient.Scripts.Menu.Collection
         [SerializeField]
         private Button _rightArrowButton = null;
         [SerializeField]
-        private TMP_Text _ownedFilterButtonText = null;
+        private TMP_Text _ownedCardsFilterButtonText = null;
 
         [SerializeField]
         private ModalCardScript _modalCard = null;
@@ -80,12 +80,12 @@ namespace RicoClient.Scripts.Menu.Collection
             if (_isOwnedCards)
             {
                 _allCardsCount = _playerCards.Count;
-                _ownedFilterButtonText.text = "All cards";
+                _ownedCardsFilterButtonText.text = "All cards";
             }
             else
             {
                 _allCardsCount = _cards.AllCards.Count;
-                _ownedFilterButtonText.text = "My cards";
+                _ownedCardsFilterButtonText.text = "My cards";
             }
 
             _maxPageNum = _allCardsCount / _cardHolders.Length;
