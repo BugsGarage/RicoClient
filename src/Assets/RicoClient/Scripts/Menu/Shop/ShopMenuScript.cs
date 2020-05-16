@@ -10,7 +10,7 @@ using Zenject;
 
 namespace RicoClient.Scripts.Menu.Shop
 {
-    public class ShopMenuScript : MonoBehaviour
+    public class ShopMenuScript : BaseMenuScript
     {
         private UserManager _user;
 

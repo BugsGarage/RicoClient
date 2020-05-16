@@ -10,14 +10,28 @@ using Zenject;
 
 namespace RicoClient.Scripts.Menu.Play
 {
-    public class PlayMenuScript : MonoBehaviour
+    public class PlayMenuScript : BaseMenuScript
     {
         private UserManager _user;
+
+        [SerializeField]
+        private CollectionMenuScript _collectionMenu = null;
 
         [Inject]
         public void Initialize(UserManager user)
         {
             _user = user;
+        }
+
+        public async void OnCollectionClick()
+        {
+            gameObject.SetActive(false);
+
+            // try ?
+            await _user.UpdatePlayerInfo();
+
+            _collectionMenu.ReturnMenu = this;
+            _collectionMenu.gameObject.SetActive(true);
         }
     }
 }

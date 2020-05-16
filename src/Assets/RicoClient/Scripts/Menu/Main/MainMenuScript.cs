@@ -12,7 +12,7 @@ using Zenject;
 
 namespace RicoClient.Scripts.Menu.Main
 {
-    public class MainMenuScript : MonoBehaviour
+    public class MainMenuScript : BaseMenuScript
     {
         private UserManager _user;
 
@@ -41,6 +41,7 @@ namespace RicoClient.Scripts.Menu.Main
             // try ?
             await _user.UpdatePlayerInfo();
 
+            _collectionMenu.ReturnMenu = this;
             _collectionMenu.gameObject.SetActive(true);
         }
 

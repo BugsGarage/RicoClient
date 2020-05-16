@@ -2,12 +2,14 @@
 using RicoClient.Scripts.Menu.Main;
 using RicoClient.Scripts.Menu.Modals;
 using RicoClient.Scripts.User;
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace RicoClient.Scripts.Menu.Auth
 {
-    public class AuthorizationMenuScript : MonoBehaviour
+    public class AuthorizationMenuScript : BaseMenuScript
     {
         private UserManager _user;
 
@@ -15,6 +17,8 @@ namespace RicoClient.Scripts.Menu.Auth
         private ModalInfo _modalInfo = null;
         [SerializeField]
         private MainMenuScript _mainMenu = null;
+        [SerializeField]
+        private Button _authButton = null;
 
         [Inject]
         public void Initialize(UserManager user)
@@ -24,7 +28,7 @@ namespace RicoClient.Scripts.Menu.Auth
 
         public async void OnAuthClick()
         {
-            gameObject.SetActive(false);
+            _authButton.interactable = false;
 
             try
             {
@@ -33,12 +37,15 @@ namespace RicoClient.Scripts.Menu.Auth
             catch (AuthorizeException e)
             {
                 Debug.LogError(e.Message);
-                gameObject.SetActive(true);
+                _authButton.interactable = true;
 
                 return;
             }
 
-            _modalInfo.SetInfoDialog("You've been completly authorized!", _mainMenu.SetMainMenuActive);
+            _modalInfo.SetInfoDialog("You've been completly authorized!", new Action(() => { 
+                _mainMenu.gameObject.SetActive(true);  
+                gameObject.SetActive(false); 
+            }));
         }
     }
 }

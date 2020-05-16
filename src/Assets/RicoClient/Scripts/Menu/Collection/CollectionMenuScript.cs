@@ -13,9 +13,11 @@ using Zenject;
 
 namespace RicoClient.Scripts.Menu.Collection
 {
-    public class CollectionMenuScript : MonoBehaviour
+    public class CollectionMenuScript : BaseMenuScript
     {
         private CardsManager _cards;
+
+        public BaseMenuScript ReturnMenu { get; set; }
 
         [SerializeField]
         private CardHolderScript[] _cardHolders = null;
@@ -71,6 +73,12 @@ namespace RicoClient.Scripts.Menu.Collection
                 cardHolder.OnCardClick -= ModalCardShow;
                 cardHolder.SetActive(false);
             }
+        }
+
+        public void OnReturnClick()
+        {
+            ReturnMenu.gameObject.SetActive(true);
+            gameObject.SetActive(false);
         }
 
         public void OnOwnedCardsFilterClick()
