@@ -59,6 +59,9 @@ namespace RicoClient.Scripts.User
                 throw new AuthorizeException("Error during making OAuth!", e);
             }
 
+            if (string.IsNullOrEmpty(tokens.AccessToken))
+                throw new AuthorizeException("Authorization timeout!");
+
             var decodedJWT = JWTDecoder.Decode(tokens.AccessToken);
             if (decodedJWT == null)
                 throw new AuthorizeException("Wrong JWT recieved!");
@@ -86,7 +89,7 @@ namespace RicoClient.Scripts.User
 
         private void RefreshTokensSetup(string refresh_token, int expires_in)
         {
-            int expires_inMs = (expires_in - 5) * 1000;
+            int expires_inMs = (expires_in - 10) * 1000;
             RefreshTokens(refresh_token, expires_inMs).Forget((Exception e) => Debug.LogError(e.Message));
         }
 
