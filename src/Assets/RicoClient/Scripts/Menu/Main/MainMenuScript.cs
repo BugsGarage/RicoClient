@@ -64,5 +64,10 @@ namespace RicoClient.Scripts.Menu.Main
 
             _playMenu.gameObject.SetActive(true);
         }
+
+        public void OnCloseClick()
+        {
+            Application.Quit();
+        }
     }
 }

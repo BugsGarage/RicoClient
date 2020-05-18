@@ -2478,7 +2478,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8810587194500881470, guid: c73be62f938a4b642a12ec28bda65609, type: 3}
       propertyPath: m_text
-      value: You won!
+      value: Info text
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c73be62f938a4b642a12ec28bda65609, type: 3}
