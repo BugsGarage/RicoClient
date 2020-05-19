@@ -16,7 +16,9 @@ namespace RicoClient.Configs
         public string ClientId { get; }
         public string ClientSecret { get; }
 
-        public int AuthorizationTimeoutSeconds { get; private set; }
+        public string[] Scopes { get; }
+
+        public int AuthorizationTimeoutSeconds { get; }
 
         public AuthorizationConfig(AppConfig config)
         {
@@ -26,6 +28,8 @@ namespace RicoClient.Configs
 
             ClientId = config.ClientId;
             ClientSecret = config.ClientSecret;
+
+            Scopes = config.Scopes;
 
             AuthorizationTimeoutSeconds = config.AuthorizationTimeoutSeconds;
         }

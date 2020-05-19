@@ -24,6 +24,9 @@ namespace RicoClient
         private string _clientSecret = null;
 
         [SerializeField]
+        private string[] _scopes = null;
+
+        [SerializeField]
         [Tooltip("How long keep context for authorization code answer")]
         private int _authorizationTimeoutSeconds = 300;
 
@@ -33,6 +36,8 @@ namespace RicoClient
 
         public string ClientId { get { return _clientId; } }
         public string ClientSecret { get { return _clientSecret; } }
+
+        public string[] Scopes { get { return _scopes; } }
 
         public int AuthorizationTimeoutSeconds { get { return _authorizationTimeoutSeconds; } }
 

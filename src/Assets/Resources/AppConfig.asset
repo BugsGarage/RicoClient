@@ -17,6 +17,16 @@ MonoBehaviour:
   _tokenEndpoint: connect/token
   _clientId: client
   _clientSecret: secret_client
+  _scopes:
+  - openid
+  - profile
+  - offline_access
+  - card_api
+  - deck_api
+  - shop_api
+  - payment_api
+  - player_api
+  - game_api
   _authorizationTimeoutSeconds: 300
   _cardsServerURL: http://localhost:5100/
   _playerServerURL: 

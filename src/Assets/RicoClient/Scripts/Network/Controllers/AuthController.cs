@@ -19,12 +19,14 @@ namespace RicoClient.Scripts.Network.Controllers
     public class AuthController
     {
         private const string code_challenge_method = "S256";
-        
+
         private readonly string _authorizationEndpoint;
         private readonly string _tokenEndpoint;
 
         private readonly string _clientId;
         private readonly string _clientSecret;
+
+        private readonly string[] _scopes;
 
         private readonly int _authorizationTimeoutSeconds;
 
@@ -35,6 +37,8 @@ namespace RicoClient.Scripts.Network.Controllers
 
             _clientId = configuration.ClientId;
             _clientSecret = configuration.ClientSecret;
+
+            _scopes = configuration.Scopes;
 
             _authorizationTimeoutSeconds = configuration.AuthorizationTimeoutSeconds;
         }
@@ -114,10 +118,19 @@ namespace RicoClient.Scripts.Network.Controllers
         /// <returns>Authorization code</returns>
         private async UniTask<string> GetAuthorizationCode(string redirectURI, string state, string code_challenge)
         {
+            string scopesString = "";
+            for (int i = 0; i < _scopes.Length; i++)
+            {
+                scopesString += _scopes[i];
+                if (i != _scopes.Length - 1)
+                    scopesString += "%20";
+            }
+
             // Creates the OAuth 2.0 authorization request
-            string authorizationRequest = string.Format("{0}?response_type=code&scope=openid%20profile%20api1%20offline_access&" +
-                "redirect_uri={1}&client_id={2}&state={3}&code_challenge={4}&code_challenge_method={5}",
+            string authorizationRequest = string.Format("{0}?response_type=code&scope={1}&redirect_uri={2}&" +
+                "client_id={3}&state={4}&code_challenge={5}&code_challenge_method={6}",
                 _authorizationEndpoint,
+                scopesString,
                 Uri.EscapeDataString(redirectURI),
                 _clientId,
                 state,
