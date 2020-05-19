@@ -471,8 +471,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 677870952}
-        m_TargetAssemblyTypeName: RicoClient.Scripts.Menu.Collection.CollectionMenuScript,
+      - m_Target: {fileID: 447094106}
+        m_TargetAssemblyTypeName: Assets.RicoClient.Scripts.Menu.Collection.CardsPanelScript,
           Assembly-CSharp
         m_MethodName: OnRightClick
         m_Mode: 1
@@ -898,6 +898,7 @@ GameObject:
   - component: {fileID: 130144267}
   - component: {fileID: 130144269}
   - component: {fileID: 130144268}
+  - component: {fileID: 130144270}
   m_Layer: 5
   m_Name: DeckPanel
   m_TagString: Untagged
@@ -966,6 +967,21 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &130144270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130144266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11e63686ddb3aa24995f25aa7d4b0ffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _deckCardPrefab: {fileID: 9121768372576731192, guid: 14aa8cc7db1861f4e8a47418969c1d3a, type: 3}
+  _deckContent: {fileID: 425994881}
+  _deckName: {fileID: 708726092}
 --- !u!1 &132502933
 GameObject:
   m_ObjectHideFlags: 0
@@ -2374,7 +2390,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 326559778}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1507802404}
+        m_TargetAssemblyTypeName: RicoClient.Scripts.Menu.Collection.Panels.DecksPanelScript,
+          Assembly-CSharp
+        m_MethodName: OnCancelDeckEdit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &326559778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2494,7 +2523,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 345259060}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1507802404}
+        m_TargetAssemblyTypeName: RicoClient.Scripts.Menu.Collection.Panels.DecksPanelScript,
+          Assembly-CSharp
+        m_MethodName: OnCreateDeck
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &345259060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2625,8 +2667,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 677870952}
-        m_TargetAssemblyTypeName: RicoClient.Scripts.Menu.Collection.CollectionMenuScript,
+      - m_Target: {fileID: 447094106}
+        m_TargetAssemblyTypeName: Assets.RicoClient.Scripts.Menu.Collection.CardsPanelScript,
           Assembly-CSharp
         m_MethodName: OnLeftClick
         m_Mode: 1
@@ -2704,15 +2746,14 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 913892129}
+  m_Children: []
   m_Father: {fileID: 405458842}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 85}
+  m_SizeDelta: {x: 0, y: 25}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &402187160
 MonoBehaviour:
@@ -3080,6 +3121,7 @@ GameObject:
   - component: {fileID: 447094102}
   - component: {fileID: 447094105}
   - component: {fileID: 447094104}
+  - component: {fileID: 447094106}
   m_Layer: 5
   m_Name: CardsPanel
   m_TagString: Untagged
@@ -3186,6 +3228,30 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &447094106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447094100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 817f61a6edc12504d80cf1f636d7b96b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cardHolders:
+  - {fileID: 1741713930}
+  - {fileID: 1077863204}
+  - {fileID: 1235305034}
+  - {fileID: 379011468}
+  - {fileID: 407521442}
+  - {fileID: 1072540539}
+  - {fileID: 1331223896}
+  - {fileID: 118369723}
+  _leftArrowButton: {fileID: 396262402}
+  _rightArrowButton: {fileID: 41839805}
+  _modalCard: {fileID: 1054358649}
 --- !u!1 &449200652
 GameObject:
   m_ObjectHideFlags: 0
@@ -3378,7 +3444,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 516665939}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 130144270}
+        m_TargetAssemblyTypeName: RicoClient.Scripts.Menu.Collection.Panels.DeckPanelScript,
+          Assembly-CSharp
+        m_MethodName: OnDeckDeleteClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &516665939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4590,19 +4669,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4281260c332463346b2ef6f22a281110, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cardHolders:
-  - {fileID: 1741713930}
-  - {fileID: 1077863204}
-  - {fileID: 1235305034}
-  - {fileID: 379011468}
-  - {fileID: 407521442}
-  - {fileID: 1072540539}
-  - {fileID: 1331223896}
-  - {fileID: 118369723}
-  _leftArrowButton: {fileID: 396262402}
-  _rightArrowButton: {fileID: 41839805}
+  _cardsPanel: {fileID: 447094106}
   _ownedCardsFilterButtonText: {fileID: 1789604367}
-  _modalCard: {fileID: 1054358649}
 --- !u!223 &677870953
 Canvas:
   m_ObjectHideFlags: 0
@@ -6786,11 +6854,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8964170562367204096, guid: 900cc5a897ae79c4abab32ca3df00171, type: 3}
   m_PrefabInstance: {fileID: 883844275}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &913892129 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-  m_PrefabInstance: {fileID: 1304036293}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &925608617
 GameObject:
   m_ObjectHideFlags: 0
@@ -8522,123 +8585,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1301761858}
   m_CullTransparentMesh: 0
---- !u!1001 &1304036293
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 402187159}
-    m_Modifications:
-    - target: {fileID: 1943621386199608442, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_Name
-      value: Deck
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 162
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 314
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386199608443, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386462989980, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_textInfo.characterCount
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386462989980, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_textInfo.spaceCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386462989980, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_textInfo.wordCount
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386462989980, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_textInfo.lineCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1943621386462989980, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
-      propertyPath: m_textInfo.pageCount
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
 --- !u!1 &1321966449
 GameObject:
   m_ObjectHideFlags: 0
@@ -9774,6 +9720,7 @@ GameObject:
   - component: {fileID: 1507802400}
   - component: {fileID: 1507802402}
   - component: {fileID: 1507802403}
+  - component: {fileID: 1507802404}
   m_Layer: 5
   m_Name: DecksPanel
   m_TagString: Untagged
@@ -9875,6 +9822,20 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1507802404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1507802398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82a0e47562ccd8c45be592cc48116c9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _deckList: {fileID: 1984704558}
+  _deck: {fileID: 130144270}
 --- !u!1 &1517862475
 GameObject:
   m_ObjectHideFlags: 0
@@ -11419,7 +11380,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1867077982}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1507802404}
+        m_TargetAssemblyTypeName: RicoClient.Scripts.Menu.Collection.Panels.DecksPanelScript,
+          Assembly-CSharp
+        m_MethodName: OnConfirmDeckEdit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1867077982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12219,6 +12193,7 @@ GameObject:
   - component: {fileID: 1984704555}
   - component: {fileID: 1984704557}
   - component: {fileID: 1984704556}
+  - component: {fileID: 1984704558}
   m_Layer: 5
   m_Name: DeckListPanel
   m_TagString: Untagged
@@ -12285,6 +12260,20 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1984704558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984704554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc2913854b39f77478c3558ece237f7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _deckPrefab: {fileID: 7793720809138070465, guid: 35349ad9f23fed14a9adf87b7507182f, type: 3}
+  _deckListContent: {fileID: 402187158}
 --- !u!1001 &2058093367
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12620,7 +12609,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1943621386199608443, guid: 14aa8cc7db1861f4e8a47418969c1d3a, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1943621386199608443, guid: 14aa8cc7db1861f4e8a47418969c1d3a, type: 3}
       propertyPath: m_AnchorMax.x
@@ -12628,7 +12617,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1943621386199608443, guid: 14aa8cc7db1861f4e8a47418969c1d3a, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1943621386199608443, guid: 14aa8cc7db1861f4e8a47418969c1d3a, type: 3}
       propertyPath: m_Pivot.x

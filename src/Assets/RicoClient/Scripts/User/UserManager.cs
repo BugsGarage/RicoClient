@@ -1,5 +1,6 @@
 ﻿using Assets.RicoClient.Scripts.Utils;
 using RicoClient.Scripts.Cards;
+using RicoClient.Scripts.Decks;
 using RicoClient.Scripts.Exceptions;
 using RicoClient.Scripts.Network;
 using RicoClient.Scripts.User.Storage;
@@ -24,6 +25,11 @@ namespace RicoClient.Scripts.User
         /// Cards owned by player
         /// </summary>
         public static Dictionary<int, int> PlayerCards { get { return _userStorage.OwnedCards; } }
+
+        /// <summary>
+        /// Player's deck headers
+        /// </summary>
+        public static List<DeckHeader> DeckHeaders { get { return _userStorage.Decks; } }
 
         /// <summary>
         /// Player balance

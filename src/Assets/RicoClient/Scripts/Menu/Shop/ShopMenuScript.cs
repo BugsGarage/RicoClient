@@ -12,12 +12,6 @@ namespace RicoClient.Scripts.Menu.Shop
 {
     public class ShopMenuScript : BaseMenuScript
     {
-        private UserManager _user;
-
-        [Inject]
-        public void Initialize(UserManager user)
-        {
-            _user = user;
-        }
+        
     }
 }

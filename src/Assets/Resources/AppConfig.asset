@@ -22,7 +22,6 @@ MonoBehaviour:
   - profile
   - offline_access
   - card_api
-  - deck_api
   - shop_api
   - payment_api
   - player_api

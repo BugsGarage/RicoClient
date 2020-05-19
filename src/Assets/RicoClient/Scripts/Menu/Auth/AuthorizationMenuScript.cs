@@ -11,20 +11,12 @@ namespace RicoClient.Scripts.Menu.Auth
 {
     public class AuthorizationMenuScript : BaseMenuScript
     {
-        private UserManager _user;
-
         [SerializeField]
         private ModalInfo _modalInfo = null;
         [SerializeField]
         private MainMenuScript _mainMenu = null;
         [SerializeField]
         private Button _authButton = null;
-
-        [Inject]
-        public void Initialize(UserManager user)
-        {
-            _user = user;
-        }
 
         public async void OnAuthClick()
         {

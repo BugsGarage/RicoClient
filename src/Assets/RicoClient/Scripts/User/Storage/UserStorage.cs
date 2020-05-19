@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RicoClient.Scripts.Decks;
+using System.Collections.Generic;
 
 namespace RicoClient.Scripts.User.Storage
 {
@@ -12,6 +13,6 @@ namespace RicoClient.Scripts.User.Storage
 
         public Dictionary<int, int> OwnedCards { get; set; }
 
-        public List<uint> Decks { get; set; }
+        public List<DeckHeader> Decks { get; set; }
     }
 }

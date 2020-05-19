@@ -14,7 +14,7 @@ namespace RicoClient.Scripts.Cards
 {
     public abstract class BaseCardScript : MonoBehaviour, IPointerClickHandler
     {
-        public event Action<BaseCardScript> OnCardClick;
+        public event Action<BaseCardScript> OnCardRightClick;
 
         [SerializeField]
         protected TMP_Text _name = null;
@@ -27,9 +27,7 @@ namespace RicoClient.Scripts.Cards
         [SerializeField]
         protected TMP_Text _description = null;
 
-        protected int _id;
-
-        public int CardId { get { return _id; } }
+        public int CardId { get; private set; }
 
         public void SetActive(bool active)
         {
@@ -38,13 +36,13 @@ namespace RicoClient.Scripts.Cards
 
         public virtual void FillCard(Card card)
         {
-            _id = card.CardId;
+            CardId = card.CardId;
 
             _name.text = card.Name;
             _rarity.text = card.Rarity;
             _cost.text = card.Cost.ToString();
 
-            // ToDo find image and description by cardId
+            // ToDo: find image and description by cardId
             _description.text = "Your beatiful description";
         }
 
@@ -52,7 +50,11 @@ namespace RicoClient.Scripts.Cards
         {
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                OnCardClick?.Invoke(this);
+                OnCardRightClick?.Invoke(this);
+            }
+            else if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                // to add in deck (check mb?)
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RicoClient.Scripts.Decks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,6 @@ namespace RicoClient.Scripts.Network.Entities
         public Dictionary<int, int> OwnedCards { get; set; }
 
         [JsonProperty("decks")]
-        public List<uint> Decks { get; set; }
+        public List<DeckHeader> Decks { get; set; }
     }
 }

@@ -14,20 +14,12 @@ namespace RicoClient.Scripts.Menu.Main
 {
     public class MainMenuScript : BaseMenuScript
     {
-        private UserManager _user;
-
         [SerializeField]
         private CollectionMenuScript _collectionMenu = null;
         [SerializeField]
         private ShopMenuScript _shopMenu = null;
         [SerializeField]
         private PlayMenuScript _playMenu = null;
-
-        [Inject]
-        public void Initialize(UserManager user)
-        {
-            _user = user;
-        }
 
         public void SetMainMenuActive()
         {
@@ -42,7 +34,7 @@ namespace RicoClient.Scripts.Menu.Main
             await _user.UpdatePlayerInfo();
 
             _collectionMenu.ReturnMenu = this;
-            _collectionMenu.gameObject.SetActive(true);
+            _collectionMenu.gameObject.SetActive(true); 
         }
 
         public async void OnShopClick()
