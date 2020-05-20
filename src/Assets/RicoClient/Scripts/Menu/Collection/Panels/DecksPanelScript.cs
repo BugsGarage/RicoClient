@@ -1,4 +1,5 @@
-﻿using RicoClient.Scripts.Menu.Collection;
+﻿using RicoClient.Scripts.Decks;
+using RicoClient.Scripts.Menu.Collection;
 using RicoClient.Scripts.User;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
 {
     public class DecksPanelScript : MonoBehaviour
     {
-        private UserManager _user;
+        private DeckManager _deckManager;
 
         [SerializeField]
         private DeckListPanelScript _deckList = null;
@@ -20,21 +21,23 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
         private DeckPanelScript _deck = null;
 
         [Inject]
-        public void Initialize(UserManager user)
+        public void Initialize(DeckManager deck)
         {
-            _user = user;
+            _deckManager = deck;
         }
 
         protected void OnEnable()
         {
-            _deckList.gameObject.SetActive(true);
+            OpenDeckListPanel();
 
             _deckList.OnDeckOpen += OnDeckOpened;
+            _deck.OnDeckDelete += OnDeckDeleted;
         }
 
         protected void OnDisable()
         {
             _deckList.OnDeckOpen -= OnDeckOpened;
+            _deck.OnDeckDelete -= OnDeckDeleted;
 
             _deckList.gameObject.SetActive(false);
             _deck.gameObject.SetActive(false);
@@ -42,30 +45,46 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
 
         public void OnCreateDeck()
         {
-            _deckList.gameObject.SetActive(false);
-            _deck.gameObject.SetActive(true);
+            OpenDeckPanel();
         }
 
-        public void OnConfirmDeckEdit()
+        public async void OnConfirmDeckEdit()
         {
-            // Send changes to server
+            // Send changes to the server
 
-            _deck.gameObject.SetActive(false);
-            _deckList.gameObject.SetActive(true);
+            OpenDeckListPanel();
         }
 
         public void OnCancelDeckEdit()
         {
+            OpenDeckListPanel();
+        }
+
+        private void OpenDeckPanel()
+        {
+            _deckList.gameObject.SetActive(false);
+            _deck.gameObject.SetActive(true);
+        }
+
+        private void OpenDeckListPanel()
+        {
             _deck.gameObject.SetActive(false);
             _deckList.gameObject.SetActive(true);
         }
 
-        public void OnDeckOpened(DeckScript deck)
+        private async void OnDeckOpened(DeckScript deckHeader)
         {
-            // Req for deck cards here
+            var deck = await _deckManager.DeckById(deckHeader.DeckId);
+            _deck.SetDeck(deck);
 
-            _deckList.gameObject.SetActive(false);
-            _deck.gameObject.SetActive(true);
+            OpenDeckPanel();
+        }
+
+        private async void OnDeckDeleted()
+        {
+            // Send del req to the server
+
+            OpenDeckListPanel();
         }
     }
 }

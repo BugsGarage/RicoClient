@@ -57,7 +57,7 @@ namespace RicoClient.Scripts.Cards
             return cards;
         }
 
-        public Card GetByCardId(int id)
+        public Card GetCardById(int id)
         {
             for (int i = 0; i < AllCards.Count; i++)
             {

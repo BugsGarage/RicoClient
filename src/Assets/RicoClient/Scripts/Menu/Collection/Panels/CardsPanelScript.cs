@@ -147,7 +147,7 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
 
         private void ModalCardShow(BaseCardScript card)
         {
-            int price = _cards.GetByCardId(card.CardId).GoldCost;
+            int price = _cards.GetCardById(card.CardId).GoldCost;
             _modalCard.SetModalCard(card, price);
         }
     }

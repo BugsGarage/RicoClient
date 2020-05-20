@@ -54,7 +54,7 @@ namespace RicoClient.Scripts.Cards
             }
             else if (eventData.button == PointerEventData.InputButton.Left)
             {
-                // to add in deck (check mb?)
+                // to add in deck (check mode mb?)
             }
         }
     }

@@ -10,6 +10,8 @@ namespace RicoClient.Scripts.Menu.Collection
 {
     public class DeckCardScript : MonoBehaviour
     {
+        public event Action<DeckCardScript> OnCardDelete;
+
         [SerializeField]
         private TMP_Text _cardName = null;
         [SerializeField]
@@ -19,18 +21,32 @@ namespace RicoClient.Scripts.Menu.Collection
 
         public int CardId { get; private set; }
 
-        public void SetDeckCard(int id, string name, int amount, int cost)
+        private int _amount;
+
+        public void SetDeckCard(int id, string name, int cost)
         {
             CardId = id;
+            _amount = 1;
 
             _cardName.text = name;
-            _cardAmount.text = amount.ToString();
+            _cardAmount.text = _amount.ToString();
             _cardResourceCost.text = cost.ToString();
+        }
+
+        public void IncreaseDeckCardAmount()
+        {
+            _amount++;
+            _cardAmount.text = _amount.ToString();
         }
 
         public void OnDeckCardClick()
         {
-            // del from deck
+            _amount--;
+
+            if (_amount > 0)
+                _cardAmount.text = _amount.ToString();
+            else
+                OnCardDelete?.Invoke(this);
         }
     }
 }

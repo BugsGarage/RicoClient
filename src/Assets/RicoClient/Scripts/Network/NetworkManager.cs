@@ -1,5 +1,6 @@
 ﻿using RicoClient.Scripts.Cards;
 using RicoClient.Scripts.Cards.Entities;
+using RicoClient.Scripts.Decks;
 using RicoClient.Scripts.Exceptions;
 using RicoClient.Scripts.Network.Controllers;
 using RicoClient.Scripts.Network.Entities;
@@ -77,6 +78,15 @@ namespace RicoClient.Scripts.Network
         public async UniTask<PlayerData> GetPlayerInfo()
         {
             return await _playerController.GetPlayerInfoRequest(UserManager.FullAccessToken);
+        }
+
+        /// <summary>
+        /// Get deck by its id
+        /// </summary>
+        /// <returns>Deck information</returns>
+        public async UniTask<Deck> GetDeckById(uint deckId)
+        {
+            return await _playerController.GetDeckByIdRequest(UserManager.FullAccessToken, deckId);
         }
     }
 }
