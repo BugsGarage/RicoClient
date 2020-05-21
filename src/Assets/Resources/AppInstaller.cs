@@ -21,6 +21,7 @@ namespace RicoClient
             Container.BindInstance(new CardsConfig(_configuration)).AsSingle().NonLazy();
             Container.BindInstance(new PlayerConfig(_configuration)).AsSingle().NonLazy();
             Container.BindInstance(new PayConfig(_configuration)).AsSingle().NonLazy();
+            Container.BindInstance(new GameConfig(_configuration)).AsSingle().NonLazy();
 
             ControllersInstaller.Install(Container);
             ManagersInstaller.Install(Container);

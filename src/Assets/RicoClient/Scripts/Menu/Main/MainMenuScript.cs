@@ -28,33 +28,30 @@ namespace RicoClient.Scripts.Menu.Main
 
         public async void OnCollectionClick()
         {
-            gameObject.SetActive(false);
-
             // try ?
             await _user.UpdatePlayerInfo();
 
             _collectionMenu.ReturnMenu = this;
-            _collectionMenu.gameObject.SetActive(true); 
+            _collectionMenu.gameObject.SetActive(true);
+            gameObject.SetActive(false);
         }
 
         public async void OnShopClick()
         {
-            gameObject.SetActive(false);
-
             // try ?
             await _user.UpdatePlayerInfo();
 
             _shopMenu.gameObject.SetActive(true);
+            gameObject.SetActive(false);
         }
 
         public async void OnPlayClick()
         {
-            gameObject.SetActive(false);
-
             // try ?
             await _user.UpdatePlayerInfo();
 
             _playMenu.gameObject.SetActive(true);
+            gameObject.SetActive(false);
         }
 
         public void OnCloseClick()

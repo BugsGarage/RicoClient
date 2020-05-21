@@ -78,5 +78,16 @@ namespace RicoClient
         public string PaymentServerURL { get { return _paymentServerURL; } }
 
         #endregion
+
+        #region Game Configuration
+
+        [Header("Game Configuration")]
+
+        [SerializeField]
+        private string _gameServerURL = null;
+
+        public string GameServerURL { get { return _gameServerURL; } }
+
+        #endregion
     }
 }
