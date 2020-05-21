@@ -61,7 +61,6 @@ namespace RicoClient.Scripts.Cards.Entities
         /// <summary>
         /// Card's ability (list in future?)
         /// </summary>
-        [JsonRequired]
         [JsonProperty("ability")]
         public Ability Ability { get; set; }
     }

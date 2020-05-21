@@ -28,9 +28,12 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
         [SerializeField]
         private TMP_InputField _deckName = null;
 
-        public uint DeckId { get; private set; }
+        public bool IsNewDeck { get; set; }
 
-        private List<DeckCardScript> _deckCards;
+        public uint DeckId { get; private set; }
+        public List<DeckCardScript> DeckCards { get; private set; }
+        public string DeckName { get { return _deckName.text; } 
+            set { _deckName.text = value; } }
 
         [Inject]
         public void Initialize(CardsManager cards)
@@ -40,13 +43,13 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
 
         protected void OnDisable()
         {
-            foreach (var deckCard in _deckCards)
+            foreach (var deckCard in DeckCards)
             {
                 deckCard.OnCardDelete -= CardDeletion;
                 Destroy(deckCard.gameObject);
             }
 
-            _deckCards.Clear();
+            DeckCards.Clear();
         }
 
         public void OnDeckDeleteClicked()
@@ -58,15 +61,24 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
 
         public void SetDeck(Deck deck)
         {
-            DeckId = deck.DeckId;
-            _deckName.text = deck.DeckName;
-            _deckCards = new List<DeckCardScript>(deck.DeckCards.Count);
+            DeckId = deck.Header.DeckId;
+            _deckName.text = deck.Header.DeckName;
+            DeckCards = new List<DeckCardScript>(deck.DeckCards.Count);
+            IsNewDeck = false;
 
             foreach (var deckCard in deck.DeckCards)
             {
                 for (int i = 0; i < deckCard.Value; i++)
                     AddCardInDeck(deckCard.Key);
             }
+        }
+
+        public void SetDeck()
+        {
+            DeckId = 0;
+            DeckName = "New Deck";
+            DeckCards = new List<DeckCardScript>();
+            IsNewDeck = true;
         }
 
         public void AddCardInDeck(int cardId)
@@ -76,7 +88,7 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
             int cardIndex = FindCardInDeck(cardId);
             if (cardIndex != -1)
             {
-                _deckCards[cardIndex].IncreaseDeckCardAmount();
+                DeckCards[cardIndex].IncreaseDeckCardAmount();
             }
             else
             {
@@ -84,17 +96,17 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
                 deckCard.SetDeckCard(cardId, card.Name, card.Cost);
                 deckCard.OnCardDelete += CardDeletion;
 
-                _deckCards.Add(deckCard);
+                DeckCards.Add(deckCard);
             }
         }
 
         private void CardDeletion(DeckCardScript deckCard)
         {
-            for (int i = 0; i < _deckCards.Count; i++)
+            for (int i = 0; i < DeckCards.Count; i++)
             {
-                if (deckCard.CardId == _deckCards[i].CardId)
+                if (deckCard.CardId == DeckCards[i].CardId)
                 {
-                    _deckCards.RemoveAt(i);
+                    DeckCards.RemoveAt(i);
                     break;
                 }
             }
@@ -104,8 +116,8 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
 
         private int FindCardInDeck(int cardId)
         {
-            for (int i = 0; i < _deckCards.Count; i++)
-                if (cardId == _deckCards[i].CardId)
+            for (int i = 0; i < DeckCards.Count; i++)
+                if (cardId == DeckCards[i].CardId)
                     return i;
 
             return -1;

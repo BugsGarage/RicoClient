@@ -33,12 +33,33 @@ namespace RicoClient.Scripts.Network.Controllers
             return GetDeckByIdRequestMock();
         }
 
+        public async UniTask<uint> PostNewDeckRequest(string accessToken, ConfirmDeck data)
+        {
+            string deckJson = JsonConvert.SerializeObject(data);
+
+            // ToDo: Request code
+
+            return 0;
+        }
+
+        public async UniTask PatchDeckByIdRequest(string accessToken, uint deckId, ConfirmDeck data)
+        {
+            string deckJson = JsonConvert.SerializeObject(data);
+
+            // ToDo: Request code
+        }
+
+        public async UniTask DeleteDeckByIdRequest(string accessToken, uint deckId)
+        {
+            // ToDo: Request code
+        }
+
         private PlayerData GetPlayerInfoRequestMock()
         {
             using (var reader = new StreamReader("./Assets/RicoClient/Scripts/Network/RequestMocks/GetPlayerInfo.json"))
             {
                 string playerJson = reader.ReadToEnd();
-
+                var a = JsonConvert.DeserializeObject<PlayerData>(playerJson);
                 return JsonConvert.DeserializeObject<PlayerData>(playerJson);
             }
         }

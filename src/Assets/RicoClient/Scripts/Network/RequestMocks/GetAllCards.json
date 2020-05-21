@@ -11,16 +11,7 @@
       "resources": 0
     },
     "cost": 1,
-    "ability": {
-      "type": "None",
-      "activation": "None",
-      "attack": 0,
-      "health": 0,
-      "target": "None",
-      "target_type": "None",
-      "targetness": "None",
-      "target_count": 0
-    },
+    "ability": null,
     "gold_cost": 10
   },
   {

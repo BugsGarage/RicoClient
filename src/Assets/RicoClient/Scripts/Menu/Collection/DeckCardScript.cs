@@ -20,31 +20,30 @@ namespace RicoClient.Scripts.Menu.Collection
         private TMP_Text _cardResourceCost = null;
 
         public int CardId { get; private set; }
-
-        private int _amount;
+        public int Amount { get; private set; }
 
         public void SetDeckCard(int id, string name, int cost)
         {
             CardId = id;
-            _amount = 1;
+            Amount = 1;
 
             _cardName.text = name;
-            _cardAmount.text = _amount.ToString();
+            _cardAmount.text = Amount.ToString();
             _cardResourceCost.text = cost.ToString();
         }
 
         public void IncreaseDeckCardAmount()
         {
-            _amount++;
-            _cardAmount.text = _amount.ToString();
+            Amount++;
+            _cardAmount.text = Amount.ToString();
         }
 
         public void OnDeckCardClick()
         {
-            _amount--;
+            Amount--;
 
-            if (_amount > 0)
-                _cardAmount.text = _amount.ToString();
+            if (Amount > 0)
+                _cardAmount.text = Amount.ToString();
             else
                 OnCardDelete?.Invoke(this);
         }

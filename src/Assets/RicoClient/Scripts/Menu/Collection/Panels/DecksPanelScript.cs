@@ -45,12 +45,25 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
 
         public void OnCreateDeck()
         {
+            _deck.SetDeck();
+
             OpenDeckPanel();
         }
 
         public async void OnConfirmDeckEdit()
         {
-            // Send changes to the server
+            Dictionary<int, int> deckCards = new Dictionary<int, int>();
+            int cardsCount = 0;
+            foreach (var deckCard in _deck.DeckCards)
+            {
+                deckCards.Add(deckCard.CardId, deckCard.Amount);
+                cardsCount += deckCard.Amount;
+            }
+
+            if (_deck.IsNewDeck)
+                await _deckManager.AddDeck(_deck.DeckName, deckCards, cardsCount);
+            else
+                await _deckManager.ConfirmDeckChange(_deck.DeckId, _deck.DeckName, deckCards, cardsCount); 
 
             OpenDeckListPanel();
         }
@@ -82,7 +95,8 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
 
         private async void OnDeckDeleted()
         {
-            // Send del req to the server
+            if (!_deck.IsNewDeck)
+                await _deckManager.DeleteDeck(_deck.DeckId);
 
             OpenDeckListPanel();
         }

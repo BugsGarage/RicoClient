@@ -12,12 +12,15 @@ namespace RicoClient.Scripts.Network.Entities
     public class PlayerData
     {
         [JsonProperty("balance")]
+        [JsonRequired]
         public int Balance { get; set; }
 
         [JsonProperty("available_cards")]
+        [JsonRequired]
         public Dictionary<int, int> OwnedCards { get; set; }
 
         [JsonProperty("decks")]
+        [JsonRequired]
         public List<DeckHeader> Decks { get; set; }
     }
 }

@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RicoClient.Scripts.Decks
+namespace RicoClient.Scripts.Network.Entities
 {
     [JsonObject]
-    public class Deck
+    public class ConfirmDeck
     {
-        [JsonProperty("deck_header")]
+        [JsonProperty("deck_name")]
         [JsonRequired]
-        public DeckHeader Header { get; set; }
+        public string DeckName { get; set; }
 
         [JsonProperty("deck_cards")]
         [JsonRequired]

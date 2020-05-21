@@ -14,7 +14,8 @@ namespace RicoClient.Scripts.Cards
 {
     public abstract class BaseCardScript : MonoBehaviour, IPointerClickHandler
     {
-        public event Action<BaseCardScript> OnCardRightClick;
+        public static event Action<BaseCardScript> OnCardRightClick;
+        public static event Action<BaseCardScript> OnCardLeftClick;
 
         [SerializeField]
         protected TMP_Text _name = null;
@@ -54,7 +55,7 @@ namespace RicoClient.Scripts.Cards
             }
             else if (eventData.button == PointerEventData.InputButton.Left)
             {
-                // to add in deck (check mode mb?)
+                OnCardLeftClick?.Invoke(this);
             }
         }
     }

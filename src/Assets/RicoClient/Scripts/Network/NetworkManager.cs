@@ -88,5 +88,44 @@ namespace RicoClient.Scripts.Network
         {
             return await _playerController.GetDeckByIdRequest(UserManager.FullAccessToken, deckId);
         }
+
+        /// <summary>
+        /// Send just created deck to the server
+        /// </summary>
+        /// <returns>Created deck id</returns>
+        public async UniTask<uint> PostNewDeck(string deckName, Dictionary<int, int> deckCards)
+        {
+            ConfirmDeck data = new ConfirmDeck()
+            {
+                DeckName = deckName,
+                DeckCards = deckCards
+            };
+
+            return await _playerController.PostNewDeckRequest(UserManager.FullAccessToken, data);
+        }
+
+        /// <summary>
+        /// Save changes of user's deck by its id
+        /// </summary>
+        /// <returns></returns>
+        public async UniTask PatchDeckById(uint deckId, string deckName, Dictionary<int, int> deckCards)
+        {
+            ConfirmDeck data = new ConfirmDeck()
+            {
+                DeckName = deckName,
+                DeckCards = deckCards
+            };
+
+            await _playerController.PatchDeckByIdRequest(UserManager.FullAccessToken, deckId, data);
+        }
+
+        /// <summary>
+        /// Delete user's deck by its id
+        /// </summary>
+        /// <returns></returns>
+        public async UniTask DeleteDeckById(uint deckId)
+        {
+            await _playerController.DeleteDeckByIdRequest(UserManager.FullAccessToken, deckId);
+        }
     }
 }

@@ -87,6 +87,29 @@ namespace RicoClient.Scripts.User
             _userStorage.Decks = data.Decks;
         }
 
+        public void UpdateLocalDeck(uint deckId, string deckName, int cardsCount)
+        {
+            for (int i = 0; i < _userStorage.Decks.Count; i++)
+            {
+                if (deckId == _userStorage.Decks[i].DeckId)
+                {
+                    _userStorage.Decks[i].DeckName = deckName;
+                    _userStorage.Decks[i].CardsCount = cardsCount;
+                    return;
+                }
+            }
+
+            // If deck is just created
+            _userStorage.Decks.Add(new DeckHeader() { DeckId = deckId, DeckName = deckName, CardsCount = cardsCount });
+        }
+
+        public void DeleteLocalDeck(uint deckId)
+        {
+            for (int i = 0; i < _userStorage.Decks.Count; i++)
+                if (deckId == _userStorage.Decks[i].DeckId)
+                    _userStorage.Decks.RemoveAt(i);
+        }
+
         private void UpdateTokens(TokenInfo tokens)
         {
             _userStorage.Tokens = tokens;

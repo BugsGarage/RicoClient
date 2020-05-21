@@ -11,12 +11,15 @@ namespace RicoClient.Scripts.Decks
     public class DeckHeader
     {
         [JsonProperty("deck_id")]
+        [JsonRequired]
         public uint DeckId { get; set; }
 
         [JsonProperty("deck_name")]
+        [JsonRequired]
         public string DeckName { get; set; }
 
         [JsonProperty("cards_count")]
+        [JsonRequired]
         public int CardsCount { get; set; }
     }
 }
