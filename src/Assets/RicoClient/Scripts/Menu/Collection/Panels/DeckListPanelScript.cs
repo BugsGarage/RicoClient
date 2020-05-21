@@ -11,8 +11,6 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
 {
     public class DeckListPanelScript : MonoBehaviour
     {
-        public event Action<DeckScript> OnDeckOpen;
-
         [SerializeField]
         private DeckScript _deckPrefab = null;
         [SerializeField]
@@ -43,7 +41,6 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
             {
                 var currDeck = Instantiate(_deckPrefab.gameObject, _deckListContent.transform).GetComponent<DeckScript>();
                 currDeck.SetDeck(deck.DeckId, deck.DeckName);
-                currDeck.OnDeckOpen += OnDeckOpened;
 
                 _decks.Add(currDeck);
             }
@@ -53,16 +50,10 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
         {
             foreach (var deck in _decks)
             {
-                deck.OnDeckOpen -= OnDeckOpened;
                 Destroy(deck.gameObject);
             }
 
             _decks.Clear();
-        }
-
-        private void OnDeckOpened(DeckScript deck)
-        {
-            OnDeckOpen?.Invoke(deck);
         }
     }
 }

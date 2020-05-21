@@ -11,7 +11,7 @@ namespace RicoClient.Scripts.User.Storage
 
         public int BalanceValue { get; set; }
 
-        public Dictionary<int, int> OwnedCards { get; set; }
+        public SortedDictionary<int, int> OwnedCards { get; set; }
 
         public List<DeckHeader> Decks { get; set; }
     }

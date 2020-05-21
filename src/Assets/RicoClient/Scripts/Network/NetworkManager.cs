@@ -9,7 +9,6 @@ using RicoClient.Scripts.User.Storage;
 using System;
 using System.Collections.Generic;
 using UniRx.Async;
-using UnityEngine;
 
 namespace RicoClient.Scripts.Network
 {
@@ -18,12 +17,14 @@ namespace RicoClient.Scripts.Network
         private readonly AuthController _authController;
         private readonly CardsController _cardsController;
         private readonly PlayerController _playerController;
+        private readonly PayController _payController;
 
-        public NetworkManager(AuthController authController, CardsController cardsController, PlayerController playerController)
+        public NetworkManager(AuthController authController, CardsController cardsController, PlayerController playerController, PayController payController)
         {
             _authController = authController;
             _cardsController = cardsController;
             _playerController = playerController;
+            _payController = payController;
         }
 
         /// <summary>
@@ -126,6 +127,15 @@ namespace RicoClient.Scripts.Network
         public async UniTask DeleteDeckById(uint deckId)
         {
             await _playerController.DeleteDeckByIdRequest(UserManager.FullAccessToken, deckId);
+        }
+
+        /// <summary>
+        /// Buy specific card for player
+        /// </summary>
+        /// <returns></returns>
+        public async UniTask PostBuySpecificCard(int cardId)
+        {
+            await _payController.PostBuySpecificCardRequest(UserManager.FullAccessToken, cardId);
         }
     }
 }

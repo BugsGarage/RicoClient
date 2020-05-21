@@ -14,6 +14,7 @@ namespace RicoClient.Installers
             Container.Bind<AuthController>().AsSingle().NonLazy();
             Container.Bind<CardsController>().AsSingle().NonLazy();
             Container.Bind<PlayerController>().AsSingle().NonLazy();
+            Container.Bind<PayController>().AsSingle().NonLazy();
         }
     }
 }

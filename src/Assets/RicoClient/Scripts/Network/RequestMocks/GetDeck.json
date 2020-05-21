@@ -1,9 +1,7 @@
 ﻿{
-  "deck_header": {
-    "deck_id": 4,
-    "deck_name": "Test1",
-    "cards_count": 5
-  },
+  "deck_id": 4,
+  "deck_name": "Test1",
+  "cards_count": 5,
   "deck_cards": {
     "1": "2",
     "2": "1",

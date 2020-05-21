@@ -30,13 +30,13 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
         {
             OpenDeckListPanel();
 
-            _deckList.OnDeckOpen += OnDeckOpened;
+            DeckScript.OnDeckOpen += OnDeckOpened;
             _deck.OnDeckDelete += OnDeckDeleted;
         }
 
         protected void OnDisable()
         {
-            _deckList.OnDeckOpen -= OnDeckOpened;
+            DeckScript.OnDeckOpen -= OnDeckOpened;
             _deck.OnDeckDelete -= OnDeckDeleted;
 
             _deckList.gameObject.SetActive(false);

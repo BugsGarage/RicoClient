@@ -17,14 +17,14 @@ namespace RicoClient.Scripts.User
         private static UserStorage _userStorage = new UserStorage();
 
         /// <summary>
-        /// Builds the whole authorization header (type + access_token)
+        /// Builds the whole authorization header (token_type + access_token)
         /// </summary>
         public static string FullAccessToken { get { return $"{_userStorage.Tokens.TokenType} {_userStorage.Tokens.AccessToken}"; } } 
 
         /// <summary>
-        /// Cards owned by player
+        /// Cards owned by player and their amount
         /// </summary>
-        public static Dictionary<int, int> PlayerCards { get { return _userStorage.OwnedCards; } }
+        public static SortedDictionary<int, int> PlayerCards { get { return _userStorage.OwnedCards; } }
 
         /// <summary>
         /// Player's deck headers
@@ -83,8 +83,21 @@ namespace RicoClient.Scripts.User
             var data = await _network.GetPlayerInfo();
 
             _userStorage.BalanceValue = data.Balance;
-            _userStorage.OwnedCards = data.OwnedCards;
+            _userStorage.OwnedCards = new SortedDictionary<int, int>(data.OwnedCards);
             _userStorage.Decks = data.Decks;
+        }
+
+        public void BuyLocalCard(int cardId, int cardCost)
+        {
+            _userStorage.BalanceValue -= cardCost;
+            if (_userStorage.OwnedCards.TryGetValue(cardId, out _))
+            {
+                _userStorage.OwnedCards[cardId] += 1;
+            }
+            else
+            {
+                _userStorage.OwnedCards.Add(cardId, 1);
+            }
         }
 
         public void UpdateLocalDeck(uint deckId, string deckName, int cardsCount)
@@ -99,7 +112,7 @@ namespace RicoClient.Scripts.User
                 }
             }
 
-            // If deck is just created
+            // If deck has just created
             _userStorage.Decks.Add(new DeckHeader() { DeckId = deckId, DeckName = deckName, CardsCount = cardsCount });
         }
 

@@ -1,7 +1,7 @@
 ﻿{
   "player_id": 1,
   "name": "Aaa",
-  "balance": 1100,
+  "balance": 100,
   "available_cards": {
     "1": "2",
     "2": "1",

@@ -1,4 +1,6 @@
 ﻿using RicoClient.Scripts.Cards;
+using RicoClient.Scripts.Exceptions;
+using RicoClient.Scripts.Pay;
 using RicoClient.Scripts.User;
 using System;
 using System.Collections.Generic;
@@ -7,11 +9,16 @@ using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 namespace RicoClient.Scripts.Menu.Collection
 {
     public class ModalCardScript : MonoBehaviour
     {
+        public event Action OnBoughtCard;
+
+        private PayManager _pay;
+
         [SerializeField]
         private GameObject _bigCardHolder = null;
         [SerializeField]
@@ -20,6 +27,13 @@ namespace RicoClient.Scripts.Menu.Collection
         private TMP_Text _playerBalance = null;
 
         private GameObject _bigCard;
+        private int _cardId;
+
+        [Inject]
+        public void Initialize(PayManager pay)
+        {
+            _pay = pay;
+        }
 
         public void OnEnable()
         {
@@ -34,14 +48,26 @@ namespace RicoClient.Scripts.Menu.Collection
         public void SetModalCard(BaseCardScript card, int price)
         {
             _bigCard = Instantiate(card.gameObject, _bigCardHolder.transform);
+            _cardId = card.CardId;
             _price.text = price.ToString();
 
             gameObject.SetActive(true);
         }
 
-        public void OnBuyClick()
+        public async void OnBuyClick()
         {
-            // Buy logic
+            try
+            {
+                await _pay.BuySpecificCard(_cardId, int.Parse(_price.text));
+            }
+            catch (NotEnoughBalanceException e)
+            {
+                Debug.LogError(e.Message);
+                return;
+            }
+
+            OnBoughtCard?.Invoke();
+            gameObject.SetActive(false);
         }
     }
 }

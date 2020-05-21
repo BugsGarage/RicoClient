@@ -413,6 +413,7 @@ GameObject:
   - component: {fileID: 7074789507972195897}
   - component: {fileID: 2814984684947913296}
   - component: {fileID: 421554606567055618}
+  - component: {fileID: 8000084473400778141}
   m_Layer: 5
   m_Name: BoughtCard
   m_TagString: Untagged
@@ -502,6 +503,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &8000084473400778141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5996659223919534455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb7f0315b6ea0641b0019eb54b23fa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &755530502902925008
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1324,7 +1324,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 153761002}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 756244463}
+        m_TargetAssemblyTypeName: RicoClient.Scripts.Menu.Shop.ShopMenuScript, Assembly-CSharp
+        m_MethodName: On10GoldBuyClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &153761002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1712,7 +1724,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 229813959}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 756244463}
+        m_TargetAssemblyTypeName: RicoClient.Scripts.Menu.Shop.ShopMenuScript, Assembly-CSharp
+        m_MethodName: OnRandomBuyClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &229813959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3591,7 +3615,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 520462366}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 756244463}
+        m_TargetAssemblyTypeName: RicoClient.Scripts.Menu.Shop.ShopMenuScript, Assembly-CSharp
+        m_MethodName: On100GoldBuyClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &520462366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3870,6 +3906,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6819667995716543032, guid: 8ffd3869654c39c478cc36d4a48bf899, type: 3}
   m_PrefabInstance: {fileID: 555300676}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &555300678 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8000084473400778141, guid: 8ffd3869654c39c478cc36d4a48bf899, type: 3}
+  m_PrefabInstance: {fileID: 555300676}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb7f0315b6ea0641b0019eb54b23fa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &556460555
 GameObject:
   m_ObjectHideFlags: 0
@@ -5147,7 +5194,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 14
-  m_CharacterLimit: 0
+  m_CharacterLimit: 32
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -5523,7 +5570,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &756244458
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5638,6 +5685,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74d2b2f41a1296c4cb86d6fbc8ace00d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerBalance: {fileID: 711750438}
+  _boughtCard: {fileID: 555300678}
+  _randomCardCost: {fileID: 1607357336}
 --- !u!1001 &778652087
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8557,7 +8607,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1301761861}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 756244463}
+        m_TargetAssemblyTypeName: RicoClient.Scripts.Menu.Shop.ShopMenuScript, Assembly-CSharp
+        m_MethodName: On1000GoldBuyClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1301761861
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -64,5 +64,19 @@ namespace RicoClient
         public string PlayerServerURL { get { return _playerServerURL; } }
 
         #endregion
+
+        #region Shop and Payment Configuration
+
+        [Header("Shop and Payment Configuration")]
+
+        [SerializeField]
+        private string _shopServerURL = null;
+        [SerializeField]
+        private string _paymentServerURL = null;
+
+        public string ShopServerURL { get { return _shopServerURL; } }
+        public string PaymentServerURL { get { return _paymentServerURL; } }
+
+        #endregion
     }
 }

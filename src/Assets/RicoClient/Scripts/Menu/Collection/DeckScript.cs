@@ -14,7 +14,7 @@ namespace RicoClient.Scripts.Menu.Collection
     /// </summary>
     public class DeckScript : MonoBehaviour
     {
-        public event Action<DeckScript> OnDeckOpen;
+        public static event Action<DeckScript> OnDeckOpen;
 
         [SerializeField]
         private TMP_Text _name = null;

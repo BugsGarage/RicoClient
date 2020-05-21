@@ -10,7 +10,7 @@ namespace RicoClient.Scripts.Menu.Collection
 {
     public class DeckCardScript : MonoBehaviour
     {
-        public event Action<DeckCardScript> OnCardDelete;
+        public static event Action<DeckCardScript> OnCardDelete;
 
         [SerializeField]
         private TMP_Text _cardName = null;

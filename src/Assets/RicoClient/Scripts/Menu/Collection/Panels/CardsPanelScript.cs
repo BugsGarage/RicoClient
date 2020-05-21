@@ -47,19 +47,19 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
 
         protected void OnDisable()
         {
+            BaseCardScript.OnCardRightClick -= ModalCardShow;
+            _modalCard.OnBoughtCard -= OnCardBought;
+
             foreach (var cardHolder in _cardHolders)
             {
-                cardHolder.OnCardRightClick -= ModalCardShow;
                 cardHolder.SetActive(false);
             }
         }
 
         public void OnCollectionPanelEnable()
         {
-            foreach (var cardHolder in _cardHolders)
-            {
-                cardHolder.OnCardRightClick += ModalCardShow;
-            }
+            BaseCardScript.OnCardRightClick += ModalCardShow;
+            _modalCard.OnBoughtCard += OnCardBought;
 
             _playerCards = UserManager.PlayerCards.Keys.ToList();
             _currPageNum = 0;
@@ -149,6 +149,12 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
         {
             int price = _cards.GetCardById(card.CardId).GoldCost;
             _modalCard.SetModalCard(card, price);
+        }
+
+        private void OnCardBought()
+        {
+            _playerCards = UserManager.PlayerCards.Keys.ToList();
+            CurrPageUpdate();
         }
     }
 }

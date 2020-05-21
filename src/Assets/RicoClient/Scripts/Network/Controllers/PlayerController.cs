@@ -59,7 +59,7 @@ namespace RicoClient.Scripts.Network.Controllers
             using (var reader = new StreamReader("./Assets/RicoClient/Scripts/Network/RequestMocks/GetPlayerInfo.json"))
             {
                 string playerJson = reader.ReadToEnd();
-                var a = JsonConvert.DeserializeObject<PlayerData>(playerJson);
+
                 return JsonConvert.DeserializeObject<PlayerData>(playerJson);
             }
         }
