@@ -87,6 +87,11 @@ namespace RicoClient.Scripts.User
             _userStorage.Decks = data.Decks;
         }
 
+        public void RefillBalance(int value)
+        {
+            _userStorage.BalanceValue += value;
+        }
+
         public void BuyLocalCard(int cardId, int cardCost)
         {
             _userStorage.BalanceValue -= cardCost;

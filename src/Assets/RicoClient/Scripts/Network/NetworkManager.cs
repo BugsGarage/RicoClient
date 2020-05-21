@@ -130,12 +130,39 @@ namespace RicoClient.Scripts.Network
         }
 
         /// <summary>
+        /// Get random card cost in gold
+        /// </summary>
+        /// <returns>Random card cost</returns>
+        public async UniTask<int> GetRandomCardCost()
+        {
+            return await _payController.GetRandomCardCostRequest();
+        }
+
+        /// <summary>
         /// Buy specific card for player
         /// </summary>
         /// <returns></returns>
         public async UniTask PostBuySpecificCard(int cardId)
         {
             await _payController.PostBuySpecificCardRequest(UserManager.FullAccessToken, cardId);
+        }
+
+        /// <summary>
+        /// Buy random card for player
+        /// </summary>
+        /// <returns>Bought card id</returns>
+        public async UniTask<int> PostBuyRandomCard()
+        {
+            return await _payController.PostBuyRandomCardRequest(UserManager.FullAccessToken);
+        }
+
+        /// <summary>
+        /// Buy gold for real money (mock)
+        /// </summary>
+        /// <returns>Result of operation</returns>
+        public async UniTask<bool> PostBuyGold(int value)
+        {
+            return await _payController.PostBuyGoldRequest(UserManager.FullAccessToken, value);
         }
     }
 }

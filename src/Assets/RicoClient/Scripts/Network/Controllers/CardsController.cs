@@ -22,7 +22,7 @@ namespace RicoClient.Scripts.Network.Controllers
             _cardsServerUrl = configuration.CardsServerURL;
         }
 
-        public async UniTask<List<Card>> GetAllCardsRequest(string accessToken)
+        public async UniTask<List<Card>> GetAllCardsRequest(string access_token)  // access token надо?
         {
             // ToDo: Real request code
             return GetAllCardsRequestMock();

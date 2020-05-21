@@ -21,19 +21,19 @@ namespace RicoClient.Scripts.Network.Controllers
             _playerServerUrl = configuration.PlayerServerURL;
         }
 
-        public async UniTask<PlayerData> GetPlayerInfoRequest(string accessToken)
+        public async UniTask<PlayerData> GetPlayerInfoRequest(string access_token)
         {
             // ToDo: Real request code
             return GetPlayerInfoRequestMock();
         }
 
-        public async UniTask<Deck> GetDeckByIdRequest(string accessToken, uint deckId)
+        public async UniTask<Deck> GetDeckByIdRequest(string access_token, uint deckId)
         {
             // ToDo: Real request code
             return GetDeckByIdRequestMock();
         }
 
-        public async UniTask<uint> PostNewDeckRequest(string accessToken, ConfirmDeck data)
+        public async UniTask<uint> PostNewDeckRequest(string access_token, ConfirmDeck data)
         {
             string deckJson = JsonConvert.SerializeObject(data);
 
@@ -42,14 +42,14 @@ namespace RicoClient.Scripts.Network.Controllers
             return 0;
         }
 
-        public async UniTask PatchDeckByIdRequest(string accessToken, uint deckId, ConfirmDeck data)
+        public async UniTask PatchDeckByIdRequest(string access_token, uint deckId, ConfirmDeck data)
         {
             string deckJson = JsonConvert.SerializeObject(data);
 
             // ToDo: Request code
         }
 
-        public async UniTask DeleteDeckByIdRequest(string accessToken, uint deckId)
+        public async UniTask DeleteDeckByIdRequest(string access_token, uint deckId)
         {
             // ToDo: Request code
         }

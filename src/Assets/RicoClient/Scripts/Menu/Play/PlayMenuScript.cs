@@ -15,6 +15,8 @@ namespace RicoClient.Scripts.Menu.Play
         [SerializeField]
         private CollectionMenuScript _collectionMenu = null;
 
+
+
         public async void OnCollectionClick()
         {
             gameObject.SetActive(false);
