@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RicoClient.Configs;
 using RicoClient.Scripts.Exceptions;
 using RicoClient.Scripts.User.Storage;
 using RicoClient.Scripts.Utils;
@@ -18,22 +19,26 @@ namespace RicoClient.Scripts.Network.Controllers
     public class AuthController
     {
         private const string code_challenge_method = "S256";
-        
+
         private readonly string _authorizationEndpoint;
         private readonly string _tokenEndpoint;
 
         private readonly string _clientId;
         private readonly string _clientSecret;
 
+        private readonly string[] _scopes;
+
         private readonly int _authorizationTimeoutSeconds;
 
-        public AuthController(AppConfig configuration)
+        public AuthController(AuthorizationConfig configuration)
         {
             _authorizationEndpoint = configuration.AuthorizationEndpoint;
             _tokenEndpoint = configuration.TokenEndpoint;
 
             _clientId = configuration.ClientId;
             _clientSecret = configuration.ClientSecret;
+
+            _scopes = configuration.Scopes;
 
             _authorizationTimeoutSeconds = configuration.AuthorizationTimeoutSeconds;
         }
@@ -62,6 +67,49 @@ namespace RicoClient.Scripts.Network.Controllers
         }
 
         /// <summary>
+        /// Making a refresh code request
+        /// </summary>
+        /// <param name="refresh_token"></param>
+        /// <returns>User tokens</returns>
+        public async UniTask<TokenInfo> RefreshTokenRequest(string refresh_token)
+        {
+            // Build request for token
+            string tokenRequestBody = string.Format("refresh_token={0}&client_id={1}&client_secret={2}&scope=&grant_type=refresh_token",
+                refresh_token,
+                _clientId,
+                _clientSecret
+            );
+
+            // Send the request
+            using (UnityWebRequest tokenRequest = new UnityWebRequest(_tokenEndpoint, "POST"))
+            {
+                byte[] byteBody = Encoding.ASCII.GetBytes(tokenRequestBody);
+                tokenRequest.uploadHandler = new UploadHandlerRaw(byteBody);
+                tokenRequest.uploadHandler.contentType = "application/x-www-form-urlencoded";
+                tokenRequest.downloadHandler = new DownloadHandlerBuffer();
+
+                await tokenRequest.SendWebRequest();
+
+                if (tokenRequest.isNetworkError || tokenRequest.isHttpError)
+                    throw new OAuthException($"Error during getting refreshed tokens: {tokenRequest.error}. Restart app please!");
+                else
+                {
+                    Debug.Log("Recieved refreshed tokens");
+
+                    Dictionary<string, string> tokenEndpointDecoded = JsonConvert.DeserializeObject<Dictionary<string, string>>(tokenRequest.downloadHandler.text);
+
+                    return new TokenInfo()
+                    {
+                        TokenType = tokenEndpointDecoded["token_type"],
+                        AccessToken = tokenEndpointDecoded["access_token"],
+                        ExpiresIn = int.Parse(tokenEndpointDecoded["expires_in"]),
+                        RefreshToken = tokenEndpointDecoded["refresh_token"]
+                    };
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets authorization code from server
         /// </summary>
         /// <param name="redirectURI"></param>
@@ -70,10 +118,19 @@ namespace RicoClient.Scripts.Network.Controllers
         /// <returns>Authorization code</returns>
         private async UniTask<string> GetAuthorizationCode(string redirectURI, string state, string code_challenge)
         {
+            string scopesString = "";
+            for (int i = 0; i < _scopes.Length; i++)
+            {
+                scopesString += _scopes[i];
+                if (i != _scopes.Length - 1)
+                    scopesString += "%20";
+            }
+
             // Creates the OAuth 2.0 authorization request
-            string authorizationRequest = string.Format("{0}?response_type=code&scope=openid%20profile%20api1%20offline_access&" +
-                "redirect_uri={1}&client_id={2}&state={3}&code_challenge={4}&code_challenge_method={5}",
+            string authorizationRequest = string.Format("{0}?response_type=code&scope={1}&redirect_uri={2}&" +
+                "client_id={3}&state={4}&code_challenge={5}&code_challenge_method={6}",
                 _authorizationEndpoint,
+                scopesString,
                 Uri.EscapeDataString(redirectURI),
                 _clientId,
                 state,
@@ -94,18 +151,18 @@ namespace RicoClient.Scripts.Network.Controllers
             // Checks for errors
             string errors = queryString.Get("error");
             if (errors != null)
-                throw new OAuthException($"Authorization error: {errors}.");
+                throw new OAuthException($"Authorization error: {errors}. Restart app please!");
 
             // Extracts the code
             string code = queryString.Get("code");
             string incoming_state = queryString.Get("state");
             if (code == null || incoming_state == null)
-                throw new OAuthException($"Malformed authorization response: {queryString}.");
+                throw new OAuthException($"Malformed authorization response: {queryString}. Restart app please!");
 
             // Compares the receieved state to the expected value, to ensure that
             // this app made the request which resulted in authorization
             if (incoming_state != state)
-                throw new OAuthException($"Received request with invalid state ({incoming_state}).");
+                throw new OAuthException($"Received request with invalid state ({incoming_state}). Restart app please!");
 
             return code;
         }
@@ -161,10 +218,7 @@ namespace RicoClient.Scripts.Network.Controllers
 
             using (var responseOutput = response.OutputStream)
             {
-                await UniTask.Run(() =>
-                {
-                    responseOutput.Write(buffer, 0, buffer.Length);
-                });
+                await responseOutput.WriteAsync(buffer, 0, buffer.Length);
             }
         }
 
@@ -199,7 +253,7 @@ namespace RicoClient.Scripts.Network.Controllers
                 await tokenRequest.SendWebRequest();
 
                 if (tokenRequest.isNetworkError || tokenRequest.isHttpError)
-                    throw new OAuthException($"Error during authorization: {tokenRequest.error}.");
+                    throw new OAuthException($"Error during authorization: {tokenRequest.error}. Restart app please!");
                 else
                 {
                     Debug.Log("Recieved tokens");

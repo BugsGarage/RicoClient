@@ -12,8 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86cfd966b7daf30419141aee2065eb35, type: 3}
   m_Name: AppConfig
   m_EditorClassIdentifier: 
-  _authServerURL: http://localhost:5000/
+  _authServerURL: http://auth.bl9.ru/
   _authorizationEndpoint: connect/authorize
   _tokenEndpoint: connect/token
   _clientId: client
   _clientSecret: secret_client
+  _scopes:
+  - openid
+  - profile
+  - offline_access
+  - card_api
+  - shop_api
+  - payment_api
+  - player_api
+  - game_api
+  _authorizationTimeoutSeconds: 300
+  _cardsServerURL: http://localhost:5100/
+  _playerServerURL: http://localhost:5100/
+  _shopServerURL: http://localhost:5100/
+  _paymentServerURL: http://localhost:5100/
+  _gameServerURL: http://localhost:5100/

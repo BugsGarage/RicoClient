@@ -1,0 +1,305 @@
+﻿[
+  {
+    "card_id": 1,
+    "name": "Recruit",
+    "rarity": "Common",
+    "type": "Unit",
+    "properties": {
+      "health": 2,
+      "attack": 2,
+      "initiative": 1,
+      "resources": 0
+    },
+    "cost": 1,
+    "ability": null,
+    "gold_cost": 10
+  },
+  {
+    "card_id": 2,
+    "name": "Mage Beginner",
+    "rarity": "Common",
+    "type": "Unit",
+    "properties": {
+      "health": 3,
+      "attack": 2,
+      "initiative": 1,
+      "resources": 0
+    },
+    "cost": 2,
+    "ability": {
+      "type": "Damage",
+      "activation": "Warcry",
+      "attack": 0,
+      "health": 1,
+      "target": 6,
+      "target_type": 7,
+      "targetness": "Pick",
+      "target_count": 1
+    },
+    "gold_cost": 10
+  },
+  {
+    "card_id": 3,
+    "name": "Colonel",
+    "rarity": "Rare",
+    "type": "Unit",
+    "properties": {
+      "health": 3,
+      "attack": 1,
+      "initiative": 2,
+      "resources": 0
+    },
+    "cost": 2,
+    "ability": {
+      "type": "Buff",
+      "activation": "Warcry",
+      "attack": 1,
+      "health": 0,
+      "target": "Ally",
+      "target_type": "Unit",
+      "targetness": "Pick",
+      "target_count": 1
+    },
+    "gold_cost": 20
+  },
+  {
+    "card_id": 4,
+    "name": "Golem-Protector",
+    "rarity": "Common",
+    "type": "Unit",
+    "properties": {
+      "health": 5,
+      "attack": 1,
+      "initiative": 1,
+      "resources": 0
+    },
+    "cost": 3,
+    "ability": {
+      "type": "None",
+      "activation": "None",
+      "attack": 0,
+      "health": 0,
+      "target": "None",
+      "target_type": "None",
+      "targetness": "None",
+      "target_count": 0
+    },
+    "gold_cost": 10
+  },
+  {
+    "card_id": 5,
+    "name": "Worker",
+    "rarity": "Common",
+    "type": "Unit",
+    "properties": {
+      "health": 1,
+      "attack": 1,
+      "initiative": 1,
+      "resources": 0
+    },
+    "cost": 1,
+    "ability": {
+      "type": "Heal",
+      "activation": "Warcry",
+      "attack": 0,
+      "health": 4,
+      "target": "Ally",
+      "target_type": 6,
+      "targetness": "Pick",
+      "target_count": 1
+    },
+    "gold_cost": 10
+  },
+  {
+    "card_id": 6,
+    "name": "Defense Mage",
+    "rarity": "Rare",
+    "type": "Unit",
+    "properties": {
+      "health": 1,
+      "attack": 2,
+      "initiative": 2,
+      "resources": 0
+    },
+    "cost": 4,
+    "ability": {
+      "type": "Buff",
+      "activation": "Warcry",
+      "attack": 0,
+      "health": 3,
+      "target": "Ally",
+      "target_type": 3,
+      "targetness": "Pick",
+      "target_count": 1
+    },
+    "gold_cost": 20
+  },
+  {
+    "card_id": 7,
+    "name": "Healer",
+    "rarity": "Common",
+    "type": "Unit",
+    "properties": {
+      "health": 2,
+      "attack": 1,
+      "initiative": 1,
+      "resources": 0
+    },
+    "cost": 3,
+    "ability": {
+      "type": "Heal",
+      "activation": "Warcry",
+      "attack": 0,
+      "health": 2,
+      "target": "Ally",
+      "target_type": "Unit",
+      "targetness": "Pick",
+      "target_count": 1
+    },
+    "gold_cost": 10
+  },
+  {
+    "card_id": 8,
+    "name": "Mine",
+    "rarity": "Common",
+    "type": "Building",
+    "properties": {
+      "health": 6,
+      "attack": 0,
+      "initiative": 0,
+      "resources": 2
+    },
+    "cost": 1,
+    "ability": {
+      "type": "None",
+      "activation": "None",
+      "attack": 0,
+      "health": 0,
+      "target": "None",
+      "target_type": "None",
+      "targetness": "None",
+      "target_count": 0
+    },
+    "gold_cost": 10
+  },
+  {
+    "card_id": 9,
+    "name": "Factory",
+    "rarity": "Rare",
+    "type": "Building",
+    "properties": {
+      "health": 12,
+      "attack": 0,
+      "initiative": 0,
+      "resources": 4
+    },
+    "cost": 5,
+    "ability": {
+      "type": "None",
+      "activation": "None",
+      "attack": 0,
+      "health": 0,
+      "target": "None",
+      "target_type": "None",
+      "targetness": "None",
+      "target_count": 0
+    },
+    "gold_cost": 20
+  },
+  {
+    "card_id": 10,
+    "name": "Wall",
+    "rarity": "Common",
+    "type": "Building",
+    "properties": {
+      "health": 5,
+      "attack": 0,
+      "initiative": 0,
+      "resources": 0
+    },
+    "cost": 5,
+    "ability": {
+      "type": "None",
+      "activation": "None",
+      "attack": 0,
+      "health": 0,
+      "target": "None",
+      "target_type": "None",
+      "targetness": "None",
+      "target_count": 0
+    },
+    "gold_cost": 10
+  },
+  {
+    "card_id": 11,
+    "name": "Hailstorm",
+    "rarity": "Common",
+    "type": "Spell",
+    "properties": {
+      "health": 0,
+      "attack": 0,
+      "initiative": 0,
+      "resources": 0
+    },
+    "cost": 5,
+    "ability": {
+      "type": "Damage",
+      "activation": "Warcry",
+      "attack": 0,
+      "health": 2,
+      "target": "Enemy",
+      "target_type": 7,
+      "targetness": "Pick",
+      "target_count": -1
+    },
+    "gold_cost": 10
+  },
+  {
+    "card_id": 12,
+    "name": "Fire shot",
+    "rarity": "Common",
+    "type": "Spell",
+    "properties": {
+      "health": 0,
+      "attack": 0,
+      "initiative": 0,
+      "resources": 0
+    },
+    "cost": 1,
+    "ability": {
+      "type": "Damage",
+      "activation": "Warcry",
+      "attack": 0,
+      "health": 2,
+      "target": "Enemy",
+      "target_type": 7,
+      "targetness": "Pick",
+      "target_count": 1
+    },
+    "gold_cost": 10
+  },
+  {
+    "card_id": 13,
+    "name": "Storm",
+    "rarity": "Rare",
+    "type": "Spell",
+    "properties": {
+      "health": 0,
+      "attack": 0,
+      "initiative": 0,
+      "resources": 0
+    },
+    "cost": 3,
+    "ability": {
+      "type": "Damage",
+      "activation": "Warcry",
+      "attack": 0,
+      "health": 2,
+      "target": 6,
+      "target_type": 7,
+      "targetness": "Pick",
+      "target_count": -1
+    },
+    "gold_cost": 20
+  }
+]

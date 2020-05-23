@@ -1,0 +1,28 @@
+﻿{
+  "player_id": 1,
+  "name": "Aaa",
+  "balance": 200,
+  "available_cards": {
+    "1": "2",
+    "2": "1",
+    "4": "2",
+    "5": "1",
+    "7": "1",
+    "8": "2",
+    "9": "2",
+    "11": "2",
+    "12": "1"
+  },
+  "decks": [
+    {
+      "deck_id": 2,
+      "deck_name": "Best deck",
+      "cards_count": 3
+    },
+    {
+      "deck_id": 4,
+      "deck_name": "Test1",
+      "cards_count": 5
+    }
+  ]
+  }

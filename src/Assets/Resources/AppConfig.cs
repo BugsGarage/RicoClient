@@ -7,7 +7,10 @@ namespace RicoClient
     [CreateAssetMenu]
     public class AppConfig : ScriptableObject
     {
+        #region Authorization Configuration
+
         [Header("Authorization Configuration")]
+
         [SerializeField]
         private string _authServerURL = null;
         [SerializeField]
@@ -21,6 +24,9 @@ namespace RicoClient
         private string _clientSecret = null;
 
         [SerializeField]
+        private string[] _scopes = null;
+
+        [SerializeField]
         [Tooltip("How long keep context for authorization code answer")]
         private int _authorizationTimeoutSeconds = 300;
 
@@ -31,6 +37,57 @@ namespace RicoClient
         public string ClientId { get { return _clientId; } }
         public string ClientSecret { get { return _clientSecret; } }
 
+        public string[] Scopes { get { return _scopes; } }
+
         public int AuthorizationTimeoutSeconds { get { return _authorizationTimeoutSeconds; } }
+
+        #endregion
+
+        #region Cards Configuration
+
+        [Header("Cards Configuration")]
+
+        [SerializeField]
+        private string _cardsServerURL = null;
+
+        public string CardsServerURL { get { return _cardsServerURL; } }
+
+        #endregion
+
+        #region Player Configuration
+
+        [Header("Player Configuration")]
+
+        [SerializeField]
+        private string _playerServerURL = null;
+
+        public string PlayerServerURL { get { return _playerServerURL; } }
+
+        #endregion
+
+        #region Shop and Payment Configuration
+
+        [Header("Shop and Payment Configuration")]
+
+        [SerializeField]
+        private string _shopServerURL = null;
+        [SerializeField]
+        private string _paymentServerURL = null;
+
+        public string ShopServerURL { get { return _shopServerURL; } }
+        public string PaymentServerURL { get { return _paymentServerURL; } }
+
+        #endregion
+
+        #region Game Configuration
+
+        [Header("Game Configuration")]
+
+        [SerializeField]
+        private string _gameServerURL = null;
+
+        public string GameServerURL { get { return _gameServerURL; } }
+
+        #endregion
     }
 }
