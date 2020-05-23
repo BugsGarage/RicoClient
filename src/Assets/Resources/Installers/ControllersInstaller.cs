@@ -1,4 +1,3 @@
-using RicoClient.Configs;
 using RicoClient.Scripts.Network.Controllers;
 using Zenject;
 
@@ -15,6 +14,7 @@ namespace RicoClient.Installers
             Container.Bind<CardsController>().AsSingle().NonLazy();
             Container.Bind<PlayerController>().AsSingle().NonLazy();
             Container.Bind<PayController>().AsSingle().NonLazy();
+            Container.Bind<GameController>().AsSingle().NonLazy();
         }
     }
 }
