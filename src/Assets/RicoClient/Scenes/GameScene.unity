@@ -244,7 +244,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 84456784}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -505,7 +505,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 317277738}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -2008,6 +2008,8 @@ MonoBehaviour:
   _enemyHand: {fileID: 70154223}
   _myBoard: {fileID: 817560019}
   _enemyBoard: {fileID: 512553702}
+  _myBase: {fileID: 8630437016451559688}
+  _enemyBase: {fileID: 1714319483}
 --- !u!4 &1123590989
 Transform:
   m_ObjectHideFlags: 0
@@ -2683,6 +2685,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8630437017192516638, guid: de229ef40525a1d46960e00fdbb390fa, type: 3}
   m_PrefabInstance: {fileID: 1714319481}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1714319483 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3713896779641288535, guid: de229ef40525a1d46960e00fdbb390fa, type: 3}
+  m_PrefabInstance: {fileID: 1714319481}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3de83f56aa2da6b4695f23744d3116c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1730342778
 GameObject:
   m_ObjectHideFlags: 0
@@ -3110,3 +3123,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de229ef40525a1d46960e00fdbb390fa, type: 3}
+--- !u!114 &8630437016451559688 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3713896779641288535, guid: de229ef40525a1d46960e00fdbb390fa, type: 3}
+  m_PrefabInstance: {fileID: 8630437016451559687}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3de83f56aa2da6b4695f23744d3116c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

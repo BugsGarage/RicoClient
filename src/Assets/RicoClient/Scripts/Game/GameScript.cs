@@ -2,6 +2,8 @@
 using RicoClient.Scripts.Cards.Entities;
 using RicoClient.Scripts.Decks;
 using RicoClient.Scripts.Exceptions;
+using RicoClient.Scripts.Game.CardLogic;
+using RicoClient.Scripts.Game.CardLogic.BoardLogic;
 using RicoClient.Scripts.Game.CardLogic.CurrentLogic;
 using RicoClient.Scripts.Game.CardLogic.HandLogic;
 using RicoClient.Scripts.Game.InGameDeck;
@@ -65,6 +67,12 @@ namespace RicoClient.Scripts.Game
         [SerializeField]
         private BoardScript _enemyBoard = null;
 
+        [Header("Bases")]
+        [SerializeField]
+        private BaseBuildingScript _myBase = null;
+        [SerializeField]
+        private BaseBuildingScript _enemyBase = null;
+
         public GameState State { get; private set; }
 
         // temp
@@ -86,6 +94,8 @@ namespace RicoClient.Scripts.Game
             MyHandCardLogic.OnCardSelected += CardSelected;
             MyCurrentCardLogic.OnCardReturnedToHand += CardDeselected;
             MyCurrentCardLogic.OnCardDroppedToBoard += CardDropped;
+            MyBoardCardLogic.OnCardPrepAttack += CardTakenToAttack;
+            MyBoardCardLogic.OnCardUnprepAttack += CardReleasedToAttack;
 
             // Also temp
             _cards.UpdateLocalCards();
@@ -139,6 +149,8 @@ namespace RicoClient.Scripts.Game
             MyHandCardLogic.OnCardSelected -= CardSelected;
             MyCurrentCardLogic.OnCardReturnedToHand -= CardDeselected;
             MyCurrentCardLogic.OnCardDroppedToBoard -= CardDropped;
+            MyBoardCardLogic.OnCardPrepAttack -= CardTakenToAttack;
+            MyBoardCardLogic.OnCardUnprepAttack -= CardReleasedToAttack;
         }
 
         public void MyTurnStart()
@@ -191,6 +203,30 @@ namespace RicoClient.Scripts.Game
             _myBoard.RemoveHighlight();
             Destroy(inHandHolder);
             _myHand.EnableHand();
+        }
+
+        private void CardTakenToAttack(UnitCardScript unit)
+        {
+            foreach (var enemy in _enemyBoard.OnBoardCards)
+            {
+                BaseCardScript enemyCard = enemy.GetComponentInChildren<BaseCardScript>();
+                EnemyBoardCardLogic cardLogic = (EnemyBoardCardLogic) enemyCard.Logic;
+                cardLogic.HighlightCard();
+            }
+
+            _enemyBase.Highlight();
+        }
+
+        private void CardReleasedToAttack(UnitCardScript unit)
+        {
+            foreach (var enemy in _enemyBoard.OnBoardCards)
+            {
+                BaseCardScript enemyCard = enemy.GetComponentInChildren<BaseCardScript>();
+                EnemyBoardCardLogic cardLogic = (EnemyBoardCardLogic) enemyCard.Logic;
+                cardLogic.UnhighlightCard();
+            }
+
+            _enemyBase.Unhighlight();
         }
 
         private BaseCardScript ConvertCardToScript(Card card)

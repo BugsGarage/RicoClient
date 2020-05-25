@@ -12,6 +12,7 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
     public class MyBoardCardLogic : BaseBoardLogic
     {
         public static event Action<UnitCardScript> OnCardPrepAttack;
+        public static event Action<UnitCardScript> OnCardUnprepAttack;
 
         private bool _canAttack;
 
@@ -47,6 +48,8 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
         public override void OnEndDrag()
         {
             _aimLine.gameObject.SetActive(false);
+
+            OnCardUnprepAttack?.Invoke((UnitCardScript) CardScript);
         }
 
         public override void OnEnter()

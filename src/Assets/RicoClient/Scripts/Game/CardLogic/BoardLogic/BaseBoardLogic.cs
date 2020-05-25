@@ -19,5 +19,15 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
             _aimLine = aimLine;
             _highlightImage = card.transform.parent.GetComponent<Image>();
         }
+
+        public void HighlightCard()
+        {
+            _highlightImage.enabled = true;
+        }
+
+        public void UnhighlightCard()
+        {
+            _highlightImage.enabled = false;
+        }
     }
 }

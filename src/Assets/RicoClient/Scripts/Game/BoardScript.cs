@@ -21,14 +21,14 @@ namespace RicoClient.Scripts.Game
         [SerializeField]
         private LineRenderer _aimLine = null;
 
+        public List<GameObject> OnBoardCards { get; private set; }
+
         private RectTransform _rectTransform;
         private Image _areaImage;
 
         private BaseCardScript _currentSelectedCard;
         private GameObject _currentSelectedCardHolder;
         private BaseCardScript _selectedCardPreview;
-
-        private List<GameObject> _onBoardCards;
 
         private bool _isPointerOver;
 
@@ -37,7 +37,7 @@ namespace RicoClient.Scripts.Game
             _rectTransform = GetComponent<RectTransform>();
             _areaImage = GetComponent<Image>();
 
-            _onBoardCards = new List<GameObject>();
+            OnBoardCards = new List<GameObject>();
             _isPointerOver = false;
         }
 
@@ -51,7 +51,7 @@ namespace RicoClient.Scripts.Game
 
         protected void OnDestroy()
         {
-            foreach (var onBoardCard in _onBoardCards)
+            foreach (var onBoardCard in OnBoardCards)
             {
                 Destroy(onBoardCard);
             }
@@ -59,7 +59,7 @@ namespace RicoClient.Scripts.Game
 
         public void HighlightAreaWith(BaseCardScript selectedCard)
         {
-            if (_onBoardCards.Count < MaxOnBoardCardsCount)
+            if (OnBoardCards.Count < MaxOnBoardCardsCount)
             {
                 _areaImage.enabled = true;
                 _currentSelectedCard = selectedCard;
@@ -77,7 +77,7 @@ namespace RicoClient.Scripts.Game
             PlaceCardOnBoard(card, cardHolder);
             card.PlaceOnBoard(_aimLine, false);
 
-            _onBoardCards.Add(cardHolder);
+            OnBoardCards.Add(cardHolder);
         }
 
         public void OnDrop(PointerEventData eventData)
@@ -92,7 +92,7 @@ namespace RicoClient.Scripts.Game
 
                 Destroy(_currentSelectedCard.gameObject);
 
-                _onBoardCards.Insert(_currentSelectedCardHolder.transform.GetSiblingIndex(), _currentSelectedCardHolder);
+                OnBoardCards.Insert(_currentSelectedCardHolder.transform.GetSiblingIndex(), _currentSelectedCardHolder);
 
                 _currentSelectedCardHolder = null;
                 _isPointerOver = false;
@@ -148,19 +148,19 @@ namespace RicoClient.Scripts.Game
             }
 
             RectTransformUtility.ScreenPointToLocalPointInRectangle(_rectTransform, boardResult.screenPosition, Camera.main, out Vector2 localPoint);
-            for (int i = 0; i < _onBoardCards.Count; i++)
+            for (int i = 0; i < OnBoardCards.Count; i++)
             {
-                if (i == 0 && localPoint.x < _onBoardCards[i].transform.localPosition.x)
+                if (i == 0 && localPoint.x < OnBoardCards[i].transform.localPosition.x)
                 {
                     _currentSelectedCardHolder.transform.SetAsFirstSibling();
                     break;
                 }
-                else if (localPoint.x <= _onBoardCards[i].transform.localPosition.x && localPoint.x > _onBoardCards[i - 1].transform.localPosition.x)
+                else if (localPoint.x <= OnBoardCards[i].transform.localPosition.x && localPoint.x > OnBoardCards[i - 1].transform.localPosition.x)
                 {
                     _currentSelectedCardHolder.transform.SetSiblingIndex(i);
                     break;
                 }
-                else if (i == _onBoardCards.Count - 1 && localPoint.x > _onBoardCards[i].transform.localPosition.x)
+                else if (i == OnBoardCards.Count - 1 && localPoint.x > OnBoardCards[i].transform.localPosition.x)
                 {
                     _currentSelectedCardHolder.transform.SetAsLastSibling();
                     break;
