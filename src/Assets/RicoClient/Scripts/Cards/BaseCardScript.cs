@@ -1,5 +1,9 @@
 ﻿using RicoClient.Scripts.Cards.Entities;
+using RicoClient.Scripts.Exceptions;
 using RicoClient.Scripts.Game.CardLogic;
+using RicoClient.Scripts.Game.CardLogic.BoardLogic;
+using RicoClient.Scripts.Game.CardLogic.CurrentLogic;
+using RicoClient.Scripts.Game.CardLogic.HandLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,8 +33,7 @@ namespace RicoClient.Scripts.Cards
         [SerializeField]
         protected TMP_Text _description = null;
 
-        protected BaseLogic _logic { get; private set; }
-
+        public BaseLogic Logic { get; private set; }
         public int CardId { get; private set; }
 
         public void SetActive(bool active)
@@ -52,12 +55,27 @@ namespace RicoClient.Scripts.Cards
 
         public void PlaceInHand()
         {
-            _logic = new MyHandCardLogic(this);
+            // null or CurrentLogic
+
+            Logic = new MyHandCardLogic(this);
         }
 
         public void Select(Transform parent)
         {
-            _logic = new MyCurrentCardLogic(this, parent);
+            Logic = new MyCurrentCardLogic(this, parent);
+        }
+
+        public void PlaceOnBoard()
+        {
+            Logic.CardDropped();
+
+            Logic = new MyBoardCardLogic(this);
+        }
+
+        public void Copy(BaseCardScript otherCard)
+        {
+            CardId = otherCard.CardId;
+            Logic = otherCard.Logic;
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -65,45 +83,45 @@ namespace RicoClient.Scripts.Cards
             if (eventData.button == PointerEventData.InputButton.Right)
             {
                 OnCardRightClick?.Invoke(this);
-                if (_logic != null)
-                    _logic.OnRightClick();
+                if (Logic != null)
+                    Logic.OnRightClick();
             }
             else if (eventData.button == PointerEventData.InputButton.Left)
             {
                 OnCardLeftClick?.Invoke(this);
-                if (_logic != null)
-                    _logic.OnLeftClick();
+                if (Logic != null)
+                    Logic.OnLeftClick();
             }
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (_logic != null)
-                _logic.OnEnter();
+            if (Logic != null)
+                Logic.OnEnter();
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (_logic != null)
-                _logic.OnExit();
+            if (Logic != null)
+                Logic.OnExit();
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (_logic != null)
-                _logic.OnBeginDrag();
+            if (Logic != null)
+                Logic.OnBeginDrag();
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            if (_logic != null)
-                _logic.OnEndDrag();
+            if (Logic != null)
+                Logic.OnEndDrag();
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (_logic != null)
-                _logic.OnDrag(eventData.delta);
+            if (Logic != null)
+                Logic.OnDrag(eventData.delta);
         }
     }
 }

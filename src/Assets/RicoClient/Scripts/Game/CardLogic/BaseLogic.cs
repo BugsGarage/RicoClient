@@ -59,5 +59,10 @@ namespace RicoClient.Scripts.Game.CardLogic
         {
             Debug.Log("Default drag action");
         }
+
+        public virtual void CardDropped()
+        {
+            Debug.Log("Default dropped");
+        }
     }
 }

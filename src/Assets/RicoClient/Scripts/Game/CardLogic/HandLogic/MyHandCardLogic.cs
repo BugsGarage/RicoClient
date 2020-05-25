@@ -2,9 +2,9 @@
 using System;
 using UnityEngine;
 
-namespace RicoClient.Scripts.Game.CardLogic
+namespace RicoClient.Scripts.Game.CardLogic.HandLogic
 {
-    public class MyHandCardLogic : BaseLogic
+    public class MyHandCardLogic : BaseHandLogic
     {
         public static event Action<BaseCardScript> OnCardSelected;
 
@@ -12,12 +12,8 @@ namespace RicoClient.Scripts.Game.CardLogic
         private const float HighlightYShift = 160;
         private const int SortOrder = 1;
 
-        private Canvas _cardCanvas;
-
         public MyHandCardLogic(BaseCardScript card) : base(card)
         {
-            _cardCanvas = _card.GetComponent<Canvas>();
-
             // Clear everything in case after MyCurrentCardLogic
             OnExit();
         }
@@ -42,6 +38,7 @@ namespace RicoClient.Scripts.Game.CardLogic
         public override void OnBeginDrag()
         {
             _canvasGroup.blocksRaycasts = false;
+            _cardCanvas.overrideSorting = false;
 
             OnCardSelected?.Invoke(CardScript);
         }

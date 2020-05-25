@@ -1,7 +1,11 @@
 ﻿using RicoClient.Scripts.Cards;
 using RicoClient.Scripts.Cards.Entities;
-using RicoClient.Scripts.Game.CardLogic;
+using RicoClient.Scripts.Decks;
+using RicoClient.Scripts.Exceptions;
+using RicoClient.Scripts.Game.CardLogic.CurrentLogic;
+using RicoClient.Scripts.Game.CardLogic.HandLogic;
 using RicoClient.Scripts.Game.InGameDeck;
+using RicoClient.Scripts.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +16,23 @@ using Zenject;
 
 namespace RicoClient.Scripts.Game
 {
+    public enum GameState
+    {
+        Start,
+        MyTurnStart,
+        MyBattle,
+        MyTurnEnd,
+        EnemyTurnStart,
+        EnemyBattle,
+        EnemyTurnEnd,
+        Finished
+    }
+
     public class GameScript : MonoBehaviour
     {
-        private GameManager _game;
+        private NetworkManager _network;
+        private CardsManager _cards;
+        private DeckManager _deck;
 
         [SerializeField]
         private GameObject _screenOverlayCanvas = null;
@@ -47,42 +65,62 @@ namespace RicoClient.Scripts.Game
         [SerializeField]
         private BoardScript _enemyBoard = null;
 
+        public GameState State { get; private set; }
+
+        // temp
+        private Deck PlayerDeck;
+        private int PlayerDeckInitSize;
+        private int EnemyDeckInitSize;
+        private int _collectedTurnStartCardsCount = 1;
+        private int _gameStartCardsCount = 3;
+
         [Inject]
-        public void Initialize(GameManager game)
+        public void Initialize(NetworkManager network, CardsManager cards, DeckManager deck)
         {
-            _game = game;
+            _network = network;
+            _cards = cards;
+            _deck = deck;
+
+            State = GameState.Finished;
 
             MyHandCardLogic.OnCardSelected += CardSelected;
-            MyCurrentCardLogic.CardReturnedToHand += CardDeselected;
+            MyCurrentCardLogic.OnCardReturnedToHand += CardDeselected;
+            MyCurrentCardLogic.OnCardDroppedToBoard += CardDropped;
+
+            // Also temp
+            _cards.UpdateLocalCards();
         }
 
         protected async void Start()
         {
-            await _game.StartGame();
+            if (State != GameState.Finished)
+                throw new GameCoreException("Not finished previous game!");
 
-            _myDeck.SetDeck(_game.PlayerDeckInitSize);
-            _enemyDeck.SetDeck(_game.EnemyDeckInitSize);
+            // Not sure how to start so let it be that way for now
+            PlayerDeck = await _deck.DeckById(4);
+            PlayerDeckInitSize = PlayerDeck.CardsCount;
+            EnemyDeckInitSize = 10;
 
-            TurnStart();
-        }
+            State = GameState.Start;
 
-        protected void OnDestroy()
-        {
-            MyHandCardLogic.OnCardSelected -= CardSelected;
-            MyCurrentCardLogic.CardReturnedToHand -= CardDeselected;
-        }
+            _myDeck.SetDeck(PlayerDeckInitSize);
+            _enemyDeck.SetDeck(EnemyDeckInitSize);
 
-        public void TurnStart()
-        {
-            var collectedCards = _game.TurnStart();
-            foreach (var collectedCard in collectedCards)
+            List<Card> gameStartCards = new List<Card>(_gameStartCardsCount);
+            for (int i = 0; i < _gameStartCardsCount; i++)
+            {
+                // This is temp too
+                gameStartCards.Add(GetRandomCardFromDeckMock());
+            }
+
+            foreach (var startCard in gameStartCards)
             {
                 _myDeck.TakeCard();
-                var convertedCard = ConvertCardToScript(collectedCard);
+                var convertedCard = ConvertCardToScript(startCard);
                 _myHand.AddRevealedCardInHand(convertedCard);
             }
 
-            int collectedCardsByEnemy = _game.TurnStartEnemy();
+            int collectedCardsByEnemy = _gameStartCardsCount;
             for (int i = 0; i < collectedCardsByEnemy; i++)
             {
                 _enemyDeck.TakeCard();
@@ -90,12 +128,38 @@ namespace RicoClient.Scripts.Game
                 _enemyHand.AddHiddenCardInHand(hiddenCard);
             }
 
-            PreparingPhase();
+            MyTurnStart();
         }
 
-        public void PreparingPhase()
+        protected void OnDestroy()
         {
-            _game.Preparing();
+            MyHandCardLogic.OnCardSelected -= CardSelected;
+            MyCurrentCardLogic.OnCardReturnedToHand -= CardDeselected;
+            MyCurrentCardLogic.OnCardDroppedToBoard -= CardDropped;
+        }
+
+        public void MyTurnStart()
+        {
+            List<Card> turnCards = new List<Card>(_collectedTurnStartCardsCount);
+            for (int i = 0; i < _collectedTurnStartCardsCount; i++)
+            {
+                // This is temp too
+                turnCards.Add(GetRandomCardFromDeckMock());
+            }
+
+            foreach (var turnCard in turnCards)
+            {
+                _myDeck.TakeCard();
+                var convertedCard = ConvertCardToScript(turnCard);
+                _myHand.AddRevealedCardInHand(convertedCard);
+            }
+
+            BattlePhase();
+        }
+
+        public void BattlePhase()
+        {
+            
         }
 
         private void CardSelected(BaseCardScript card)
@@ -105,7 +169,7 @@ namespace RicoClient.Scripts.Game
 
             if (!(card is SpellCardScript))
             {
-                _myBoard.HighlightArea();
+                _myBoard.HighlightAreaWith(card);
             }
             else
             {
@@ -116,6 +180,13 @@ namespace RicoClient.Scripts.Game
         private void CardDeselected(BaseCardScript card)
         {
             _myBoard.RemoveHighlight();
+            _myHand.EnableHand();
+        }
+
+        private void CardDropped(GameObject inHandHolder)
+        {
+            _myBoard.RemoveHighlight();
+            Destroy(inHandHolder);
             _myHand.EnableHand();
         }
 
@@ -140,6 +211,13 @@ namespace RicoClient.Scripts.Game
 
             res.FillCard(card);
             return res;
+        }
+
+        // Temp mock
+        private Card GetRandomCardFromDeckMock()
+        {
+            int randomCardI = UnityEngine.Random.Range(0, PlayerDeck.DeckCards.Count);
+            return _cards.GetCardById(PlayerDeck.DeckCards.Keys.ElementAt(randomCardI));
         }
     }
 }
