@@ -16,6 +16,10 @@ namespace RicoClient.Scripts.Game
 
         [SerializeField]
         private GameObject _onBoardCardHolder = null;
+        [SerializeField]
+        private Vector2 _cardHolderOffset;
+        [SerializeField]
+        private LineRenderer _aimLine = null;
 
         private RectTransform _rectTransform;
         private Image _areaImage;
@@ -67,6 +71,15 @@ namespace RicoClient.Scripts.Game
             _areaImage.enabled = false;
         }
 
+        public void AddCardOnBoard(BaseCardScript card)
+        {
+            var cardHolder = Instantiate(_onBoardCardHolder, transform);
+            PlaceCardOnBoard(card, cardHolder);
+            card.PlaceOnBoard(_aimLine, false);
+
+            _onBoardCards.Add(cardHolder);
+        }
+
         public void OnDrop(PointerEventData eventData)
         {
             if (_areaImage.enabled)
@@ -75,7 +88,7 @@ namespace RicoClient.Scripts.Game
                 cardCanvas.alpha = 1;
                 cardCanvas.blocksRaycasts = true;
 
-                _selectedCardPreview.PlaceOnBoard();
+                _selectedCardPreview.PlaceOnBoard(_aimLine, true);
 
                 Destroy(_currentSelectedCard.gameObject);
 
@@ -96,7 +109,7 @@ namespace RicoClient.Scripts.Game
                 // Guess because moves from overlay canvas to screenspace, not googling anyway
                 _selectedCardPreview = Instantiate(_currentSelectedCard.gameObject).GetComponent<BaseCardScript>();
                 _selectedCardPreview.Copy(_currentSelectedCard);
-                PlaceCardOnBoard(_selectedCardPreview);
+                PlaceCardOnBoard(_selectedCardPreview, _currentSelectedCardHolder);
 
                 CanvasGroup cardCanvas = _selectedCardPreview.GetComponent<CanvasGroup>();
                 cardCanvas.alpha = 0.5f;
@@ -155,12 +168,12 @@ namespace RicoClient.Scripts.Game
             }
         }
 
-        private void PlaceCardOnBoard(BaseCardScript card)
+        private void PlaceCardOnBoard(BaseCardScript card, GameObject cardHolder)
         {
-            var initialSize = _currentSelectedCard.GetComponent<RectTransform>().sizeDelta;
+            var initialSize = cardHolder.GetComponent<RectTransform>().sizeDelta - _cardHolderOffset;
 
             RectTransform cardTransform = card.GetComponent<RectTransform>();
-            cardTransform.SetParent(_currentSelectedCardHolder.transform, false);
+            cardTransform.SetParent(cardHolder.transform, false);
             cardTransform.localPosition = Vector3.zero;
             cardTransform.sizeDelta = initialSize;
         }

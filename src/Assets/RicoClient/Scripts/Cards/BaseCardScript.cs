@@ -65,11 +65,14 @@ namespace RicoClient.Scripts.Cards
             Logic = new MyCurrentCardLogic(this, parent);
         }
 
-        public void PlaceOnBoard()
+        public void PlaceOnBoard(LineRenderer aimLine, bool isMine)
         {
-            Logic.CardDropped();
+            Logic?.CardDropped();
 
-            Logic = new MyBoardCardLogic(this);
+            if (isMine)
+                Logic = new MyBoardCardLogic(this, aimLine);
+            else
+                Logic = new EnemyBoardCardLogic(this, aimLine);
         }
 
         public void Copy(BaseCardScript otherCard)
@@ -109,7 +112,7 @@ namespace RicoClient.Scripts.Cards
         public void OnBeginDrag(PointerEventData eventData)
         {
             if (Logic != null)
-                Logic.OnBeginDrag();
+                Logic.OnBeginDrag(eventData);
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -121,7 +124,7 @@ namespace RicoClient.Scripts.Cards
         public void OnDrag(PointerEventData eventData)
         {
             if (Logic != null)
-                Logic.OnDrag(eventData.delta);
+                Logic.OnDrag(eventData);
         }
     }
 }

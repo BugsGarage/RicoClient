@@ -129,6 +129,9 @@ namespace RicoClient.Scripts.Game
             }
 
             MyTurnStart();
+
+            // Temp too
+            _enemyBoard.AddCardOnBoard(ConvertCardToScript(_cards.GetCardById(2)));
         }
 
         protected void OnDestroy()

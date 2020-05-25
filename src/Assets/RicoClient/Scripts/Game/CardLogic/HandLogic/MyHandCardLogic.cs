@@ -1,6 +1,7 @@
 ﻿using RicoClient.Scripts.Cards;
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace RicoClient.Scripts.Game.CardLogic.HandLogic
 {
@@ -35,7 +36,7 @@ namespace RicoClient.Scripts.Game.CardLogic.HandLogic
             _rectTransform.localPosition = Vector3.zero;
         }
 
-        public override void OnBeginDrag()
+        public override void OnBeginDrag(PointerEventData eventData)
         {
             _canvasGroup.blocksRaycasts = false;
             _cardCanvas.overrideSorting = false;

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86cfd966b7daf30419141aee2065eb35, type: 3}
   m_Name: AppConfig
   m_EditorClassIdentifier: 
-  _authServerURL: http://localhost:5011/
+  _authServerURL: http://auth.bl9.ru/
   _authorizationEndpoint: connect/authorize
   _tokenEndpoint: connect/token
   _clientId: client

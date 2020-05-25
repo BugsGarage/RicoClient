@@ -1,10 +1,6 @@
 ﻿using RicoClient.Scripts.Cards;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace RicoClient.Scripts.Game.CardLogic
 {
@@ -45,7 +41,7 @@ namespace RicoClient.Scripts.Game.CardLogic
             Debug.Log("Default pointer exit action");
         }
 
-        public virtual void OnBeginDrag()
+        public virtual void OnBeginDrag(PointerEventData eventData)
         {
             Debug.Log("Default begin drag action");
         }
@@ -55,7 +51,7 @@ namespace RicoClient.Scripts.Game.CardLogic
             Debug.Log("Default end drag action");
         }
 
-        public virtual void OnDrag(Vector2 delta)
+        public virtual void OnDrag(PointerEventData eventData)
         {
             Debug.Log("Default drag action");
         }

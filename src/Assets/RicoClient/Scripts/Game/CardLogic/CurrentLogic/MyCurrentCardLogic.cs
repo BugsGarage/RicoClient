@@ -1,6 +1,7 @@
 ﻿using RicoClient.Scripts.Cards;
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace RicoClient.Scripts.Game.CardLogic.CurrentLogic
 {
@@ -14,9 +15,9 @@ namespace RicoClient.Scripts.Game.CardLogic.CurrentLogic
             
         }
 
-        public override void OnDrag(Vector2 delta)
+        public override void OnDrag(PointerEventData eventData)
         {
-            _rectTransform.anchoredPosition += delta;
+            _rectTransform.anchoredPosition += eventData.delta;
         }
 
         public override void OnEndDrag()
