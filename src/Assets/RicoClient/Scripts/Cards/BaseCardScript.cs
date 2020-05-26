@@ -17,7 +17,8 @@ using Zenject;
 
 namespace RicoClient.Scripts.Cards
 {
-    public abstract class BaseCardScript : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
+    public abstract class BaseCardScript : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, 
+        IBeginDragHandler, IEndDragHandler, IDragHandler, IDropHandler
     {
         public static event Action<BaseCardScript> OnCardRightClick;
         public static event Action<BaseCardScript> OnCardLeftClick;
@@ -125,6 +126,12 @@ namespace RicoClient.Scripts.Cards
         {
             if (Logic != null)
                 Logic.OnDrag(eventData);
+        }
+
+        public void OnDrop(PointerEventData eventData)
+        {
+            if (Logic != null)
+                Logic.OnDrop();
         }
     }
 }

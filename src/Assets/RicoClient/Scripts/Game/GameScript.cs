@@ -75,6 +75,8 @@ namespace RicoClient.Scripts.Game
 
         public GameState State { get; private set; }
 
+        private UnitCardScript _currentAttackingCard;
+
         // temp
         private Deck PlayerDeck;
         private int PlayerDeckInitSize;
@@ -96,6 +98,14 @@ namespace RicoClient.Scripts.Game
             MyCurrentCardLogic.OnCardDroppedToBoard += CardDropped;
             MyBoardCardLogic.OnCardPrepAttack += CardTakenToAttack;
             MyBoardCardLogic.OnCardUnprepAttack += CardReleasedToAttack;
+            BaseBoardLogic.OnBoardCardEnter += AimChoosed;
+            BaseBoardLogic.OnBoardCardExit += AimDechosed;
+            BaseBoardLogic.OnDroppedOnCard += CardBeenChoosedForAction;
+
+            BaseBuildingScript.OnBaseEnter += AimChoosed;
+            BaseBuildingScript.OnBaseExit += AimDechosed;
+            BaseBuildingScript.OnOnDropped += BaseBeenChoosedForAction;
+
 
             // Also temp
             _cards.UpdateLocalCards();
@@ -138,6 +148,9 @@ namespace RicoClient.Scripts.Game
                 _enemyHand.AddHiddenCardInHand(hiddenCard);
             }
 
+            _myBase.FillBase(20, 1);
+            _enemyBase.FillBase(20, 1);
+
             MyTurnStart();
 
             // Temp too
@@ -151,6 +164,13 @@ namespace RicoClient.Scripts.Game
             MyCurrentCardLogic.OnCardDroppedToBoard -= CardDropped;
             MyBoardCardLogic.OnCardPrepAttack -= CardTakenToAttack;
             MyBoardCardLogic.OnCardUnprepAttack -= CardReleasedToAttack;
+            BaseBoardLogic.OnBoardCardEnter -= AimChoosed;
+            BaseBoardLogic.OnBoardCardExit -= AimDechosed;
+            BaseBoardLogic.OnDroppedOnCard -= CardBeenChoosedForAction;
+
+            BaseBuildingScript.OnBaseEnter -= AimChoosed;
+            BaseBuildingScript.OnBaseExit -= AimDechosed;
+            BaseBuildingScript.OnOnDropped -= BaseBeenChoosedForAction;
         }
 
         public void MyTurnStart()
@@ -214,6 +234,7 @@ namespace RicoClient.Scripts.Game
                 cardLogic.HighlightCard();
             }
 
+            _currentAttackingCard = unit;
             _enemyBase.Highlight();
         }
 
@@ -226,7 +247,52 @@ namespace RicoClient.Scripts.Game
                 cardLogic.UnhighlightCard();
             }
 
+            _currentAttackingCard = null;
             _enemyBase.Unhighlight();
+        }
+
+        private void AimChoosed(Vector3 enemyDownSide)
+        {
+            // Mean we attaking by our card
+            if (_currentAttackingCard != null)
+            {
+                ((MyBoardCardLogic) _currentAttackingCard.Logic).SetAimTarget(enemyDownSide);
+            }
+        }
+
+        private void AimDechosed()
+        {
+            Debug.Log("Dechosed");
+            if (_currentAttackingCard != null)
+            {
+                ((MyBoardCardLogic) _currentAttackingCard.Logic).RemoveAimTarget();
+            }
+        }
+
+        private void CardBeenChoosedForAction(BaseCardScript card)
+        {
+            if (_currentAttackingCard != null)
+            {
+                EntityCardScript entity = (EntityCardScript) card;
+                entity.Damage(_currentAttackingCard.Attack);
+                _currentAttackingCard.Damage(entity.Attack);
+
+                MyBoardCardLogic attackingLogic = (MyBoardCardLogic) _currentAttackingCard.Logic;
+                attackingLogic.RemoveAimTarget();
+                attackingLogic.CanAttack = false;
+            }
+        }
+
+        private void BaseBeenChoosedForAction(BaseBuildingScript baseBuilding)
+        {
+            if (_currentAttackingCard != null)
+            {
+                baseBuilding.Damage(_currentAttackingCard.Attack);
+
+                MyBoardCardLogic attackingLogic = (MyBoardCardLogic) _currentAttackingCard.Logic;
+                attackingLogic.RemoveAimTarget();
+                attackingLogic.CanAttack = false;
+            }
         }
 
         private BaseCardScript ConvertCardToScript(Card card)

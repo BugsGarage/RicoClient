@@ -14,17 +14,20 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
         public static event Action<UnitCardScript> OnCardPrepAttack;
         public static event Action<UnitCardScript> OnCardUnprepAttack;
 
-        private bool _canAttack;
+        private Vector3 _aimTarget;
+        private bool _isFocusedOnTarget;
+
+        public bool CanAttack { get; set; }
 
         public MyBoardCardLogic(BaseCardScript card, LineRenderer aimLine) : base(card, aimLine)
         {
             //_canAttack = false;
-            _canAttack = true;
+            CanAttack = true;
         }
 
         public override void OnBeginDrag(PointerEventData eventData)
         {
-            if (CardScript is UnitCardScript && _canAttack)
+            if (CardScript is UnitCardScript && CanAttack)
             {
                 Vector3[] corners = new Vector3[4];
                 _rectTransform.GetWorldCorners(corners);
@@ -39,9 +42,16 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
 
         public override void OnDrag(PointerEventData eventData)
         {
-            if (CardScript is UnitCardScript && _canAttack)
+            if (CardScript is UnitCardScript && CanAttack)
             {
-                _aimLine.SetPosition(1, GetMousePosition(Input.mousePosition));
+                if (!_isFocusedOnTarget)
+                {
+                    _aimLine.SetPosition(1, GetMousePosition(Input.mousePosition));
+                }
+                else
+                {
+                    _aimLine.SetPosition(1, _aimTarget);
+                }
             }
         }
 
@@ -52,19 +62,15 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
             OnCardUnprepAttack?.Invoke((UnitCardScript) CardScript);
         }
 
-        public override void OnEnter()
+        public void SetAimTarget(Vector3 target)
         {
-            Debug.Log("On board enter");
+            _aimTarget = target;
+            _isFocusedOnTarget = true;
         }
 
-        public override void OnExit()
+        public void RemoveAimTarget()
         {
-            Debug.Log("On board exit");
-        }
-
-        public override void OnRightClick()
-        {
-            Debug.Log("Board right click");
+            _isFocusedOnTarget = false;
         }
 
         private Vector3 GetMousePosition(Vector3 pos)

@@ -10,21 +10,14 @@ using UnityEngine.EventSystems;
 
 namespace RicoClient.Scripts.Cards
 {
-    public class UnitCardScript : BaseCardScript
+    public class UnitCardScript : EntityCardScript
     {
-        [SerializeField]
-        protected TMP_Text _health = null;
-        [SerializeField]
-        protected TMP_Text _attack = null;
         [SerializeField]
         protected TMP_Text _initiative = null;
 
         public override void FillCard(Card card)
         {
             base.FillCard(card);
-
-            _health.text = card.Properties.Health.ToString();
-            _attack.text = card.Properties.Attack.ToString();
             _initiative.text = card.Properties.Initiative.ToString();
         }
     }

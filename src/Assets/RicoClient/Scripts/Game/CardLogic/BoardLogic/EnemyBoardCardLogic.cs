@@ -15,15 +15,5 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
         {
 
         }
-
-        public override void OnEnter()
-        {
-            Debug.Log("On enemy board enter");
-        }
-
-        public override void OnExit()
-        {
-            Debug.Log("On enemy board exit");
-        }
     }
 }
