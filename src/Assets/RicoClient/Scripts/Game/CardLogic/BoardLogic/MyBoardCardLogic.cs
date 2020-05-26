@@ -57,9 +57,12 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
 
         public override void OnEndDrag()
         {
-            _aimLine.gameObject.SetActive(false);
+            if (CardScript is UnitCardScript)
+            {
+                _aimLine.gameObject.SetActive(false);
 
-            OnCardUnprepAttack?.Invoke((UnitCardScript) CardScript);
+                OnCardUnprepAttack?.Invoke((UnitCardScript) CardScript);
+            }
         }
 
         public void SetAimTarget(Vector3 target)
@@ -80,7 +83,7 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
                 pos, Camera.main, out Vector2 movePos);
 
             Vector3 positionToReturn = aimLineParentCanvas.transform.TransformPoint(movePos);
-            positionToReturn.z -= 0.2f;
+            positionToReturn.z -= 0.15f;
             return positionToReturn;
         }
     }

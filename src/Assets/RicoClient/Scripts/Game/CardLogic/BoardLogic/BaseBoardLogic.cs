@@ -15,6 +15,9 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
         public static event Action OnBoardCardExit;
         public static event Action<BaseCardScript> OnDroppedOnCard;
 
+        private readonly Color SelectionColor = new Color(0.16f, 0.47f, 1, 0.59f);
+        private readonly Color HighlightColor = new Color(1, 1, 1, 0.59f);
+
         protected LineRenderer _aimLine;
         protected Image _highlightImage;
 
@@ -26,7 +29,8 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
 
         public void HighlightCard()
         {
-            _highlightImage.enabled = true;
+            _highlightImage.color = HighlightColor;
+            _highlightImage.enabled = true;    
         }
 
         public void UnhighlightCard()
@@ -43,6 +47,8 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
         {
             if (_highlightImage.enabled)
             {
+                _highlightImage.color = SelectionColor;
+
                 Vector3[] corners = new Vector3[4];
                 _rectTransform.GetWorldCorners(corners);
                 Vector3 downCardSide = new Vector3((corners[0].x + corners[3].x) / 2, corners[0].y, corners[0].z);
@@ -55,6 +61,8 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
         {
             if (_highlightImage.enabled)
             {
+                _highlightImage.color = HighlightColor;
+
                 OnBoardCardExit?.Invoke();
             }
         }

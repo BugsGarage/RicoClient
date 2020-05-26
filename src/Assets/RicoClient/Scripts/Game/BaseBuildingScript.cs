@@ -17,6 +17,9 @@ namespace RicoClient.Scripts.Game
         public static event Action OnBaseExit;
         public static event Action<BaseBuildingScript> OnOnDropped;
 
+        private readonly Color SelectionColor = new Color(0.16f, 0.47f, 1, 0.59f);
+        private readonly Color HighlightColor = new Color(1, 1, 1, 0.59f);
+
         [SerializeField]
         protected TMP_Text _health = null;
         [SerializeField]
@@ -51,6 +54,7 @@ namespace RicoClient.Scripts.Game
 
         public void Highlight()
         {
+            _highlightImage.color = HighlightColor;
             _highlightImage.enabled = true;
         }
 
@@ -63,6 +67,8 @@ namespace RicoClient.Scripts.Game
         {
             if (_highlightImage.enabled)
             {
+                _highlightImage.color = SelectionColor;
+
                 Vector3[] corners = new Vector3[4];
                 _rectTransform.GetWorldCorners(corners);
                 Vector3 downBaseSide = new Vector3((corners[0].x + corners[3].x) / 2, corners[0].y, corners[0].z);
@@ -75,6 +81,8 @@ namespace RicoClient.Scripts.Game
         {
             if (_highlightImage.enabled)
             {
+                _highlightImage.color = HighlightColor;
+
                 OnBaseExit?.Invoke();
             }
         }
