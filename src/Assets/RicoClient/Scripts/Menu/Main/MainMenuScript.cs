@@ -1,14 +1,9 @@
-﻿using RicoClient.Scripts.Menu.Collection;
+﻿using RicoClient.Scripts.Exceptions;
+using RicoClient.Scripts.Menu.Collection;
 using RicoClient.Scripts.Menu.Play;
 using RicoClient.Scripts.Menu.Shop;
-using RicoClient.Scripts.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UniRx.Async;
 using UnityEngine;
-using Zenject;
 
 namespace RicoClient.Scripts.Menu.Main
 {
@@ -28,35 +23,57 @@ namespace RicoClient.Scripts.Menu.Main
 
         public async void OnCollectionClick()
         {
-            // try ?
-            await _user.UpdatePlayerInfo();
+            bool res = await UpdatePlayer();
 
-            _collectionMenu.ReturnMenu = this;
-            _collectionMenu.gameObject.SetActive(true);
-            gameObject.SetActive(false);
+            if (res)
+            {
+                _collectionMenu.ReturnMenu = this;
+                _collectionMenu.gameObject.SetActive(true);
+                gameObject.SetActive(false);
+            }
         }
 
         public async void OnShopClick()
         {
-            // try ?
-            await _user.UpdatePlayerInfo();
+            bool res = await UpdatePlayer();
 
-            _shopMenu.gameObject.SetActive(true);
-            gameObject.SetActive(false);
+            if (res)
+            {
+                _shopMenu.gameObject.SetActive(true);
+                gameObject.SetActive(false);
+            }
         }
 
         public async void OnPlayClick()
         {
-            // try ?
-            await _user.UpdatePlayerInfo();
+            bool res = await UpdatePlayer();
 
-            _playMenu.gameObject.SetActive(true);
-            gameObject.SetActive(false);
+            if (res)
+            {
+                _playMenu.gameObject.SetActive(true);
+                gameObject.SetActive(false);
+            }
         }
 
         public void OnCloseClick()
         {
             Application.Quit();
+        }
+
+        private async UniTask<bool> UpdatePlayer()
+        {
+            try
+            {
+                await _user.UpdatePlayerInfo();
+            }
+            catch (PlayersException e)
+            {
+                Debug.LogError(e.Message);
+
+                return false;
+            }
+
+            return true;
         }
     }
 }

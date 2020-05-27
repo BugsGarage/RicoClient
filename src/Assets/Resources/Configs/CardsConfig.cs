@@ -1,19 +1,12 @@
-﻿using RicoClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RicoClient.Configs
+﻿namespace RicoClient.Configs
 {
     public class CardsConfig
     {
-        public string CardsServerURL { get; }
+        public string AllCardsEndpoint { get; }
 
         public CardsConfig(AppConfig config)
         {
-            CardsServerURL = config.CardsServerURL;
+            AllCardsEndpoint = config.AllCardsEndpoint;
         }
     }
 }

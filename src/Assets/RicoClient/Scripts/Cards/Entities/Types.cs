@@ -7,6 +7,17 @@ using System.Threading.Tasks;
 
 namespace RicoClient.Scripts.Cards.Entities
 {
+    public enum RarityType
+    {
+        None,
+        Common,
+        Uncommon,
+        Rare,
+        Epic,
+        Legendary
+    }
+
+
     [Flags]
     public enum CardType
     {

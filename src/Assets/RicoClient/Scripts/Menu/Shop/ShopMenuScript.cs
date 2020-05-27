@@ -1,13 +1,7 @@
 ﻿using RicoClient.Scripts.Cards;
 using RicoClient.Scripts.Exceptions;
-using RicoClient.Scripts.Menu.Collection;
 using RicoClient.Scripts.Pay;
 using RicoClient.Scripts.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -16,11 +10,13 @@ namespace RicoClient.Scripts.Menu.Shop
 {
     public class ShopMenuScript : BaseMenuScript
     {
-        private PayManager _pay;
+        private ShopManager _pay;
         private CardsManager _cards;
 
         [SerializeField]
         private TMP_Text _playerBalance = null;
+        [SerializeField]
+        private TMP_Text _goldCoef = null;
 
         [SerializeField]
         private BoughtCardModalScript _boughtCard = null;
@@ -28,7 +24,7 @@ namespace RicoClient.Scripts.Menu.Shop
         private TMP_Text _randomCardCost = null;
 
         [Inject]
-        public void Initialize(PayManager pay, CardsManager cards)
+        public void Initialize(ShopManager pay, CardsManager cards)
         {
             _pay = pay;
             _cards = cards;
@@ -37,7 +33,28 @@ namespace RicoClient.Scripts.Menu.Shop
         protected async void OnEnable()
         {
             _playerBalance.text = UserManager.Balance.ToString();
-            _randomCardCost.text = (await _pay.GetRandomCardCost()).ToString();
+
+            try
+            {
+                _randomCardCost.text = (await _pay.GetRandomCardCost()).ToString();
+            }
+            catch (ShopException e)
+            {
+                _randomCardCost.text = "?";
+                Debug.LogError(e.Message);
+                return;
+            }
+
+            try
+            {
+                _goldCoef.text = (await _pay.GetGoldCoeff()).ToString();
+            }
+            catch (PaymentException e)
+            {
+                _goldCoef.text = "?";
+                Debug.LogError(e.Message);
+                return;
+            }
         }
 
         public async void OnRandomBuyClick()
@@ -52,6 +69,11 @@ namespace RicoClient.Scripts.Menu.Shop
                 Debug.LogError(e.Message);
                 return;
             }
+            catch (ShopException e)
+            {
+                Debug.LogError(e.Message);
+                return;
+            }
 
             var card = _cards.GetCardById(cardId);
 
@@ -61,23 +83,47 @@ namespace RicoClient.Scripts.Menu.Shop
 
         public async void On10GoldBuyClick()
         {
-            bool res = await _pay.BuyGold(10);
-            if (res)
-                _playerBalance.text = UserManager.Balance.ToString();
+            try
+            {
+                await _pay.BuyGold(10);
+            }
+            catch (PaymentException e)
+            {
+                Debug.LogError(e.Message);
+                return;
+            }
+
+            _playerBalance.text = UserManager.Balance.ToString();
         }
 
         public async void On100GoldBuyClick()
         {
-            bool res = await _pay.BuyGold(100);
-            if (res)
-                _playerBalance.text = UserManager.Balance.ToString();
+            try
+            {
+                await _pay.BuyGold(100);
+            }
+            catch (PaymentException e)
+            {
+                Debug.LogError(e.Message);
+                return;
+            }
+
+            _playerBalance.text = UserManager.Balance.ToString();
         }
 
         public async void On1000GoldBuyClick()
         {
-            bool res = await _pay.BuyGold(1000);
-            if (res)
-                _playerBalance.text = UserManager.Balance.ToString();
+            try
+            {
+                await _pay.BuyGold(1000);
+            }
+            catch (PaymentException e)
+            {
+                Debug.LogError(e.Message);
+                return;
+            }
+
+            _playerBalance.text = UserManager.Balance.ToString();
         }
     }
 }

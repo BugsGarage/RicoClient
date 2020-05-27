@@ -9,13 +9,13 @@ namespace RicoClient.Configs
 {
     public class PayConfig
     {
-        public string ShopServerURL { get; }
-        public string PaymentServerURL { get; }
+        public string GoldCoefEndpoint { get; }
+        public string PaymentEndpoint { get; }
 
         public PayConfig(AppConfig config)
         {
-            ShopServerURL = config.ShopServerURL;
-            PaymentServerURL = config.PaymentServerURL;
+            GoldCoefEndpoint = config.GoldCoefEndpoint;
+            PaymentEndpoint = config.PaymentEndpoint;
         }
     }
 }

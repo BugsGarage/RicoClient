@@ -1,11 +1,6 @@
 ﻿using RicoClient.Scripts.Decks;
-using RicoClient.Scripts.Menu.Collection;
-using RicoClient.Scripts.User;
-using System;
+using RicoClient.Scripts.Exceptions;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -60,10 +55,18 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
                 cardsCount += deckCard.Amount;
             }
 
-            if (_deck.IsNewDeck)
-                await _deckManager.AddDeck(_deck.DeckName, deckCards, cardsCount);
-            else
-                await _deckManager.ConfirmDeckChange(_deck.DeckId, _deck.DeckName, deckCards, cardsCount); 
+            try
+            {
+                if (_deck.IsNewDeck)
+                    await _deckManager.AddDeck(_deck.DeckName, deckCards, cardsCount);
+                else
+                    await _deckManager.ConfirmDeckChange(_deck.DeckId, _deck.DeckName, deckCards, cardsCount);
+            }
+            catch (PlayersException e)
+            {
+                Debug.LogError(e.Message);
+                return;
+            }
 
             OpenDeckListPanel();
         }
@@ -87,7 +90,16 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
 
         private async void OnDeckOpened(DeckScript deckHeader)
         {
-            var deck = await _deckManager.DeckById(deckHeader.DeckId);
+            Deck deck;
+            try
+            {
+                deck = await _deckManager.DeckById(deckHeader.DeckId);
+            }
+            catch (PlayersException e)
+            {
+                Debug.LogError(e.Message);
+                return;
+            }
             _deck.SetDeck(deck);
 
             OpenDeckPanel();
@@ -95,8 +107,16 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
 
         private async void OnDeckDeleted()
         {
-            if (!_deck.IsNewDeck)
-                await _deckManager.DeleteDeck(_deck.DeckId);
+            try
+            {
+                if (!_deck.IsNewDeck)
+                    await _deckManager.DeleteDeck(_deck.DeckId);
+            }
+            catch (PlayersException e)
+            {
+                Debug.LogError(e.Message);
+                return;
+            }
 
             OpenDeckListPanel();
         }

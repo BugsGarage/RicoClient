@@ -9,7 +9,6 @@ namespace RicoClient.Configs
 {
     public class AuthorizationConfig
     {
-        public string AuthServerURL { get; }
         public string AuthorizationEndpoint { get; }
         public string TokenEndpoint { get; }
 
@@ -22,7 +21,6 @@ namespace RicoClient.Configs
 
         public AuthorizationConfig(AppConfig config)
         {
-            AuthServerURL = config.AuthServerURL;
             AuthorizationEndpoint = config.AuthorizationEndpoint;
             TokenEndpoint = config.TokenEndpoint;
 

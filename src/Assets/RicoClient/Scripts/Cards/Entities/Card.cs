@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace RicoClient.Scripts.Cards.Entities
         /// </summary>
         [JsonRequired]
         [JsonProperty("rarity")]
-        public string Rarity { get; set; }
+        public RarityType Rarity { get; set; }
 
         /// <summary>
         /// Card type (Unit, Building or Spell)

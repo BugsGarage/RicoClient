@@ -3,10 +3,6 @@ using RicoClient.Scripts.Exceptions;
 using RicoClient.Scripts.Pay;
 using RicoClient.Scripts.User;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -17,7 +13,7 @@ namespace RicoClient.Scripts.Menu.Collection
     {
         public event Action OnBoughtCard;
 
-        private PayManager _pay;
+        private ShopManager _shop;
 
         [SerializeField]
         private GameObject _bigCardHolder = null;
@@ -30,9 +26,9 @@ namespace RicoClient.Scripts.Menu.Collection
         private int _cardId;
 
         [Inject]
-        public void Initialize(PayManager pay)
+        public void Initialize(ShopManager shop)
         {
-            _pay = pay;
+            _shop = shop;
         }
 
         public void OnEnable()
@@ -58,9 +54,14 @@ namespace RicoClient.Scripts.Menu.Collection
         {
             try
             {
-                await _pay.BuySpecificCard(_cardId, int.Parse(_price.text));
+                await _shop.BuySpecificCard(_cardId, int.Parse(_price.text));
             }
             catch (NotEnoughBalanceException e)
+            {
+                Debug.LogError(e.Message);
+                return;
+            }
+            catch (ShopException e)
             {
                 Debug.LogError(e.Message);
                 return;

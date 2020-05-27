@@ -22,17 +22,22 @@ namespace RicoClient.Scripts.Menu.Modals
 
         public void SetWarnDialog(string text, Action okAction)
         {
+            _okButton.onClick.RemoveAllListeners();
+
             _warnText.text = text;
             _okButton.onClick.AddListener(new UnityAction(okAction));
+            _okButton.onClick.AddListener(new UnityAction(() => { gameObject.SetActive(false); }));
 
             gameObject.SetActive(true);
         }
 
         public void SetWarnDialog(string text, Action okAction, Action cancelAction)
         {
-            _warnText.text = text;
-            _okButton.onClick.AddListener(new UnityAction(okAction));
+            _cancelButton.onClick.RemoveAllListeners();
+
+            SetWarnDialog(text, okAction);
             _cancelButton.onClick.AddListener(new UnityAction(cancelAction));
+            _cancelButton.onClick.AddListener(new UnityAction(() => { gameObject.SetActive(false); }));
 
             gameObject.SetActive(true);
         }

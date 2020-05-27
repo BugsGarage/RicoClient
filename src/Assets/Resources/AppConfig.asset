@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86cfd966b7daf30419141aee2065eb35, type: 3}
   m_Name: AppConfig
   m_EditorClassIdentifier: 
-  _authServerURL: http://auth.bl9.ru/
+  _authServerURL: https://auth.bl9.ru/
   _authorizationEndpoint: connect/authorize
   _tokenEndpoint: connect/token
   _clientId: client
@@ -27,8 +27,17 @@ MonoBehaviour:
   - player_api
   - game_api
   _authorizationTimeoutSeconds: 300
-  _cardsServerURL: http://localhost:5100/
-  _playerServerURL: http://localhost:5100/
-  _shopServerURL: http://localhost:5100/
-  _paymentServerURL: http://localhost:5100/
+  _cardsServerURL: http://cards.bl9.ru/
+  _allCardsEndpoint: api/v1/cards
+  _playerServerURL: http://players.bl9.ru/
+  _entranceEndpoint: api/v1/players/entrance
+  _playerInfoEndpoint: api/v1/players/self
+  _newDeckEndpoint: api/v1/players/decks
+  _shopServerURL: http://shop.bl9.ru/
+  _specificCardEndpoint: api/v1/card/specific
+  _randomCardEndpoint: api/v1/card/random
+  _randomCostEndpoint: api/v1/card/random/cost
+  _paymentServerURL: http://payment.bl9.ru/
+  _goldCoefEndpoint: api/v1/coefficient
+  _paymentEndpoint: api/v1/payment
   _gameServerURL: http://localhost:5100/

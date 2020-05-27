@@ -16,7 +16,7 @@ namespace RicoClient.Installers
         {
             Container.Bind<NetworkManager>().AsSingle().NonLazy();
             Container.Bind<CardsManager>().AsSingle().NonLazy();
-            Container.Bind<PayManager>().AsSingle().NonLazy();
+            Container.Bind<ShopManager>().AsSingle().NonLazy();
             Container.Bind<DeckManager>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<UserManager>().AsSingle().NonLazy();
         }

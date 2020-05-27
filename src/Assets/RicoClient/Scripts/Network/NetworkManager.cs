@@ -1,12 +1,10 @@
-﻿using RicoClient.Scripts.Cards;
-using RicoClient.Scripts.Cards.Entities;
+﻿using RicoClient.Scripts.Cards.Entities;
 using RicoClient.Scripts.Decks;
 using RicoClient.Scripts.Exceptions;
 using RicoClient.Scripts.Network.Controllers;
 using RicoClient.Scripts.Network.Entities;
 using RicoClient.Scripts.User;
 using RicoClient.Scripts.User.Storage;
-using System;
 using System.Collections.Generic;
 using UniRx.Async;
 
@@ -45,6 +43,21 @@ namespace RicoClient.Scripts.Network
         }
 
         /// <summary>
+        /// Request for game entering
+        /// </summary>
+        public async UniTask EnterGame()
+        {
+            try
+            {
+                await _playerController.PostEnterGame(UserManager.FullAccessToken);
+            }
+            catch (PlayersException)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Refresh token request
         /// </summary>
         /// <param name="refresh_token"></param>
@@ -69,7 +82,14 @@ namespace RicoClient.Scripts.Network
         /// <returns>List with all in-game cards</returns>
         public async UniTask<List<Card>> GetAllCards()
         {
-            return await _cardsController.GetAllCardsRequest(UserManager.FullAccessToken);
+            try
+            {
+                return await _cardsController.GetAllCardsRequest();
+            }
+            catch (CardsException)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -78,7 +98,14 @@ namespace RicoClient.Scripts.Network
         /// <returns>Player info about his cards and decks</returns>
         public async UniTask<PlayerData> GetPlayerInfo()
         {
-            return await _playerController.GetPlayerInfoRequest(UserManager.FullAccessToken);
+            try
+            {
+                return await _playerController.GetPlayerInfoRequest(UserManager.FullAccessToken);
+            }
+            catch (PlayersException)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -87,7 +114,14 @@ namespace RicoClient.Scripts.Network
         /// <returns>Deck information</returns>
         public async UniTask<Deck> GetDeckById(uint deckId)
         {
-            return await _playerController.GetDeckByIdRequest(UserManager.FullAccessToken, deckId);
+            try
+            {
+                return await _playerController.GetDeckByIdRequest(UserManager.FullAccessToken, deckId);
+            }
+            catch (PlayersException)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -102,7 +136,14 @@ namespace RicoClient.Scripts.Network
                 DeckCards = deckCards
             };
 
-            return await _playerController.PostNewDeckRequest(UserManager.FullAccessToken, data);
+            try
+            {
+                return await _playerController.PostNewDeckRequest(UserManager.FullAccessToken, data);
+            }
+            catch (PlayersException)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -117,7 +158,14 @@ namespace RicoClient.Scripts.Network
                 DeckCards = deckCards
             };
 
-            await _playerController.PatchDeckByIdRequest(UserManager.FullAccessToken, deckId, data);
+            try
+            {
+                await _playerController.PatchDeckByIdRequest(UserManager.FullAccessToken, deckId, data);
+            }
+            catch (PlayersException)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -126,7 +174,14 @@ namespace RicoClient.Scripts.Network
         /// <returns></returns>
         public async UniTask DeleteDeckById(uint deckId)
         {
-            await _playerController.DeleteDeckByIdRequest(UserManager.FullAccessToken, deckId);
+            try
+            {
+                await _playerController.DeleteDeckByIdRequest(UserManager.FullAccessToken, deckId);
+            }
+            catch (PlayersException)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -135,7 +190,30 @@ namespace RicoClient.Scripts.Network
         /// <returns>Random card cost</returns>
         public async UniTask<int> GetRandomCardCost()
         {
-            return await _payController.GetRandomCardCostRequest();
+            try
+            { 
+                return await _payController.GetRandomCardCostRequest();
+            }
+            catch (ShopException)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Get coeff for converting real value in in-game gold
+        /// </summary>
+        /// <returns>Coeff</returns>
+        public async UniTask<double> GetGoldCoeff()
+        {
+            try
+            {
+                return await _payController.GetGoldCoefRequest();
+            }
+            catch (PaymentException)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -144,7 +222,14 @@ namespace RicoClient.Scripts.Network
         /// <returns></returns>
         public async UniTask PostBuySpecificCard(int cardId)
         {
-            await _payController.PostBuySpecificCardRequest(UserManager.FullAccessToken, cardId);
+            try
+            {
+                await _payController.PostBuySpecificCardRequest(UserManager.FullAccessToken, cardId);
+            }
+            catch (ShopException)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -153,16 +238,30 @@ namespace RicoClient.Scripts.Network
         /// <returns>Bought card id</returns>
         public async UniTask<int> PostBuyRandomCard()
         {
-            return await _payController.PostBuyRandomCardRequest(UserManager.FullAccessToken);
+            try
+            {
+                return await _payController.PostBuyRandomCardRequest(UserManager.FullAccessToken);
+            }
+            catch (ShopException)
+            {
+                throw;
+            }
         }
 
         /// <summary>
         /// Buy gold for real money (mock)
         /// </summary>
         /// <returns>Result of operation</returns>
-        public async UniTask<bool> PostBuyGold(int value)
+        public async UniTask PostBuyGold(int value)
         {
-            return await _payController.PostBuyGoldRequest(UserManager.FullAccessToken, value);
+            try
+            {
+                await _payController.PostBuyGoldRequest(UserManager.FullAccessToken, value);
+            }
+            catch (PaymentException)
+            {
+                throw;
+            }
         }
     }
 }

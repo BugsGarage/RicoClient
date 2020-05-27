@@ -2,7 +2,6 @@
 using RicoClient.Scripts.Cards.Entities;
 using RicoClient.Scripts.Decks;
 using RicoClient.Scripts.Exceptions;
-using RicoClient.Scripts.Game.CardLogic;
 using RicoClient.Scripts.Game.CardLogic.BoardLogic;
 using RicoClient.Scripts.Game.CardLogic.CurrentLogic;
 using RicoClient.Scripts.Game.CardLogic.HandLogic;
@@ -105,7 +104,6 @@ namespace RicoClient.Scripts.Game
             BaseBuildingScript.OnBaseEnter += AimChoosed;
             BaseBuildingScript.OnBaseExit += AimDechosed;
             BaseBuildingScript.OnOnDropped += BaseBeenChoosedForAction;
-
 
             // Also temp
             _cards.UpdateLocalCards();
@@ -262,7 +260,6 @@ namespace RicoClient.Scripts.Game
 
         private void AimDechosed()
         {
-            Debug.Log("Dechosed");
             if (_currentAttackingCard != null)
             {
                 ((MyBoardCardLogic) _currentAttackingCard.Logic).RemoveAimTarget();

@@ -47,7 +47,7 @@ namespace RicoClient.Scripts.Cards
             CardId = card.CardId;
 
             _name.text = card.Name;
-            _rarity.text = card.Rarity;
+            _rarity.text = card.Rarity.ToString();
             _cost.text = card.Cost.ToString();
 
             // ToDo: find image and description by cardId

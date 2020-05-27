@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace RicoClient.Scripts.Menu.Collection
 {
     /// <summary>
-    /// Script for deck in deck list panel in collection
+    /// Script for deck in deck list panel in collection menu
     /// </summary>
     public class DeckScript : MonoBehaviour
     {

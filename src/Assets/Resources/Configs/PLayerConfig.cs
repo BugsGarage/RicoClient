@@ -1,19 +1,16 @@
-﻿using RicoClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RicoClient.Configs
+﻿namespace RicoClient.Configs
 {
     public class PlayerConfig
     {
-        public string PlayerServerURL { get; }
+        public string EntranceEndpoint { get; }
+        public string PlayerInfoEndpoint { get; }
+        public string NewDeckEndpoint { get; }
 
         public PlayerConfig(AppConfig config)
         {
-            PlayerServerURL = config.PlayerServerURL;
+            EntranceEndpoint = config.EntranceEndpoint;
+            PlayerInfoEndpoint = config.PlayerInfoEndpoint;
+            NewDeckEndpoint = config.NewDeckEndpoint;
         }
     }
 }

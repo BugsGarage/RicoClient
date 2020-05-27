@@ -1,10 +1,5 @@
-﻿using RicoClient.Scripts.Menu.Collection;
-using RicoClient.Scripts.User;
-using System;
+﻿using RicoClient.Scripts.User;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace RicoClient.Scripts.Menu.Collection.Panels

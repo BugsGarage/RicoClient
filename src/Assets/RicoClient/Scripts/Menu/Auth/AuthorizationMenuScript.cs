@@ -28,7 +28,7 @@ namespace RicoClient.Scripts.Menu.Auth
             }
             catch (AuthorizeException e)
             {
-                Debug.LogError(e.Message);
+                Debug.LogError(e.Message + '\n' + e.InnerException.Message);
                 _authButton.interactable = true;
 
                 return;
