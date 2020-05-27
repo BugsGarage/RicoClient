@@ -10,12 +10,8 @@ using UnityEngine.EventSystems;
 
 namespace RicoClient.Scripts.Cards
 {
-    public class BuildingCardScript : BaseCardScript
+    public class BuildingCardScript : EntityCardScript
     {
-        [SerializeField]
-        protected TMP_Text _health = null;
-        [SerializeField]
-        protected TMP_Text _attack = null;
         [SerializeField]
         protected TMP_Text _resource = null;
 
@@ -23,8 +19,6 @@ namespace RicoClient.Scripts.Cards
         {
             base.FillCard(card);
 
-            _health.text = card.Properties.Health.ToString();
-            _attack.text = card.Properties.Attack.ToString();
             _resource.text = card.Properties.Resources.ToString();
         }
     }

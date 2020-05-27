@@ -1,4 +1,9 @@
 ﻿using RicoClient.Scripts.Cards.Entities;
+using RicoClient.Scripts.Exceptions;
+using RicoClient.Scripts.Game.CardLogic;
+using RicoClient.Scripts.Game.CardLogic.BoardLogic;
+using RicoClient.Scripts.Game.CardLogic.CurrentLogic;
+using RicoClient.Scripts.Game.CardLogic.HandLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +17,8 @@ using Zenject;
 
 namespace RicoClient.Scripts.Cards
 {
-    public abstract class BaseCardScript : MonoBehaviour, IPointerClickHandler
+    public abstract class BaseCardScript : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, 
+        IBeginDragHandler, IEndDragHandler, IDragHandler, IDropHandler
     {
         public static event Action<BaseCardScript> OnCardRightClick;
         public static event Action<BaseCardScript> OnCardLeftClick;
@@ -28,6 +34,7 @@ namespace RicoClient.Scripts.Cards
         [SerializeField]
         protected TMP_Text _description = null;
 
+        public BaseLogic Logic { get; private set; }
         public int CardId { get; private set; }
 
         public void SetActive(bool active)
@@ -47,16 +54,84 @@ namespace RicoClient.Scripts.Cards
             _description.text = "Your beatiful description";
         }
 
+        public void PlaceInHand()
+        {
+            // null or CurrentLogic
+
+            Logic = new MyHandCardLogic(this);
+        }
+
+        public void Select(Transform parent)
+        {
+            Logic = new MyCurrentCardLogic(this, parent);
+        }
+
+        public void PlaceOnBoard(LineRenderer aimLine, bool isMine)
+        {
+            Logic?.CardDropped();
+
+            if (isMine)
+                Logic = new MyBoardCardLogic(this, aimLine);
+            else
+                Logic = new EnemyBoardCardLogic(this, aimLine);
+        }
+
+        public void Copy(BaseCardScript otherCard)
+        {
+            CardId = otherCard.CardId;
+            Logic = otherCard.Logic;
+        }
+
         public void OnPointerClick(PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Right)
             {
                 OnCardRightClick?.Invoke(this);
+                if (Logic != null)
+                    Logic.OnRightClick();
             }
             else if (eventData.button == PointerEventData.InputButton.Left)
             {
                 OnCardLeftClick?.Invoke(this);
+                if (Logic != null)
+                    Logic.OnLeftClick();
             }
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (Logic != null)
+                Logic.OnEnter();
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (Logic != null)
+                Logic.OnExit();
+        }
+
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            if (Logic != null)
+                Logic.OnBeginDrag(eventData);
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            if (Logic != null)
+                Logic.OnEndDrag();
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            if (Logic != null)
+                Logic.OnDrag(eventData);
+        }
+
+        public void OnDrop(PointerEventData eventData)
+        {
+            if (Logic != null)
+                Logic.OnDrop();
         }
     }
 }
