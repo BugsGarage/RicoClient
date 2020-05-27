@@ -20,8 +20,11 @@ namespace RicoClient.Scripts.Menu.Modals
 
         public void SetInfoDialog(string text, Action okAction)
         {
+            _okButton.onClick.RemoveAllListeners();
+
             _infoText.text = text;
             _okButton.onClick.AddListener(new UnityAction(okAction));
+            _okButton.onClick.AddListener(new UnityAction(() => { gameObject.SetActive(false); }));
 
             gameObject.SetActive(true);
         }

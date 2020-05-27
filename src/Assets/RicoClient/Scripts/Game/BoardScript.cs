@@ -17,7 +17,7 @@ namespace RicoClient.Scripts.Game
         [SerializeField]
         private GameObject _onBoardCardHolder = null;
         [SerializeField]
-        private Vector2 _cardHolderOffset;
+        private Vector2 _cardHolderOffset = Vector2.zero;
         [SerializeField]
         private LineRenderer _aimLine = null;
 

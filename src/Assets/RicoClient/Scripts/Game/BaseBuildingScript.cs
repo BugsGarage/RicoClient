@@ -91,8 +91,6 @@ namespace RicoClient.Scripts.Game
         {
             if (_highlightImage.enabled)
             {
-                Debug.Log("Base Drop");
-
                 OnOnDropped?.Invoke(this);
             }
         }

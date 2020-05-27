@@ -1,10 +1,6 @@
 ﻿using RicoClient.Scripts.Cards;
 using RicoClient.Scripts.Cards.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace RicoClient.Scripts.Menu.Shop

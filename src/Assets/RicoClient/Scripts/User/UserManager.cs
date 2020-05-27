@@ -3,6 +3,7 @@ using RicoClient.Scripts.Cards;
 using RicoClient.Scripts.Decks;
 using RicoClient.Scripts.Exceptions;
 using RicoClient.Scripts.Network;
+using RicoClient.Scripts.Network.Entities;
 using RicoClient.Scripts.User.Storage;
 using System;
 using System.Collections.Generic;
@@ -75,12 +76,36 @@ namespace RicoClient.Scripts.User
             _userStorage.Username = decodedJWT["name"].ToString();
             UpdateTokens(tokens);
 
-            await _cards.UpdateLocalCards();
+            try
+            {
+                await _network.EnterGame();
+            }
+            catch (PlayersException e)
+            {
+                throw new AuthorizeException("Can't enter game!", e);
+            }
+
+            try
+            {
+                await _cards.UpdateLocalCards();
+            }
+            catch (CardsException e)
+            {
+                throw new AuthorizeException("Can't get cards for play!", e);
+            }
         }
 
         public async UniTask UpdatePlayerInfo()
         {
-            var data = await _network.GetPlayerInfo();
+            PlayerData data;
+            try
+            {
+                data = await _network.GetPlayerInfo();
+            }
+            catch (PlayersException)
+            {
+                throw;
+            }
 
             _userStorage.BalanceValue = data.Balance;
             _userStorage.OwnedCards = new SortedDictionary<int, int>(data.OwnedCards);

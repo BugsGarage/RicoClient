@@ -1,6 +1,7 @@
 ﻿using RicoClient.Configs;
 using RicoClient.Scripts.Cards.Entities;
 using RicoClient.Scripts.Network;
+using RicoClient.Scripts.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,6 +30,7 @@ namespace RicoClient.Scripts.Cards
         public async UniTask UpdateLocalCards()
         {
             AllCards = await _network.GetAllCards();
+            AllCards.Sort(new CardsComparer());
         }
 
         public Card[] GetCardsRangeFrom(List<int> ids, int startId, int count)

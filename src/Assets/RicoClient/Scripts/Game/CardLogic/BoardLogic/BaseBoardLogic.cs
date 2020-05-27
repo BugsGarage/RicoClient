@@ -71,8 +71,6 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
         {
             if (_highlightImage.enabled)
             {
-                Debug.Log("BoardDrop");
-
                 OnDroppedOnCard?.Invoke(CardScript);
             }
         }

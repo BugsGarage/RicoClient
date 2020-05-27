@@ -254,20 +254,17 @@ namespace RicoClient.Scripts.Network.Controllers
 
                 if (tokenRequest.isNetworkError || tokenRequest.isHttpError)
                     throw new OAuthException($"Error during authorization: {tokenRequest.error}. Restart app please!");
-                else
+                
+                return JsonConvert.DeserializeObject<TokenInfo>(tokenRequest.downloadHandler.text);
+                /*Dictionary<string, string> tokenEndpointDecoded = JsonConvert.DeserializeObject<Dictionary<string, string>>(tokenRequest.downloadHandler.text);
+
+                return new TokenInfo()
                 {
-                    Debug.Log("Recieved tokens");
-
-                    Dictionary<string, string> tokenEndpointDecoded = JsonConvert.DeserializeObject<Dictionary<string, string>>(tokenRequest.downloadHandler.text);
-
-                    return new TokenInfo()
-                    {
-                        TokenType = tokenEndpointDecoded["token_type"],
-                        AccessToken = tokenEndpointDecoded["access_token"],
-                        ExpiresIn = int.Parse(tokenEndpointDecoded["expires_in"]),
-                        RefreshToken = tokenEndpointDecoded["refresh_token"]
-                    };
-                }
+                    TokenType = tokenEndpointDecoded["token_type"],
+                    AccessToken = tokenEndpointDecoded["access_token"],
+                    ExpiresIn = int.Parse(tokenEndpointDecoded["expires_in"]),
+                    RefreshToken = tokenEndpointDecoded["refresh_token"]
+                };*/
             }
         }
 
