@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/RicoClient/Scenes/MenuScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/RicoClient/Scenes/GameScene.unity
+    guid: 30335fab6f94ce148a155a518e688765
   m_configObjects: {}

@@ -1,14 +1,11 @@
-﻿using RicoClient.Scripts.Menu.Collection;
+﻿using RicoClient.Scripts.Exceptions;
+using RicoClient.Scripts.Menu.Collection;
 using RicoClient.Scripts.User;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Zenject;
 
 namespace RicoClient.Scripts.Menu.Play
 {
@@ -45,13 +42,25 @@ namespace RicoClient.Scripts.Menu.Play
 
         public async void OnPlayClick()
         {
+            _playText.text = "Waiting..";
+            _playButton.interactable = false;
+
             // Start match look up logic
+
+            SceneManager.LoadSceneAsync("RicoClient/Scenes/GameScene");
         }
 
         public async void OnCollectionClick()
         {
-            // try ?
-            await _user.UpdatePlayerInfo();
+            try
+            {
+                await _user.UpdatePlayerInfo();
+            }
+            catch (PlayersException e)
+            {
+                Debug.LogError(e.Message);
+                return;
+            }
 
             _collectionMenu.ReturnMenu = this;
             _collectionMenu.gameObject.SetActive(true);
