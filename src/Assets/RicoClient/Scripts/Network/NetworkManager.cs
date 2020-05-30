@@ -16,13 +16,16 @@ namespace RicoClient.Scripts.Network
         private readonly CardsController _cardsController;
         private readonly PlayerController _playerController;
         private readonly PayController _payController;
+        private readonly GameController _gameController;
 
-        public NetworkManager(AuthController authController, CardsController cardsController, PlayerController playerController, PayController payController)
+        public NetworkManager(AuthController authController, CardsController cardsController, PlayerController playerController, 
+            PayController payController, GameController gameController)
         {
             _authController = authController;
             _cardsController = cardsController;
             _playerController = playerController;
             _payController = payController;
+            _gameController = gameController;
         }
 
         /// <summary>
@@ -259,6 +262,21 @@ namespace RicoClient.Scripts.Network
                 await _payController.PostBuyGoldRequest(UserManager.FullAccessToken, value);
             }
             catch (PaymentException)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Connect to game request
+        /// </summary>
+        public async UniTask PostConnectGame(uint deckId)
+        {
+            try
+            {
+                await _gameController.PostConnectGameRequest(UserManager.FullAccessToken, deckId);
+            }
+            catch (GameException)
             {
                 throw;
             }

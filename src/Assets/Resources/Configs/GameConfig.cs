@@ -9,11 +9,14 @@ namespace RicoClient.Configs
 {
     public class GameConfig
     {
-        public string GameServerURL { get; }
+        public string GameConnectEndpoint { get; }
+
+        public string GameWebsocketPath { get; }
 
         public GameConfig(AppConfig config)
         {
-            GameServerURL = config.GameServerURL;
+            GameConnectEndpoint = config.GameConnectEndpoint;
+            GameWebsocketPath = config.GameWebsocketPath;
         }
     }
 }

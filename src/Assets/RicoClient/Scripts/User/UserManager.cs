@@ -18,6 +18,11 @@ namespace RicoClient.Scripts.User
         private static UserStorage _userStorage = new UserStorage();
 
         /// <summary>
+        /// Current access_token
+        /// </summary>
+        public static string AccessToken { get { return _userStorage.Tokens.AccessToken; } }
+
+        /// <summary>
         /// Builds the whole authorization header (token_type + access_token)
         /// </summary>
         public static string FullAccessToken { get { return $"{_userStorage.Tokens.TokenType} {_userStorage.Tokens.AccessToken}"; } } 

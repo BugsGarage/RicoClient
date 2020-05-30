@@ -1,4 +1,5 @@
 ﻿using NativeWebSocket;
+using Newtonsoft.Json;
 using RicoClient.Scripts.Cards;
 using RicoClient.Scripts.Cards.Entities;
 using RicoClient.Scripts.Decks;
@@ -8,6 +9,7 @@ using RicoClient.Scripts.Game.CardLogic.CurrentLogic;
 using RicoClient.Scripts.Game.CardLogic.HandLogic;
 using RicoClient.Scripts.Game.InGameDeck;
 using RicoClient.Scripts.Network;
+using RicoClient.Scripts.Network.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +38,7 @@ namespace RicoClient.Scripts.Game
         private NetworkManager _network;
         private CardsManager _cards;
         private DeckManager _deck;
+        private GameManager _game;
 
         [SerializeField]
         private GameObject _screenOverlayCanvas = null;
@@ -76,8 +79,6 @@ namespace RicoClient.Scripts.Game
 
         public GameState State { get; private set; }
 
-        private WebSocket _websocket;
-
         private UnitCardScript _currentAttackingCard;
 
         // temp
@@ -88,11 +89,12 @@ namespace RicoClient.Scripts.Game
         private int _gameStartCardsCount = 3;
 
         [Inject]
-        public void Initialize(NetworkManager network, CardsManager cards, DeckManager deck)
+        public void Initialize(NetworkManager network, CardsManager cards, DeckManager deck, GameManager game)
         {
             _network = network;
             _cards = cards;
             _deck = deck;
+            _game = game;
 
             State = GameState.Finished;
 
@@ -114,8 +116,6 @@ namespace RicoClient.Scripts.Game
         {
             if (State != GameState.Finished)
                 throw new GameCoreException("Not finished previous game!");
-
-            WebSocketSetup();
 
             // Not sure how to start so let it be that way for now
             PlayerDeck = await _deck.DeckById(5);
@@ -158,52 +158,7 @@ namespace RicoClient.Scripts.Game
             _enemyBoard.AddCardOnBoard(ConvertCardToScript(_cards.GetCardById(2)));
         }
 
-        private async void WebSocketSetup()
-        {
-            _websocket = new WebSocket("ws://26.11.117.175:1707");
-
-            _websocket.OnOpen += () =>
-            {
-                Debug.Log("Connection open!");
-            };
-
-            _websocket.OnError += (e) =>
-            {
-                Debug.Log("Error! " + e);
-            };
-
-            _websocket.OnClose += (e) =>
-            {
-                Debug.Log("Connection closed!");
-            };
-
-            _websocket.OnMessage += (bytes) =>
-            {
-                Debug.Log("OnMessage!");
-                Debug.Log(bytes);
-
-                // getting the message as a string
-                var message = Encoding.UTF8.GetString(bytes);
-                Debug.Log("OnMessage! " + message);
-            };
-
-            InvokeRepeating("SendWebSocketMessage", 0.0f, 0.3f);
-
-            // Waiting for messages
-            await _websocket.Connect();
-        }
-
-        private async void SendWebSocketMessage()
-        {
-            if (_websocket.State == WebSocketState.Open)
-            {
-                // Sending plain text
-                await _websocket.SendText("test");
-                Debug.Log("Sended message");
-            }
-        }
-
-        protected async void OnDestroy()
+        protected void OnDestroy()
         {
             MyHandCardLogic.OnCardSelected -= CardSelected;
             MyCurrentCardLogic.OnCardReturnedToHand -= CardDeselected;
@@ -217,8 +172,6 @@ namespace RicoClient.Scripts.Game
             BaseBuildingScript.OnBaseEnter -= AimChoosed;
             BaseBuildingScript.OnBaseExit -= AimDechosed;
             BaseBuildingScript.OnOnDropped -= BaseBeenChoosedForAction;
-
-            await _websocket.Close();
         }
 
         public void MyTurnStart()

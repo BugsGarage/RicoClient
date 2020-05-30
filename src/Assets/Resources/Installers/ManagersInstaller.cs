@@ -4,6 +4,7 @@ using RicoClient.Scripts.Decks;
 using RicoClient.Scripts.Network;
 using RicoClient.Scripts.User;
 using Zenject;
+using RicoClient.Scripts.Game;
 
 namespace RicoClient.Installers
 {
@@ -18,6 +19,7 @@ namespace RicoClient.Installers
             Container.Bind<CardsManager>().AsSingle().NonLazy();
             Container.Bind<ShopManager>().AsSingle().NonLazy();
             Container.Bind<DeckManager>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<GameManager>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<UserManager>().AsSingle().NonLazy();
         }
     }
