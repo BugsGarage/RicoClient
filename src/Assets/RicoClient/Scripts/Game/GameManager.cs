@@ -28,6 +28,11 @@ namespace RicoClient.Scripts.Game
         /// </summary>
         public string GameAccessToken { get; private set; }
 
+        /// <summary>
+        /// Initial size of players deck
+        /// </summary>
+        public int PlayerDeckInitSize { get; set; }
+
         private WebSocket _gameWebsocket;
 
         public GameManager(NetworkManager network, GameConfig configuration)
@@ -53,10 +58,15 @@ namespace RicoClient.Scripts.Game
             WebSocketSetup();
         }
 
-        private async void WebSocketSetup()
+        public async UniTask CloseSocket()
         {
             if (_gameWebsocket != null && _gameWebsocket.State != WebSocketState.Closed)
                 await _gameWebsocket.Close();
+        }
+
+        private async void WebSocketSetup()
+        {
+            await CloseSocket();
 
             _gameWebsocket = new WebSocket(_gameWebsocketPath);
 
@@ -117,7 +127,7 @@ namespace RicoClient.Scripts.Game
             {
                 if (disposing)
                 {
-                    await _gameWebsocket.Close();
+                    await CloseSocket();
                 }
                 _gameWebsocket = null;
 

@@ -1,6 +1,4 @@
-﻿using NativeWebSocket;
-using Newtonsoft.Json;
-using RicoClient.Scripts.Cards;
+﻿using RicoClient.Scripts.Cards;
 using RicoClient.Scripts.Cards.Entities;
 using RicoClient.Scripts.Decks;
 using RicoClient.Scripts.Exceptions;
@@ -8,13 +6,9 @@ using RicoClient.Scripts.Game.CardLogic.BoardLogic;
 using RicoClient.Scripts.Game.CardLogic.CurrentLogic;
 using RicoClient.Scripts.Game.CardLogic.HandLogic;
 using RicoClient.Scripts.Game.InGameDeck;
-using RicoClient.Scripts.Network;
-using RicoClient.Scripts.Network.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UniRx.Async;
 using UnityEngine;
 using Zenject;
@@ -35,7 +29,6 @@ namespace RicoClient.Scripts.Game
 
     public class GameScript : MonoBehaviour
     {
-        private NetworkManager _network;
         private CardsManager _cards;
         private DeckManager _deck;
         private GameManager _game;
@@ -83,15 +76,13 @@ namespace RicoClient.Scripts.Game
 
         // temp
         private Deck PlayerDeck;
-        private int PlayerDeckInitSize;
         private int EnemyDeckInitSize;
         private int _collectedTurnStartCardsCount = 1;
         private int _gameStartCardsCount = 3;
 
         [Inject]
-        public void Initialize(NetworkManager network, CardsManager cards, DeckManager deck, GameManager game)
+        public void Initialize(CardsManager cards, DeckManager deck, GameManager game)
         {
-            _network = network;
             _cards = cards;
             _deck = deck;
             _game = game;
@@ -110,6 +101,8 @@ namespace RicoClient.Scripts.Game
             BaseBuildingScript.OnBaseEnter += AimChoosed;
             BaseBuildingScript.OnBaseExit += AimDechosed;
             BaseBuildingScript.OnOnDropped += BaseBeenChoosedForAction;
+
+            _game.OnWebsocketError += OnWebsocketError;
         }
 
         protected async void Start()
@@ -119,12 +112,11 @@ namespace RicoClient.Scripts.Game
 
             // Not sure how to start so let it be that way for now
             PlayerDeck = await _deck.DeckById(5);
-            PlayerDeckInitSize = PlayerDeck.CardsCount;
             EnemyDeckInitSize = 10;
 
             State = GameState.Start;
 
-            _myDeck.SetDeck(PlayerDeckInitSize);
+            _myDeck.SetDeck(_game.PlayerDeckInitSize);
             _enemyDeck.SetDeck(EnemyDeckInitSize);
 
             List<Card> gameStartCards = new List<Card>(_gameStartCardsCount);
@@ -316,6 +308,11 @@ namespace RicoClient.Scripts.Game
 
             res.FillCard(card);
             return res;
+        }
+
+        private void OnWebsocketError(string error)
+        {
+            Debug.LogError($"An error has occurred during game: {error}!");
         }
 
         // Temp mock

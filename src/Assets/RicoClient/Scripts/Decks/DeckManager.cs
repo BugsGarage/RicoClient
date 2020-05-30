@@ -39,7 +39,7 @@ namespace RicoClient.Scripts.Decks
             uint deckId;
             try
             {
-                deckId = await _network.PostNewDeck(deckName, deckCards);
+                deckId = await _network.PostNewDeck(deckName, deckCards, cardsCount);
             }
             catch (PlayersException)
             {
@@ -53,7 +53,7 @@ namespace RicoClient.Scripts.Decks
         {
             try
             {
-                await _network.PatchDeckById(deckId, deckName, deckCards);
+                await _network.PatchDeckById(deckId, deckName, deckCards, cardsCount);
             }
             catch (PlayersException)
             {

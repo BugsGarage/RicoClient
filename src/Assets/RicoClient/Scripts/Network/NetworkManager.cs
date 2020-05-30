@@ -131,11 +131,13 @@ namespace RicoClient.Scripts.Network
         /// Send just created deck to the server
         /// </summary>
         /// <returns>Created deck id</returns>
-        public async UniTask<uint> PostNewDeck(string deckName, Dictionary<int, int> deckCards)
+        public async UniTask<uint> PostNewDeck(string deckName, Dictionary<int, int> deckCards, int cardsCount)
         {
-            ConfirmDeck data = new ConfirmDeck()
+            Deck data = new Deck()
             {
+                DeckId = 0,
                 DeckName = deckName,
+                CardsCount = cardsCount,
                 DeckCards = deckCards
             };
 
@@ -153,11 +155,13 @@ namespace RicoClient.Scripts.Network
         /// Save changes of user's deck by its id
         /// </summary>
         /// <returns></returns>
-        public async UniTask PatchDeckById(uint deckId, string deckName, Dictionary<int, int> deckCards)
+        public async UniTask PatchDeckById(uint deckId, string deckName, Dictionary<int, int> deckCards, int cardsCount)
         {
-            ConfirmDeck data = new ConfirmDeck()
+            Deck data = new Deck()
             {
+                DeckId = deckId,
                 DeckName = deckName,
+                CardsCount = cardsCount,
                 DeckCards = deckCards
             };
 

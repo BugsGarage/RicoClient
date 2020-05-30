@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using Zenject;
 using System;
 using RicoClient.Scripts.Network.Entities;
+using RicoClient.Scripts.Decks;
 
 namespace RicoClient.Scripts.Menu.Play
 {
@@ -21,6 +22,8 @@ namespace RicoClient.Scripts.Menu.Play
         private CollectionMenuScript _collectionMenu = null;
         [SerializeField]
         private Button _playButton = null;
+        [SerializeField]
+        private Button _collectionButton = null;
         [SerializeField]
         private TMP_Text _playText = null;
         [SerializeField]
@@ -62,20 +65,22 @@ namespace RicoClient.Scripts.Menu.Play
 
         public async void OnPlayClick()
         {
-            DisablePlayButton();
+            DisableButtons();
 
-            uint currDeckId = UserManager.DeckHeaders[_decks.value].DeckId;
+            DeckHeader currDeck = UserManager.DeckHeaders[_decks.value];
             try
             {
-                await _game.ConnectGame(currDeckId);
+                await _game.ConnectGame(currDeck.DeckId);
             }
             catch (GameException e)
             {
-                EnablePlayButton();
+                EnableButtons();
 
                 Debug.LogError(e.Message);
                 return;
             }
+
+            _game.PlayerDeckInitSize = currDeck.CardsCount;
         }
 
         public async void OnCollectionClick()
@@ -95,16 +100,24 @@ namespace RicoClient.Scripts.Menu.Play
             gameObject.SetActive(false);
         }
 
+        public async void OnBackClick()
+        {
+            await _game.CloseSocket();
+
+            gameObject.SetActive(false);
+        }
+
         private async void OnWebsocketConnected()
         {
+            _playText.text = "Looking for opponents ...";
+
             try
             {
-                _playText.text = "Looking for opponents ...";
                 await _game.SendConnectionMessage();
             }
-            catch (Exception e)  // ToDo: Which exception
+            catch (Exception e)  // ToDo: Which exception and is it needed
             {
-                EnablePlayButton();
+                EnableButtons();
 
                 Debug.LogError(e.Message);
                 return;
@@ -113,7 +126,7 @@ namespace RicoClient.Scripts.Menu.Play
 
         private void OnWebsocketError(string error)
         {
-            EnablePlayButton();
+            EnableButtons();
 
             Debug.LogError($"Error during connecting game: {error}! Try later!");
         }
@@ -128,16 +141,20 @@ namespace RicoClient.Scripts.Menu.Play
             }
         }
 
-        private void DisablePlayButton()
+        private void DisableButtons()
         {
             _playText.text = "Waiting..";
             _playButton.interactable = false;
+            _decks.interactable = false;
+            _collectionButton.interactable = false;
         }
 
-        private void EnablePlayButton()
+        private void EnableButtons()
         {
             _playText.text = "Play!";
             _playButton.interactable = true;
+            _decks.interactable = true;
+            _collectionButton.interactable = true;
         }
     }
 }

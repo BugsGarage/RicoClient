@@ -1,16 +1,9 @@
 ﻿using Newtonsoft.Json;
 using RicoClient.Configs;
-using RicoClient.Scripts.Cards;
 using RicoClient.Scripts.Cards.Entities;
 using RicoClient.Scripts.Exceptions;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UniRx.Async;
-using UnityEngine;
 using UnityEngine.Networking;
 
 namespace RicoClient.Scripts.Network.Controllers
@@ -36,16 +29,6 @@ namespace RicoClient.Scripts.Network.Controllers
                     throw new CardsException($"Error during entering in game: {allCardsRequest.error}. Restart app please!");
 
                 return JsonConvert.DeserializeObject<List<Card>>(allCardsRequest.downloadHandler.text);
-            }
-        }
-
-        public List<Card> GetAllCardsRequestMock()
-        {
-            using (var reader = new StreamReader("./Assets/RicoClient/Scripts/Network/RequestMocks/GetAllCards.json"))
-            {
-                string cardsJson = reader.ReadToEnd();
-
-                return JsonConvert.DeserializeObject<List<Card>>(cardsJson);
             }
         }
     }
