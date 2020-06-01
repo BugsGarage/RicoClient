@@ -1,9 +1,5 @@
 ﻿using RicoClient.Scripts.Cards;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -13,9 +9,11 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
     {
         public static event Action<UnitCardScript> OnCardPrepAttack;
         public static event Action<UnitCardScript> OnCardUnprepAttack;
+        public static event Action<BaseCardScript> OnWarcryCheck;
 
         private Vector3 _aimTarget;
         private bool _isFocusedOnTarget;
+        private bool _isDirectedAbilityActivated;
 
         public bool CanAttack { get; set; }
 
@@ -27,6 +25,9 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
 
         public override void OnBeginDrag(PointerEventData eventData)
         {
+            if (GameScript.State != GameState.MyTurn)
+                return;
+
             if (CardScript is UnitCardScript && CanAttack)
             {
                 Vector3[] corners = new Vector3[4];
@@ -42,6 +43,9 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
 
         public override void OnDrag(PointerEventData eventData)
         {
+            if (GameScript.State != GameState.MyTurn)
+                return;
+
             if (CardScript is UnitCardScript && CanAttack)
             {
                 if (!_isFocusedOnTarget)
@@ -57,12 +61,53 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
 
         public override void OnEndDrag()
         {
+            if (GameScript.State != GameState.MyTurn)
+                return;
+
             if (CardScript is UnitCardScript)
             {
                 _aimLine.gameObject.SetActive(false);
 
                 OnCardUnprepAttack?.Invoke((UnitCardScript) CardScript);
             }
+        }
+
+        public override void OnUpdate()
+        {
+            if (_isDirectedAbilityActivated)
+            {
+                if (!_isFocusedOnTarget)
+                {
+                    _aimLine.SetPosition(1, GetMousePosition(Input.mousePosition));
+                }
+                else
+                {
+                    _aimLine.SetPosition(1, _aimTarget);
+                }
+            }
+        }
+
+        public void ActivateDirectedAbility()
+        {
+            Vector3[] corners = new Vector3[4];
+            _rectTransform.GetWorldCorners(corners);
+            Vector3 upperCardSide = new Vector3((corners[1].x + corners[2].x) / 2, corners[1].y, corners[1].z);
+            _aimLine.SetPositions(new Vector3[] { upperCardSide, upperCardSide });
+
+            _aimLine.gameObject.SetActive(true);
+
+            _isDirectedAbilityActivated = true;
+        }
+
+        public void DeactivateDirectedAbility()
+        {
+            _aimLine.gameObject.SetActive(false);
+            _isDirectedAbilityActivated = false;
+        }
+
+        public void CheckCardWarcry()
+        {
+            OnWarcryCheck?.Invoke(CardScript);
         }
 
         public void SetAimTarget(Vector3 target)

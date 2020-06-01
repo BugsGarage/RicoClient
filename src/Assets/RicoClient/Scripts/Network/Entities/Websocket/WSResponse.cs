@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace RicoClient.Scripts.Network.Entities
+namespace RicoClient.Scripts.Network.Entities.Websocket
 {
     [JsonObject]
     public class WSResponse

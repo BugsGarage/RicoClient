@@ -10,8 +10,8 @@ namespace RicoClient.Scripts.Game.CardLogic.CurrentLogic
         public BaseCurrentLogic(BaseCardScript card, Transform parent) : base(card)
         {
             InHandCardHolder = _rectTransform.parent.gameObject;
-            InHandCardHolder.SetActive(false);
             _rectTransform.SetParent(parent, true);
+            InHandCardHolder.SetActive(false);
         }
     }
 }

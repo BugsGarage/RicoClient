@@ -1,9 +1,9 @@
-﻿using NativeWebSocket;
+﻿using RicoClient.Scripts.Network.Entities.Websocket;
+using NativeWebSocket;
 using Newtonsoft.Json;
 using RicoClient.Configs;
 using RicoClient.Scripts.Exceptions;
 using RicoClient.Scripts.Network;
-using RicoClient.Scripts.Network.Entities;
 using RicoClient.Scripts.User;
 using System;
 using System.Text;
@@ -29,9 +29,9 @@ namespace RicoClient.Scripts.Game
         public string GameAccessToken { get; private set; }
 
         /// <summary>
-        /// Initial size of players deck
+        /// Values for game start
         /// </summary>
-        public int PlayerDeckInitSize { get; set; }
+        public GameStartPayload StartValues { get; set; }
 
         private WebSocket _gameWebsocket;
 
@@ -117,12 +117,31 @@ namespace RicoClient.Scripts.Game
             await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.Connect, null)));
         }
 
+        public async UniTask SendReadyMessage()
+        {
+            await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.GameStartReady, null)));
+        }
+
+        public async UniTask SendEndTurnMessage()
+        {
+            await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.EndTurnReady, null)));
+        }
+
+        public async UniTask SendPlacedCardMessage(int deckCardId)
+        {
+            Debug.Log($"Send {deckCardId}");
+            PlayedCardPayload payload = new PlayedCardPayload() { DeckCardId = deckCardId };
+            await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.CardPlayRequest, payload)));
+        }
+
         #region IDisposable Support
 
         private volatile bool _disposed = false;
 
         protected virtual async void Dispose(bool disposing)
         {
+            Debug.Log("User disposed");
+
             if (!_disposed)
             {
                 if (disposing)

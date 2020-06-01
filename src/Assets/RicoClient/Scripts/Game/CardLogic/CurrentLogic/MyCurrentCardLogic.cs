@@ -8,7 +8,7 @@ namespace RicoClient.Scripts.Game.CardLogic.CurrentLogic
     public class MyCurrentCardLogic : BaseCurrentLogic
     {
         public static event Action<BaseCardScript> OnCardReturnedToHand;
-        public static event Action<GameObject> OnCardDroppedToBoard;
+        public static event Action<GameObject, BaseCardScript> OnCardDroppedToBoard;
 
         public MyCurrentCardLogic(BaseCardScript card, Transform parent) : base(card, parent)
         {
@@ -35,7 +35,7 @@ namespace RicoClient.Scripts.Game.CardLogic.CurrentLogic
         {
             _canvasGroup.blocksRaycasts = true;
 
-            OnCardDroppedToBoard?.Invoke(InHandCardHolder);
+            OnCardDroppedToBoard?.Invoke(InHandCardHolder, CardScript);
         }
     }
 }

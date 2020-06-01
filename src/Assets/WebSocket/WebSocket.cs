@@ -303,7 +303,10 @@ namespace NativeWebSocket
 			catch (Exception ex)
 			{
 				OnError?.Invoke(ex.Message);
-				OnClose?.Invoke(WebSocketCloseCode.Abnormal);
+
+                m_Socket.Abort();
+
+                OnClose?.Invoke(WebSocketCloseCode.Abnormal);
 			}
 		}
 

@@ -1,4 +1,5 @@
 ﻿using RicoClient.Scripts.Cards;
+using RicoClient.Scripts.Cards.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,12 @@ using UnityEngine.UI;
 
 namespace RicoClient.Scripts.Game
 {
-    public class BaseBuildingScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
+    public class BaseBuildingScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler, IPointerClickHandler
     {
         public static event Action<Vector3> OnBaseEnter;
         public static event Action OnBaseExit;
         public static event Action<BaseBuildingScript> OnOnDropped;
+        public static event Action<BaseBuildingScript> OnClicked;
 
         private readonly Color SelectionColor = new Color(0.16f, 0.47f, 1, 0.59f);
         private readonly Color HighlightColor = new Color(1, 1, 1, 0.59f);
@@ -27,6 +29,7 @@ namespace RicoClient.Scripts.Game
 
         public int Resource { get { return int.Parse(_resource.text); } }
         public int Health { get { return int.Parse(_health.text); } }
+        public int CardDeckId { get; private set; }
 
         private RectTransform _rectTransform;
         private Image _highlightImage;
@@ -37,10 +40,12 @@ namespace RicoClient.Scripts.Game
             _highlightImage = transform.parent.GetComponent<Image>();
         }
 
-        public void FillBase(int health, int resources)
+        public void FillBase(BaseBuilding baseBuilding)
         {
-            _health.text = health.ToString();
-            _resource.text = resources.ToString();
+            CardDeckId = 0;
+
+            _health.text = baseBuilding.Health.ToString();
+            _resource.text = baseBuilding.Resources.ToString();
         }
 
         public void Damage(int healthValue)
@@ -50,6 +55,12 @@ namespace RicoClient.Scripts.Game
                 int newHealth = Health - healthValue;
                 _health.text = newHealth.ToString();
             }
+        }
+
+        public void ShiftStats(int healthValue)
+        {
+            int newHealth = Health - healthValue;
+            _health.text = newHealth.ToString();
         }
 
         public void Highlight()
@@ -93,6 +104,14 @@ namespace RicoClient.Scripts.Game
             {
                 OnOnDropped?.Invoke(this);
             }
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                OnClicked?.Invoke(this);
+            }   
         }
     }
 }

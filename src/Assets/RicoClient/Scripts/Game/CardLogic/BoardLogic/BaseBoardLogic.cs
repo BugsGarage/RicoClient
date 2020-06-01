@@ -14,6 +14,7 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
         public static event Action<Vector3> OnBoardCardEnter;
         public static event Action OnBoardCardExit;
         public static event Action<BaseCardScript> OnDroppedOnCard;
+        public static event Action<BaseCardScript> OnClickedOnCard;
 
         private readonly Color SelectionColor = new Color(0.16f, 0.47f, 1, 0.59f);
         private readonly Color HighlightColor = new Color(1, 1, 1, 0.59f);
@@ -72,6 +73,14 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
             if (_highlightImage.enabled)
             {
                 OnDroppedOnCard?.Invoke(CardScript);
+            }
+        }
+
+        public override void OnLeftClick()
+        {
+            if (_highlightImage.enabled)
+            {
+                OnClickedOnCard?.Invoke(CardScript);
             }
         }
     }

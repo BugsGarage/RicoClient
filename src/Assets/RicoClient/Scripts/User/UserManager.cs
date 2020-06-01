@@ -18,6 +18,11 @@ namespace RicoClient.Scripts.User
         private static UserStorage _userStorage = new UserStorage();
 
         /// <summary>
+        ///  Current user name
+        /// </summary>
+        public static string Username { get { return _userStorage.Username; } }
+
+        /// <summary>
         /// Current access_token
         /// </summary>
         public static string AccessToken { get { return _userStorage.Tokens.AccessToken; } }
@@ -185,6 +190,8 @@ namespace RicoClient.Scripts.User
 
         protected virtual void Dispose(bool disposing)
         {
+            Debug.Log("User disposed");
+
             if (!_disposed)
             {
                 if (disposing)

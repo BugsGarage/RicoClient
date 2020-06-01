@@ -28,6 +28,13 @@ namespace RicoClient.Scripts.Cards
             _attack.text = card.Properties.Attack.ToString();
         }
 
+        public override void FillCard(Card card, int deckCardId)
+        {
+            FillCard(card);
+
+            DeckCardId = deckCardId;
+        }
+
         public void Damage(int healthValue)
         {
             if (healthValue >= 0)
@@ -35,6 +42,15 @@ namespace RicoClient.Scripts.Cards
                 int newHealth = Health - healthValue;
                 _health.text = newHealth.ToString();
             }
+        }
+
+        public void ShiftStats(int healthDelta, int attackDelta)
+        {
+            int newHealth = Health + healthDelta;
+            _health.text = newHealth.ToString();
+
+            int newAttack = Attack + attackDelta;
+            _attack.text = newAttack.ToString();
         }
     }
 }

@@ -65,5 +65,10 @@ namespace RicoClient.Scripts.Game.CardLogic
         {
             Debug.Log("Default dropped");
         }
+
+        public virtual void OnUpdate()
+        {
+
+        }
     }
 }

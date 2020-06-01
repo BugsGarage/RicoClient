@@ -71,7 +71,7 @@ namespace RicoClient.Scripts.Game
             _areaImage.enabled = false;
         }
 
-        public void AddCardOnBoard(BaseCardScript card)
+        public void AddEnemyCardOnBoard(BaseCardScript card)
         {
             var cardHolder = Instantiate(_onBoardCardHolder, transform);
             PlaceCardOnBoard(card, cardHolder);

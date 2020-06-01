@@ -9,8 +9,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Zenject;
 using System;
-using RicoClient.Scripts.Network.Entities;
-using RicoClient.Scripts.Decks;
+using RicoClient.Scripts.Network.Entities.Websocket;
+using Newtonsoft.Json;
 
 namespace RicoClient.Scripts.Menu.Play
 {
@@ -44,6 +44,9 @@ namespace RicoClient.Scripts.Menu.Play
                 deckNames.Add(UserManager.DeckHeaders[i].DeckName);
             _decks.AddOptions(deckNames);
 
+            _decks.interactable = true;
+            _collectionButton.interactable = true;
+
             if (_decks.options.Count > 0)
                 _playButton.interactable = true;
             else
@@ -67,10 +70,10 @@ namespace RicoClient.Scripts.Menu.Play
         {
             DisableButtons();
 
-            DeckHeader currDeck = UserManager.DeckHeaders[_decks.value];
+            uint currDeckId = UserManager.DeckHeaders[_decks.value].DeckId;
             try
             {
-                await _game.ConnectGame(currDeck.DeckId);
+                await _game.ConnectGame(currDeckId);
             }
             catch (GameException e)
             {
@@ -79,8 +82,6 @@ namespace RicoClient.Scripts.Menu.Play
                 Debug.LogError(e.Message);
                 return;
             }
-
-            _game.PlayerDeckInitSize = currDeck.CardsCount;
         }
 
         public async void OnCollectionClick()
@@ -115,7 +116,7 @@ namespace RicoClient.Scripts.Menu.Play
             {
                 await _game.SendConnectionMessage();
             }
-            catch (Exception e)  // ToDo: Which exception and is it needed
+            catch (Exception e)  // ToDo: is it needed
             {
                 EnableButtons();
 
@@ -136,6 +137,10 @@ namespace RicoClient.Scripts.Menu.Play
             switch (msg.Type)
             {
                 case ResponseCommandType.Started:
+                    _game.StartValues = JsonConvert.DeserializeObject<GameStartPayload>(msg.Payload.ToString());
+                    _game.StartValues.MyNickname = UserManager.Username;
+                    _game.StartValues.PlayerDeckInitSize = UserManager.DeckHeaders[_decks.value].CardsCount;
+
                     SceneManager.LoadSceneAsync("RicoClient/Scenes/GameScene");
                     break;
             }

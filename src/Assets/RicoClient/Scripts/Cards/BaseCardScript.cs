@@ -34,8 +34,11 @@ namespace RicoClient.Scripts.Cards
         [SerializeField]
         protected TMP_Text _description = null;
 
+        public int Cost { get { return int.Parse(_cost.text); } }
+
         public BaseLogic Logic { get; private set; }
         public int CardId { get; private set; }
+        public int DeckCardId { get; protected set; }
 
         public void SetActive(bool active)
         {
@@ -52,6 +55,13 @@ namespace RicoClient.Scripts.Cards
 
             // ToDo: find image and description by cardId
             _description.text = "Your beatiful description";
+        }
+
+        public virtual void FillCard(Card card, int deckCardId)
+        {
+            FillCard(card);
+
+            DeckCardId = deckCardId;
         }
 
         public void PlaceInHand()
@@ -71,9 +81,14 @@ namespace RicoClient.Scripts.Cards
             Logic?.CardDropped();
 
             if (isMine)
+            {
                 Logic = new MyBoardCardLogic(this, aimLine);
+                ((MyBoardCardLogic) Logic).CheckCardWarcry();
+            }
             else
+            {
                 Logic = new EnemyBoardCardLogic(this, aimLine);
+            }
         }
 
         public void Copy(BaseCardScript otherCard)
@@ -132,6 +147,12 @@ namespace RicoClient.Scripts.Cards
         {
             if (Logic != null)
                 Logic.OnDrop();
+        }
+
+        protected void Update()
+        {
+            if (Logic != null)
+                Logic.OnUpdate();
         }
     }
 }
