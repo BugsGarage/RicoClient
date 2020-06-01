@@ -20,13 +20,10 @@ namespace RicoClient.Scripts.Game
         private HorizontalLayoutGroup _horizontalGroup;
         private CanvasGroup _canvasGroup;
 
-        private float _currAllCardsWidth;
-
         protected void Awake()
         {
             _horizontalGroup = GetComponent<HorizontalLayoutGroup>();
             _canvasGroup = GetComponent<CanvasGroup>();
-            _currAllCardsWidth = 0;
         }
 
         public void AddRevealedCardInHand(BaseCardScript card)

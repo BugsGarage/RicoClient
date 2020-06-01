@@ -14,6 +14,7 @@ using UniRx.Async;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Video;
 using Zenject;
 
 namespace RicoClient.Scripts.Game
@@ -35,11 +36,18 @@ namespace RicoClient.Scripts.Game
         private const string WaitTurnText = "Waiting";
         private const string EnemyPlayingText = "Playing";
 
+        private const int SpellShowMs = 2500;
+        private const int AbilityTargetShowMs = 2000;
+
         private CardsManager _cards;
         private GameManager _game;
 
         [SerializeField]
         private GameObject _screenOverlayCanvas = null;
+        [SerializeField]
+        private GameObject _playedSpellCardHolder = null;
+        [SerializeField]
+        private LineRenderer _aimLine = null;
 
         [Header("Nicknames")]
         [SerializeField]
@@ -114,6 +122,8 @@ namespace RicoClient.Scripts.Game
             MyHandCardLogic.OnCardSelected += CardSelected;
             MyCurrentCardLogic.OnCardReturnedToHand += CardDeselected;
             MyCurrentCardLogic.OnCardDroppedToBoard += CardDropped;
+            MyCurrentSpellLogic.OnSpellReturnedToHand += CardDeselected;
+            MyCurrentSpellLogic.OnSpellDroppedToTarget += SpellPlayed;
             MyBoardCardLogic.OnCardPrepAttack += CardTakenToAttack;
             MyBoardCardLogic.OnCardUnprepAttack += CardReleasedFromAttack;
             MyBoardCardLogic.OnWarcryCheck += ActivateWarcryAbility;
@@ -165,6 +175,8 @@ namespace RicoClient.Scripts.Game
             MyHandCardLogic.OnCardSelected -= CardSelected;
             MyCurrentCardLogic.OnCardReturnedToHand -= CardDeselected;
             MyCurrentCardLogic.OnCardDroppedToBoard -= CardDropped;
+            MyCurrentSpellLogic.OnSpellReturnedToHand -= CardDeselected;
+            MyCurrentSpellLogic.OnSpellDroppedToTarget -= SpellPlayed;
             MyBoardCardLogic.OnCardPrepAttack -= CardTakenToAttack;
             MyBoardCardLogic.OnCardUnprepAttack -= CardReleasedFromAttack;
             MyBoardCardLogic.OnWarcryCheck -= ActivateWarcryAbility;
@@ -240,7 +252,7 @@ namespace RicoClient.Scripts.Game
 
         public void MyCardPlayed(WSResponse resp)
         {
-            CardPlayResponse payload = JsonConvert.DeserializeObject<CardPlayResponse>(resp.Payload.ToString());
+            CardPlayPayload payload = JsonConvert.DeserializeObject<CardPlayPayload>(resp.Payload.ToString());
             if (!payload.Approved)  // If not approved means some cheat attempt or net bug. How resolve?
             {
                 Debug.LogError(resp.Error);
@@ -252,13 +264,173 @@ namespace RicoClient.Scripts.Game
             _enemyHand.PlayCardFromHand();
 
             Card card = _cards.GetCardById(data.CardId);
-            _enemyBoard.AddEnemyCardOnBoard(ConvertTakenCardToScript(card, data.DeckCardId));
+            BaseCardScript cardScript = ConvertTakenCardToScript(card, data.DeckCardId);
+
             _enemyResources.text = (EnemyResources - card.Cost).ToString();
+
+            if (!(cardScript is SpellCardScript))
+            {
+                _enemyBoard.AddEnemyCardOnBoard(cardScript);
+            }
+            else
+            {
+                ShowSpell((SpellCardScript) cardScript);
+            }
         }
 
-        public void BattlePhase()
+        public void MyAbilityUsed(WSResponse resp)
         {
-            
+            AbilityUsePayload payload = JsonConvert.DeserializeObject<AbilityUsePayload>(resp.Payload.ToString());
+            if (!payload.Approved)  // If not approved means some cheat attempt or net bug. How resolve?
+            {
+                Debug.LogError($"{resp.Error} with card deck id {payload.DeckCardId}!");
+            }
+        }
+
+        public void EnemyAbilityUsed(EnemyAbilityUsePayload data)
+        {
+            Card abilityCard = _cards.GetCardById(data.CardId);
+
+            if (data.TargetDeckCardId != -1)
+            {
+                if (data.TargetDeckCardId == 0)  // If base
+                {
+                    BaseBuildingScript baseBuilding = null;
+                    if (data.Target.HasFlag(AbilityTargetType.Ally))
+                        baseBuilding = _myBase;
+                    else if (data.Target.HasFlag(AbilityTargetType.Enemy))
+                        baseBuilding = _enemyBase;
+
+                    if (abilityCard.Ability.Type == AbilityType.Damage)
+                    {
+                        baseBuilding.ShiftStats(-abilityCard.Ability.Health);
+                    }
+                    else if (abilityCard.Ability.Type == AbilityType.Buff)
+                    {
+                        baseBuilding.ShiftStats(abilityCard.Ability.Health);
+                    }
+
+                    baseBuilding.TemporaryHighlight(AbilityTargetShowMs);
+                }
+                else   // If card
+                {
+                    EntityCardScript card = null;
+                    if (data.Target.HasFlag(AbilityTargetType.Ally))
+                    {
+                        card = FindCardOnBoard(_myBoard, data.TargetDeckCardId);
+                    }
+                    else if (data.Target.HasFlag(AbilityTargetType.Enemy))
+                    {
+                        card = FindCardOnBoard(_enemyBoard, data.TargetDeckCardId);
+                    }
+
+                    if (abilityCard.Ability.Type == AbilityType.Damage)
+                    {
+                        card.ShiftStats(-abilityCard.Ability.Health, -abilityCard.Ability.Attack);
+                    }
+                    else if (abilityCard.Ability.Type == AbilityType.Buff)
+                    {
+                        card.ShiftStats(abilityCard.Ability.Health, abilityCard.Ability.Attack);
+                    }
+
+                    ((BaseBoardLogic) card.Logic).TemporaryHighlight(AbilityTargetShowMs);
+                }
+            }
+            else
+            {
+                if (data.Target.HasFlag(AbilityTargetType.Ally))  // If friend haas been damaged
+                {
+                    foreach (var myBoardCard in _myBoard.OnBoardCards)
+                    {
+                        EntityCardScript entityCard = null;
+                        if (abilityCard.Ability.TargetType.HasFlag(CardType.Unit))  // If unit been damaged
+                        {
+                            entityCard = myBoardCard.GetComponentInChildren<UnitCardScript>();
+                        }
+
+                        if (entityCard == null && abilityCard.Ability.TargetType.HasFlag(CardType.Building))   // If building been damaged
+                        {
+                            entityCard = myBoardCard.GetComponentInChildren<BuildingCardScript>();
+                        }
+
+                        if (entityCard != null)
+                        {
+                            if (abilityCard.Ability.Type == AbilityType.Damage)
+                            {
+                                entityCard.ShiftStats(-abilityCard.Ability.Health, -abilityCard.Ability.Attack);
+                            }
+                            else if (abilityCard.Ability.Type == AbilityType.Buff)
+                            {
+                                entityCard.ShiftStats(abilityCard.Ability.Health, abilityCard.Ability.Attack);
+                            }
+
+                            ((BaseBoardLogic) entityCard.Logic).TemporaryHighlight(AbilityTargetShowMs);
+                        }
+                    }
+
+                    if (abilityCard.Ability.TargetType.HasFlag(CardType.Base))   // If base been damaged
+                    {
+                        if (abilityCard.Ability.Type == AbilityType.Damage)
+                        {
+                            _myBase.ShiftStats(-abilityCard.Ability.Health);
+                        }
+                        else if (abilityCard.Ability.Type == AbilityType.Buff)
+                        {
+                            _myBase.ShiftStats(abilityCard.Ability.Health);
+                        }
+
+                        _myBase.TemporaryHighlight(AbilityTargetShowMs);
+                    }
+                }
+
+                if (data.Target.HasFlag(AbilityTargetType.Enemy))
+                {
+                    foreach (var enemyBoardCard in _enemyBoard.OnBoardCards)
+                    {
+                        EntityCardScript entityCard = null;
+                        if (abilityCard.Ability.TargetType.HasFlag(CardType.Unit))  
+                        {
+                            entityCard = enemyBoardCard.GetComponentInChildren<UnitCardScript>();
+                        }
+
+                        if (entityCard == null && abilityCard.Ability.TargetType.HasFlag(CardType.Building)) 
+                        {
+                            entityCard = enemyBoardCard.GetComponentInChildren<BuildingCardScript>();
+                        }
+
+                        if (entityCard != null)
+                        {
+                            if (abilityCard.Ability.Type == AbilityType.Damage)
+                            {
+                                entityCard.ShiftStats(-abilityCard.Ability.Health, -abilityCard.Ability.Attack);
+                            }
+                            else if (abilityCard.Ability.Type == AbilityType.Buff)
+                            {
+                                entityCard.ShiftStats(abilityCard.Ability.Health, abilityCard.Ability.Attack);
+                            }
+
+                            ((BaseBoardLogic) entityCard.Logic).TemporaryHighlight(AbilityTargetShowMs);
+                        }
+                    }
+
+                    if (abilityCard.Ability.TargetType.HasFlag(CardType.Base))
+                    {
+                        if (abilityCard.Ability.Type == AbilityType.Damage)
+                        {
+                            _enemyBase.ShiftStats(-abilityCard.Ability.Health);
+                        }
+                        else if (abilityCard.Ability.Type == AbilityType.Buff)
+                        {
+                            _enemyBase.ShiftStats(abilityCard.Ability.Health);
+                        }
+
+                        _enemyBase.TemporaryHighlight(AbilityTargetShowMs);
+                    }
+                }
+            }
+
+            RemoveAllDeadMinions();
+            CheckBasesStatus();
         }
 
         public async void OnEndTurnClick()
@@ -275,35 +447,61 @@ namespace RicoClient.Scripts.Game
 
         private void OnWebsocketMessage(WSResponse msg)
         {
-            switch (msg.Type)
+            try
             {
-                case ResponseCommandType.PlayersTurnStart:
-                    PlayerStartTurnPayload myTurnStartData = JsonConvert.DeserializeObject<PlayerStartTurnPayload>(msg.Payload.ToString());
-                    MyTurnStart(myTurnStartData.PlayerTakenCards);
-                    break;
-                case ResponseCommandType.EnemyTurnStart:
-                    EnemyStartTurnPayload enemyTurnStartData = JsonConvert.DeserializeObject<EnemyStartTurnPayload>(msg.Payload.ToString());
-                    EnemyTurnStart(enemyTurnStartData.EnemyTakenCards);
-                    break;
-                case ResponseCommandType.PlayersTurnFinsh:
-                    MyTurnFinish();
-                    break;
-                case ResponseCommandType.EnemyTurnFinsh:
-                    EnemyTurnFinish();
-                    break;
-                case ResponseCommandType.CardPlayResponse:
-                    MyCardPlayed(msg);
-                    break;
-                case ResponseCommandType.EnemyCardPlayResponse:
-                    EnemyCardPlayPayload enemyCardPlayData = JsonConvert.DeserializeObject<EnemyCardPlayPayload>(msg.Payload.ToString());
-                    EnemyCardPlayed(enemyCardPlayData);
-                    break;
+                switch (msg.Type)
+                {
+                    case ResponseCommandType.PlayersTurnStart:
+                        PlayerStartTurnPayload myTurnStartData = JsonConvert.DeserializeObject<PlayerStartTurnPayload>(msg.Payload.ToString());
+                        MyTurnStart(myTurnStartData.PlayerTakenCards);
+                        break;
+                    case ResponseCommandType.EnemyTurnStart:
+                        EnemyStartTurnPayload enemyTurnStartData = JsonConvert.DeserializeObject<EnemyStartTurnPayload>(msg.Payload.ToString());
+                        EnemyTurnStart(enemyTurnStartData.EnemyTakenCards);
+                        break;
+                    case ResponseCommandType.PlayersTurnFinsh:
+                        MyTurnFinish();
+                        break;
+                    case ResponseCommandType.EnemyTurnFinsh:
+                        EnemyTurnFinish();
+                        break;
+                    case ResponseCommandType.CardPlayResponse:
+                        MyCardPlayed(msg);
+                        break;
+                    case ResponseCommandType.EnemyCardPlayResponse:
+                        EnemyCardPlayPayload enemyCardPlayData = JsonConvert.DeserializeObject<EnemyCardPlayPayload>(msg.Payload.ToString());
+                        EnemyCardPlayed(enemyCardPlayData);
+                        break;
+                    case ResponseCommandType.UseAbilityResponse:
+                        MyAbilityUsed(msg);
+                        break;
+                    case ResponseCommandType.EnemyUseAbilityResponse:
+                        EnemyAbilityUsePayload enemyAbilityUseData = JsonConvert.DeserializeObject<EnemyAbilityUsePayload>(msg.Payload.ToString());
+                        EnemyAbilityUsed(enemyAbilityUseData);
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
             }
         }
 
         private void OnWebsocketError(string error)
         {
             Debug.LogError($"An error has occurred during game: {error}!");
+        }
+
+        private async void ShowSpell(SpellCardScript cardScript)
+        {
+            var initialSize = _playedSpellCardHolder.GetComponent<RectTransform>().sizeDelta;
+            RectTransform cardTransform = cardScript.GetComponent<RectTransform>();
+            cardTransform.SetParent(_playedSpellCardHolder.transform, false);
+            cardTransform.localPosition = Vector3.zero;
+            cardTransform.sizeDelta = initialSize;
+
+            await UniTask.Delay(SpellShowMs);
+            Destroy(cardScript.gameObject);
         }
 
         private void TakeMyCards(List<TakenCardPayload> cards)
@@ -336,22 +534,37 @@ namespace RicoClient.Scripts.Game
             if (card.Cost > MyResources)
                 return;
 
-            card.Select(_screenOverlayCanvas.transform);
-            _myHand.BlockHand();
-
             if (!(card is SpellCardScript))
             {
+                card.Select(_screenOverlayCanvas.transform);
                 _myBoard.HighlightAreaWith(card);
             }
             else
             {
+                Vector3[] corners = new Vector3[4];
+                _myBase.GetComponent<RectTransform>().GetWorldCorners(corners);
+                Vector3 upperBaseSide = new Vector3((corners[1].x + corners[2].x) / 2, corners[1].y, corners[1].z);
+                _aimLine.SetPositions(new Vector3[] { upperBaseSide, upperBaseSide });
 
+                card.ActiveSpell(_screenOverlayCanvas.transform, _aimLine);
+
+                ActivateWarcryAbility(card);
             }
+
+            _myHand.BlockHand();
         }
 
         private void CardDeselected(BaseCardScript card)
         {
-            _myBoard.RemoveHighlight();
+            if (!(card is SpellCardScript))
+            {
+                _myBoard.RemoveHighlight();
+            }
+            else
+            {
+                ClearAllHighlights();
+            }
+            
             _myHand.EnableHand();
         }
 
@@ -367,7 +580,30 @@ namespace RicoClient.Scripts.Game
             await _game.SendPlacedCardMessage(card.DeckCardId);
         }
 
-        private void ActivateWarcryAbility(BaseCardScript cardScript)
+        private void SpellPlayed(GameObject inHandHolder, BaseCardScript card)
+        {
+            _myResources.text = (MyResources - card.Cost).ToString();
+
+            ClearAllHighlights();
+            Destroy(inHandHolder);
+            Destroy(card.gameObject);
+            _myHand.RecalculateSpacing(1);
+            _myHand.EnableHand();
+        }
+
+        private EntityCardScript FindCardOnBoard(BoardScript board, int deckCardId)
+        {
+            foreach (var boardCard in board.OnBoardCards)
+            {
+                EntityCardScript card = boardCard.GetComponentInChildren<EntityCardScript>();
+                if (card.DeckCardId == deckCardId)
+                    return card;
+            }
+
+            return null;
+        }
+
+        private async void ActivateWarcryAbility(BaseCardScript cardScript)
         {
             Card card = _cards.GetCardById(cardScript.CardId);
 
@@ -382,26 +618,22 @@ namespace RicoClient.Scripts.Game
             {
                 foreach (var myBoardCard in _myBoard.OnBoardCards)
                 {
+                    EntityCardScript entityCard = null;
                     if (card.Ability.TargetType.HasFlag(CardType.Unit))
                     {
-                        UnitCardScript unitCard = myBoardCard.GetComponentInChildren<UnitCardScript>();
-                        if (unitCard != null)
-                        {
-                            BaseBoardLogic cardLogic = (BaseBoardLogic) unitCard.Logic;
-                            cardLogic.HighlightCard();
-                            highlitedCards++;
-                        }
+                        entityCard = myBoardCard.GetComponentInChildren<UnitCardScript>();
                     }
                     
-                    if (card.Ability.TargetType.HasFlag(CardType.Building))
+                    if (entityCard == null && card.Ability.TargetType.HasFlag(CardType.Building))
                     {
-                        BuildingCardScript buildingCard = myBoardCard.GetComponentInChildren<BuildingCardScript>();
-                        if (buildingCard != null)
-                        {
-                            BaseBoardLogic cardLogic = (BaseBoardLogic) buildingCard.Logic;
-                            cardLogic.HighlightCard();
-                            highlitedCards++;
-                        }
+                        entityCard = myBoardCard.GetComponentInChildren<BuildingCardScript>();
+                    }
+
+                    if (entityCard != null)
+                    {
+                        BaseBoardLogic cardLogic = (BaseBoardLogic) entityCard.Logic;
+                        cardLogic.HighlightCard();
+                        highlitedCards++;
                     }
                 }
 
@@ -416,26 +648,22 @@ namespace RicoClient.Scripts.Game
             {
                 foreach (var enemyBoardCard in _enemyBoard.OnBoardCards)
                 {
+                    EntityCardScript entityCard = null;
                     if (card.Ability.TargetType.HasFlag(CardType.Unit))
                     {
-                        UnitCardScript unitCard = enemyBoardCard.GetComponentInChildren<UnitCardScript>();
-                        if (unitCard != null)
-                        {
-                            BaseBoardLogic cardLogic = (BaseBoardLogic) unitCard.Logic;
-                            cardLogic.HighlightCard();
-                            highlitedCards++;
-                        }
+                        entityCard = enemyBoardCard.GetComponentInChildren<UnitCardScript>();
                     }
 
-                    if (card.Ability.TargetType.HasFlag(CardType.Building))
+                    if (entityCard == null && card.Ability.TargetType.HasFlag(CardType.Building))
                     {
-                        BuildingCardScript buildingCard = enemyBoardCard.GetComponentInChildren<BuildingCardScript>();
-                        if (buildingCard != null)
-                        {
-                            BaseBoardLogic cardLogic = (BaseBoardLogic) buildingCard.Logic;
-                            cardLogic.HighlightCard();
-                            highlitedCards++;
-                        }
+                        entityCard = enemyBoardCard.GetComponentInChildren<BuildingCardScript>();
+                    }
+
+                    if (entityCard != null)
+                    {
+                        BaseBoardLogic cardLogic = (BaseBoardLogic) entityCard.Logic;
+                        cardLogic.HighlightCard();
+                        highlitedCards++;
                     }
                 }
 
@@ -448,12 +676,20 @@ namespace RicoClient.Scripts.Game
 
             if (highlitedCards > 0)
             {
-                ((MyBoardCardLogic) cardScript.Logic).ActivateDirectedAbility();
+                if (!(cardScript is SpellCardScript))
+                {
+                    ((MyBoardCardLogic) cardScript.Logic).ActivateDirectedAbility();
+                }
+
                 _currentAbilityCard = cardScript;
             }
             else
             {
-                // send none
+                // If not a spell and no targets - ignore ability
+                if (!(cardScript is SpellCardScript))
+                {
+                    await _game.SendUsedAbilityMessage(cardScript.DeckCardId, -1, AbilityTargetType.None);
+                }
             }
         }
 
@@ -492,7 +728,11 @@ namespace RicoClient.Scripts.Game
             }
             else if (_currentAbilityCard != null)  // Mean we aiming with ability or spell card
             {
-                ((MyBoardCardLogic) _currentAbilityCard.Logic).SetAimTarget(targetDownSide);
+                MyBoardCardLogic logic = _currentAbilityCard.Logic as MyBoardCardLogic; 
+                if (logic != null)
+                    logic.SetAimTarget(targetDownSide);
+                else
+                    ((MyCurrentSpellLogic) _currentAbilityCard.Logic).SetAimTarget(targetDownSide);
             }
         }
 
@@ -504,11 +744,15 @@ namespace RicoClient.Scripts.Game
             }
             else if (_currentAbilityCard != null)
             {
-                ((MyBoardCardLogic) _currentAbilityCard.Logic).RemoveAimTarget();
+                MyBoardCardLogic logic = _currentAbilityCard.Logic as MyBoardCardLogic;
+                if (logic != null)
+                    logic.RemoveAimTarget();
+                else
+                    ((MyCurrentSpellLogic) _currentAbilityCard.Logic).RemoveAimTarget();
             }
         }
 
-        private void CardBeenChoosedForAction(BaseCardScript card)
+        private async void CardBeenChoosedForAction(BaseCardScript card)
         {
             if (_currentAttackingCard != null)
             {
@@ -524,11 +768,26 @@ namespace RicoClient.Scripts.Game
             {
                 Card currentCard = _cards.GetCardById(_currentAbilityCard.CardId);
 
+                // Remove every highlight and aim line
+                MyBoardCardLogic abilityLogic = _currentAbilityCard.Logic as MyBoardCardLogic;
+                if (abilityLogic != null)
+                {
+                    abilityLogic.RemoveAimTarget();
+                    abilityLogic.DeactivateDirectedAbility();
+                }
+                else
+                {
+                    ((MyCurrentSpellLogic) _currentAbilityCard.Logic).IsApllied = true;
+                    await _game.SendPlacedCardMessage(_currentAbilityCard.DeckCardId);
+                }
+
                 if (currentCard.Ability.TargetCount == 1)
                 {
-                    // Send info about
-
                     EntityCardScript entity = (EntityCardScript) card;
+
+                    AbilityTargetType targetType = entity.Logic is MyBoardCardLogic ? AbilityTargetType.Ally : AbilityTargetType.Enemy;
+                    await _game.SendUsedAbilityMessage(_currentAbilityCard.DeckCardId, card.DeckCardId, targetType);
+
                     if (currentCard.Ability.Type == AbilityType.Damage)
                     {
                         entity.ShiftStats(-currentCard.Ability.Health, -currentCard.Ability.Attack);
@@ -540,133 +799,19 @@ namespace RicoClient.Scripts.Game
                 }
                 else if (currentCard.Ability.TargetCount == -1)
                 {
-                    // Send info about
+                    await _game.SendUsedAbilityMessage(_currentAbilityCard.DeckCardId, -1, currentCard.Ability.Target);
 
-                    if (currentCard.Ability.Target.HasFlag(AbilityTargetType.Ally))  // If friend can be damaged
-                    {
-                        foreach (var myBoardCard in _myBoard.OnBoardCards)
-                        {
-                            if (currentCard.Ability.TargetType.HasFlag(CardType.Unit))  // If unit can be damaged
-                            {
-                                UnitCardScript unitCard = myBoardCard.GetComponentInChildren<UnitCardScript>();
-                                if (unitCard != null)
-                                {
-                                    if (currentCard.Ability.Type == AbilityType.Damage)
-                                    {
-                                        unitCard.ShiftStats(-currentCard.Ability.Health, -currentCard.Ability.Attack);
-                                    }
-                                    else if (currentCard.Ability.Type == AbilityType.Buff)
-                                    {
-                                        unitCard.ShiftStats(currentCard.Ability.Health, currentCard.Ability.Attack);
-                                    }
-                                }
-                            }
-
-                            if (currentCard.Ability.TargetType.HasFlag(CardType.Building))   // If building can be damaged
-                            {
-                                BuildingCardScript buildingCard = myBoardCard.GetComponentInChildren<BuildingCardScript>();
-                                if (buildingCard != null)
-                                {
-                                    if (currentCard.Ability.Type == AbilityType.Damage)
-                                    {
-                                        buildingCard.ShiftStats(-currentCard.Ability.Health, -currentCard.Ability.Attack);
-                                    }
-                                    else if (currentCard.Ability.Type == AbilityType.Buff)
-                                    {
-                                        buildingCard.ShiftStats(currentCard.Ability.Health, currentCard.Ability.Attack);
-                                    }
-                                }
-                            }
-                        }
-
-                        if (currentCard.Ability.TargetType.HasFlag(CardType.Base))   // If base can be damaged
-                        {
-                            if (currentCard.Ability.Type == AbilityType.Damage)
-                            {
-                                _myBase.ShiftStats(-currentCard.Ability.Health);
-                            }
-                            else if (currentCard.Ability.Type == AbilityType.Buff)
-                            {
-                                _myBase.ShiftStats(currentCard.Ability.Health);
-                            }
-                        }
-                    }
-
-                    if (currentCard.Ability.Target.HasFlag(AbilityTargetType.Enemy))
-                    {
-                        foreach (var enemyBoardCard in _enemyBoard.OnBoardCards)
-                        {
-                            if (currentCard.Ability.TargetType.HasFlag(CardType.Unit))
-                            {
-                                UnitCardScript unitCard = enemyBoardCard.GetComponentInChildren<UnitCardScript>();
-                                if (unitCard != null)
-                                {
-                                    if (currentCard.Ability.Type == AbilityType.Damage)
-                                    {
-                                        unitCard.ShiftStats(-currentCard.Ability.Health, -currentCard.Ability.Attack);
-                                    }
-                                    else if (currentCard.Ability.Type == AbilityType.Buff)
-                                    {
-                                        unitCard.ShiftStats(currentCard.Ability.Health, currentCard.Ability.Attack);
-                                    }
-                                }
-                            }
-
-                            if (currentCard.Ability.TargetType.HasFlag(CardType.Building))
-                            {
-                                BuildingCardScript buildingCard = enemyBoardCard.GetComponentInChildren<BuildingCardScript>();
-                                if (buildingCard != null)
-                                {
-                                    if (currentCard.Ability.Type == AbilityType.Damage)
-                                    {
-                                        buildingCard.ShiftStats(-currentCard.Ability.Health, -currentCard.Ability.Attack);
-                                    }
-                                    else if (currentCard.Ability.Type == AbilityType.Buff)
-                                    {
-                                        buildingCard.ShiftStats(currentCard.Ability.Health, currentCard.Ability.Attack);
-                                    }
-                                }
-                            }
-                        }
-
-                        if (currentCard.Ability.TargetType.HasFlag(CardType.Base))
-                        {
-                            if (currentCard.Ability.Type == AbilityType.Damage)
-                            {
-                                _enemyBase.ShiftStats(-currentCard.Ability.Health);
-                            }
-                            else if (currentCard.Ability.Type == AbilityType.Buff)
-                            {
-                                _enemyBase.ShiftStats(currentCard.Ability.Health);
-                            }
-                        }
-                    }
+                    ApplyAbilityOnEverybody(currentCard);
                 }
 
-                // Remove every highlight and aim line
-                MyBoardCardLogic abilityLogic = (MyBoardCardLogic) _currentAbilityCard.Logic;
-                abilityLogic.RemoveAimTarget();
-                abilityLogic.DeactivateDirectedAbility();
-
-                foreach (var myOnBoardCard in _myBoard.OnBoardCards)
-                {
-                    BaseBoardLogic cardLogic = (BaseBoardLogic) myOnBoardCard.GetComponentInChildren<BaseCardScript>().Logic;
-                    cardLogic.UnhighlightCard();
-                }
-                foreach (var enemyOnBoardCard in _enemyBoard.OnBoardCards)
-                {
-                    BaseBoardLogic cardLogic = (BaseBoardLogic)enemyOnBoardCard.GetComponentInChildren<BaseCardScript>().Logic;
-                    cardLogic.UnhighlightCard();
-                }
-                _myBase.Unhighlight();
-                _enemyBase.Unhighlight();
-
-                // Check for death
-
+                ClearAllHighlights();
             }
+
+            RemoveAllDeadMinions();
+            CheckBasesStatus();
         }
 
-        private void BaseBeenChoosedForAction(BaseBuildingScript baseBuilding)
+        private async void BaseBeenChoosedForAction(BaseBuildingScript baseBuilding)
         {
             if (_currentAttackingCard != null)
             {
@@ -678,13 +823,182 @@ namespace RicoClient.Scripts.Game
             }
             else if (_currentAbilityCard != null)
             {
-                // Base
+                Card currentCard = _cards.GetCardById(_currentAbilityCard.CardId);
+
+                // Remove every highlight and aim line
+                MyBoardCardLogic abilityLogic = _currentAbilityCard.Logic as MyBoardCardLogic;
+                if (abilityLogic != null)
+                {
+                    abilityLogic.RemoveAimTarget();
+                    abilityLogic.DeactivateDirectedAbility();
+                }
+                else
+                {
+                    ((MyCurrentSpellLogic) _currentAbilityCard.Logic).IsApllied = true;
+                    await _game.SendPlacedCardMessage(_currentAbilityCard.DeckCardId);
+                }
+
+                if (currentCard.Ability.TargetCount == 1)
+                {
+                    AbilityTargetType targetType = baseBuilding == _myBase ? AbilityTargetType.Ally : AbilityTargetType.Enemy;
+                    await _game.SendUsedAbilityMessage(_currentAbilityCard.DeckCardId, 0, targetType);
+
+                    if (currentCard.Ability.Type == AbilityType.Damage)
+                    {
+                        baseBuilding.ShiftStats(-currentCard.Ability.Health);
+                    }
+                    else if (currentCard.Ability.Type == AbilityType.Buff)
+                    {
+                        baseBuilding.ShiftStats(currentCard.Ability.Health);
+                    }
+                }
+                else if (currentCard.Ability.TargetCount == -1)
+                {
+                    await _game.SendUsedAbilityMessage(_currentAbilityCard.DeckCardId, -1, currentCard.Ability.Target);
+
+                    ApplyAbilityOnEverybody(currentCard);
+                }
+
+                ClearAllHighlights();
+
+                RemoveAllDeadMinions();
+                CheckBasesStatus();
             }
         }
 
-        private void ApplyAbilityOnEverybody()
+        private void ClearAllHighlights()
         {
+            foreach (var myOnBoardCard in _myBoard.OnBoardCards)
+            {
+                BaseBoardLogic cardLogic = (BaseBoardLogic) myOnBoardCard.GetComponentInChildren<BaseCardScript>().Logic;
+                cardLogic.UnhighlightCard();
+            }
+            foreach (var enemyOnBoardCard in _enemyBoard.OnBoardCards)
+            {
+                BaseBoardLogic cardLogic = (BaseBoardLogic) enemyOnBoardCard.GetComponentInChildren<BaseCardScript>().Logic;
+                cardLogic.UnhighlightCard();
+            }
+            _myBase.Unhighlight();
+            _enemyBase.Unhighlight();
+        }
 
+        private void RemoveAllDeadMinions()
+        {
+            for (int i = 0; i < _myBoard.OnBoardCards.Count; i++)
+            {
+                var myOnBoardCard = _myBoard.OnBoardCards[i];
+                EntityCardScript minionCard = myOnBoardCard.GetComponentInChildren<EntityCardScript>();
+                if (minionCard.Health <= 0)
+                {
+                    _myBoard.OnBoardCards.RemoveAt(i);
+                    Destroy(myOnBoardCard);
+                    i--;
+                }
+            }
+            for (int i = 0; i < _enemyBoard.OnBoardCards.Count; i++)
+            {
+                var enemyOnBoardCard = _enemyBoard.OnBoardCards[i];
+                EntityCardScript minionCard = enemyOnBoardCard.GetComponentInChildren<EntityCardScript>();
+                if (minionCard.Health <= 0)
+                {
+                    _enemyBoard.OnBoardCards.RemoveAt(i);
+                    Destroy(enemyOnBoardCard);
+                    i--;
+                }
+            }
+        }
+
+        private void CheckBasesStatus()
+        {
+            bool isMyBaseDead = _myBase.Health <= 0;
+            bool isEnemyBaseDead = _enemyBase.Health <= 0;
+
+            // ToDo
+        }
+
+        private void ApplyAbilityOnEverybody(Card currentCard)
+        {
+            if (currentCard.Ability.Target.HasFlag(AbilityTargetType.Ally))  // If friend can be damaged
+            {
+                foreach (var myBoardCard in _myBoard.OnBoardCards)
+                {
+                    EntityCardScript entityCard = null;
+                    if (currentCard.Ability.TargetType.HasFlag(CardType.Unit))  // If unit can be damaged
+                    {
+                        entityCard = myBoardCard.GetComponentInChildren<UnitCardScript>();
+                    }
+
+                    if (entityCard == null && currentCard.Ability.TargetType.HasFlag(CardType.Building))   // If building can be damaged
+                    {
+                        entityCard = myBoardCard.GetComponentInChildren<BuildingCardScript>();
+                    }
+
+                    if (entityCard != null)
+                    {
+                        if (currentCard.Ability.Type == AbilityType.Damage)
+                        {
+                            entityCard.ShiftStats(-currentCard.Ability.Health, -currentCard.Ability.Attack);
+                        }
+                        else if (currentCard.Ability.Type == AbilityType.Buff)
+                        {
+                            entityCard.ShiftStats(currentCard.Ability.Health, currentCard.Ability.Attack);
+                        }
+                    }
+                }
+
+                if (currentCard.Ability.TargetType.HasFlag(CardType.Base))   // If base can be damaged
+                {
+                    if (currentCard.Ability.Type == AbilityType.Damage)
+                    {
+                        _myBase.ShiftStats(-currentCard.Ability.Health);
+                    }
+                    else if (currentCard.Ability.Type == AbilityType.Buff)
+                    {
+                        _myBase.ShiftStats(currentCard.Ability.Health);
+                    }
+                }
+            }
+
+            if (currentCard.Ability.Target.HasFlag(AbilityTargetType.Enemy))
+            {
+                foreach (var enemyBoardCard in _enemyBoard.OnBoardCards)
+                {
+                    EntityCardScript entityCard = null;
+                    if (currentCard.Ability.TargetType.HasFlag(CardType.Unit))  // If unit can be damaged
+                    {
+                        entityCard = enemyBoardCard.GetComponentInChildren<UnitCardScript>();
+                    }
+
+                    if (entityCard == null && currentCard.Ability.TargetType.HasFlag(CardType.Building))   // If building can be damaged
+                    {
+                        entityCard = enemyBoardCard.GetComponentInChildren<BuildingCardScript>();
+                    }
+
+                    if (entityCard != null)
+                    {
+                        if (currentCard.Ability.Type == AbilityType.Damage)
+                        {
+                            entityCard.ShiftStats(-currentCard.Ability.Health, -currentCard.Ability.Attack);
+                        }
+                        else if (currentCard.Ability.Type == AbilityType.Buff)
+                        {
+                            entityCard.ShiftStats(currentCard.Ability.Health, currentCard.Ability.Attack);
+                        }
+                    }
+                }
+
+                if (currentCard.Ability.TargetType.HasFlag(CardType.Base))
+                {
+                    if (currentCard.Ability.Type == AbilityType.Damage)
+                    {
+                        _enemyBase.ShiftStats(-currentCard.Ability.Health);
+                    }
+                    else if (currentCard.Ability.Type == AbilityType.Buff)
+                    {
+                        _enemyBase.ShiftStats(currentCard.Ability.Health);
+                    }
+                }
+            }
         }
 
         private int GenerateResources(List<GameObject> boardCards, BaseBuildingScript baseBuilding)

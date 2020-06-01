@@ -2,8 +2,11 @@
 
 namespace RicoClient.Scripts.Network.Entities.Websocket
 {
+    /// <summary>
+    ///  Player card play from service
+    /// </summary>
     [JsonObject]
-    public class CardPlayResponse
+    public class CardPlayPayload
     {
         [JsonProperty("approved")]
         [JsonRequired]

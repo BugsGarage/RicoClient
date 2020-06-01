@@ -2116,7 +2116,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &961794868
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2398,6 +2398,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _screenOverlayCanvas: {fileID: 1143466736}
+  _playedSpellCardHolder: {fileID: 1177835158}
+  _aimLine: {fileID: 635277202}
   _myName: {fileID: 888806725}
   _enemyName: {fileID: 555649657}
   _backCard: {fileID: 9189957903569708676, guid: 511396335b537484ba607982adf73b68, type: 3}
@@ -2592,6 +2594,7 @@ RectTransform:
   - {fileID: 888806724}
   - {fileID: 555649656}
   - {fileID: 746129505}
+  - {fileID: 1177835159}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2600,6 +2603,41 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1177835158
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1177835159}
+  m_Layer: 5
+  m_Name: PlayedSpellCardHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1177835159
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1177835158}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1143466740}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -200, y: -260}
+  m_SizeDelta: {x: 315, y: 430}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1271606624
 GameObject:
   m_ObjectHideFlags: 0

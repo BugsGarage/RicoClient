@@ -76,6 +76,11 @@ namespace RicoClient.Scripts.Cards
             Logic = new MyCurrentCardLogic(this, parent);
         }
 
+        public void ActiveSpell(Transform parent, LineRenderer aimLine)
+        {
+            Logic = new MyCurrentSpellLogic(this, parent, aimLine);
+        }
+
         public void PlaceOnBoard(LineRenderer aimLine, bool isMine)
         {
             Logic?.CardDropped();
@@ -94,6 +99,7 @@ namespace RicoClient.Scripts.Cards
         public void Copy(BaseCardScript otherCard)
         {
             CardId = otherCard.CardId;
+            DeckCardId = otherCard.DeckCardId;
             Logic = otherCard.Logic;
         }
 

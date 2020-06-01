@@ -17,6 +17,8 @@ namespace RicoClient.Scripts.Game.CardLogic.HandLogic
         {
             // Clear everything in case after MyCurrentCardLogic
             OnExit();
+
+            _canvasGroup.blocksRaycasts = true;
         }
 
         public override void OnEnter()

@@ -3,11 +3,15 @@
 namespace RicoClient.Scripts.Network.Entities.Websocket
 {
     /// <summary>
-    ///  Player card play to service
+    /// Player ability use from service
     /// </summary>
     [JsonObject]
-    public class PlayedCardPayload
+    public class AbilityUsePayload
     {
+        [JsonProperty("approved")]
+        [JsonRequired]
+        public bool Approved { get; set; }
+
         [JsonProperty("cid_id")]
         [JsonRequired]
         public int DeckCardId { get; set; }

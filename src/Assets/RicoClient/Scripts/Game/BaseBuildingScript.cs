@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TMPro;
+using UniRx.Async;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -21,6 +22,7 @@ namespace RicoClient.Scripts.Game
 
         private readonly Color SelectionColor = new Color(0.16f, 0.47f, 1, 0.59f);
         private readonly Color HighlightColor = new Color(1, 1, 1, 0.59f);
+        private readonly Color TemporaryColor = new Color(1, 0, 0, 0.59f);
 
         [SerializeField]
         protected TMP_Text _health = null;
@@ -34,10 +36,14 @@ namespace RicoClient.Scripts.Game
         private RectTransform _rectTransform;
         private Image _highlightImage;
 
+        private volatile bool _isTemporaryHighlight;
+
         protected void Awake()
         {
             _rectTransform = GetComponent<RectTransform>();
             _highlightImage = transform.parent.GetComponent<Image>();
+
+            _isTemporaryHighlight = false;
         }
 
         public void FillBase(BaseBuilding baseBuilding)
@@ -59,7 +65,7 @@ namespace RicoClient.Scripts.Game
 
         public void ShiftStats(int healthValue)
         {
-            int newHealth = Health - healthValue;
+            int newHealth = Health + healthValue;
             _health.text = newHealth.ToString();
         }
 
@@ -74,9 +80,20 @@ namespace RicoClient.Scripts.Game
             _highlightImage.enabled = false;
         }
 
+        public async void TemporaryHighlight(int intervalMs)
+        {
+            _isTemporaryHighlight = true;
+            _highlightImage.color = TemporaryColor;
+            _highlightImage.enabled = true;
+
+            await UniTask.Delay(intervalMs);
+            _highlightImage.enabled = false;
+            _isTemporaryHighlight = false;
+        }
+
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (_highlightImage.enabled)
+            if (_highlightImage.enabled && !_isTemporaryHighlight)
             {
                 _highlightImage.color = SelectionColor;
 
@@ -90,7 +107,7 @@ namespace RicoClient.Scripts.Game
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (_highlightImage.enabled)
+            if (_highlightImage.enabled && !_isTemporaryHighlight)
             {
                 _highlightImage.color = HighlightColor;
 
@@ -100,7 +117,7 @@ namespace RicoClient.Scripts.Game
 
         public void OnDrop(PointerEventData eventData)
         {
-            if (_highlightImage.enabled)
+            if (_highlightImage.enabled && !_isTemporaryHighlight)
             {
                 OnOnDropped?.Invoke(this);
             }
@@ -108,7 +125,7 @@ namespace RicoClient.Scripts.Game
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left)
+            if (eventData.button == PointerEventData.InputButton.Left && _highlightImage.enabled && !_isTemporaryHighlight)
             {
                 OnClicked?.Invoke(this);
             }   

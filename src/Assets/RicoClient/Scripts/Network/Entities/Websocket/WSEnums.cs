@@ -7,7 +7,9 @@
         Disconnect,
         GameStartReady,
         EndTurnReady,
-        CardPlayRequest
+        CardPlayRequest,
+        AbilityUseRequest,
+        AttackRequest
     }
 
     public enum ResponseCommandType
@@ -21,6 +23,11 @@
         PlayersTurnStart,
         EnemyTurnStart,
         CardPlayResponse,
-        EnemyCardPlayResponse
+        EnemyCardPlayResponse,
+        CanUseAbilityResponse,
+        UseAbilityResponse,
+        EnemyUseAbilityResponse,
+        AttackResponse,
+        EnemyAttackResponse
     }
 }

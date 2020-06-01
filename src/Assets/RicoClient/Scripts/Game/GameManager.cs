@@ -9,6 +9,7 @@ using System;
 using System.Text;
 using UniRx.Async;
 using UnityEngine;
+using RicoClient.Scripts.Cards.Entities;
 
 namespace RicoClient.Scripts.Game
 {
@@ -134,13 +135,22 @@ namespace RicoClient.Scripts.Game
             await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.CardPlayRequest, payload)));
         }
 
+        public async UniTask SendUsedAbilityMessage(int deckCardId, int targetDeckCardId, AbilityTargetType target)
+        {
+            UsedAbilityPayload payload = new UsedAbilityPayload() { 
+                DeckCardId = deckCardId, TargetDeckCardId = targetDeckCardId, Target = target
+            };
+            Debug.Log(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.AbilityUseRequest, payload)));
+            await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.AbilityUseRequest, payload)));
+        }
+
         #region IDisposable Support
 
         private volatile bool _disposed = false;
 
         protected virtual async void Dispose(bool disposing)
         {
-            Debug.Log("User disposed");
+            Debug.Log("Game disposed");
 
             if (!_disposed)
             {
