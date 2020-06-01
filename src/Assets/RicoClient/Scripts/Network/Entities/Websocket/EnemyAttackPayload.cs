@@ -13,6 +13,7 @@ namespace RicoClient.Scripts.Network.Entities.Websocket
         public int DeckCardId { get; set; }
 
         [JsonProperty("target_cid_id")]
+        [JsonRequired]
         public int TargetDeckCardId { get; set; }
     }
 }

@@ -38,6 +38,7 @@ namespace RicoClient.Scripts.Game
 
         private const int SpellShowMs = 2500;
         private const int AbilityTargetShowMs = 2000;
+        private const int AttackShowMs = 1500;
 
         private CardsManager _cards;
         private GameManager _game;
@@ -310,7 +311,7 @@ namespace RicoClient.Scripts.Game
                         baseBuilding.ShiftStats(abilityCard.Ability.Health);
                     }
 
-                    baseBuilding.TemporaryHighlight(AbilityTargetShowMs);
+                    baseBuilding.TemporaryTargetHighlight(AbilityTargetShowMs);
                 }
                 else   // If card
                 {
@@ -333,7 +334,7 @@ namespace RicoClient.Scripts.Game
                         card.ShiftStats(abilityCard.Ability.Health, abilityCard.Ability.Attack);
                     }
 
-                    ((BaseBoardLogic) card.Logic).TemporaryHighlight(AbilityTargetShowMs);
+                    ((BaseBoardLogic) card.Logic).TemporaryTargetHighlight(AbilityTargetShowMs);
                 }
             }
             else
@@ -364,7 +365,7 @@ namespace RicoClient.Scripts.Game
                                 entityCard.ShiftStats(abilityCard.Ability.Health, abilityCard.Ability.Attack);
                             }
 
-                            ((BaseBoardLogic) entityCard.Logic).TemporaryHighlight(AbilityTargetShowMs);
+                            ((BaseBoardLogic) entityCard.Logic).TemporaryTargetHighlight(AbilityTargetShowMs);
                         }
                     }
 
@@ -379,7 +380,7 @@ namespace RicoClient.Scripts.Game
                             _myBase.ShiftStats(abilityCard.Ability.Health);
                         }
 
-                        _myBase.TemporaryHighlight(AbilityTargetShowMs);
+                        _myBase.TemporaryTargetHighlight(AbilityTargetShowMs);
                     }
                 }
 
@@ -409,7 +410,7 @@ namespace RicoClient.Scripts.Game
                                 entityCard.ShiftStats(abilityCard.Ability.Health, abilityCard.Ability.Attack);
                             }
 
-                            ((BaseBoardLogic) entityCard.Logic).TemporaryHighlight(AbilityTargetShowMs);
+                            ((BaseBoardLogic) entityCard.Logic).TemporaryTargetHighlight(AbilityTargetShowMs);
                         }
                     }
 
@@ -424,13 +425,45 @@ namespace RicoClient.Scripts.Game
                             _enemyBase.ShiftStats(abilityCard.Ability.Health);
                         }
 
-                        _enemyBase.TemporaryHighlight(AbilityTargetShowMs);
+                        _enemyBase.TemporaryTargetHighlight(AbilityTargetShowMs);
                     }
                 }
             }
 
             RemoveAllDeadMinions();
             CheckBasesStatus();
+        }
+
+        public void MyAttacked(WSResponse resp)
+        {
+            AttackPayload payload = JsonConvert.DeserializeObject<AttackPayload>(resp.Payload.ToString());
+            if (!payload.Approved)  // If not approved means some cheat attempt or net bug. How resolve?
+            {
+                Debug.LogError($"{resp.Error} with card deck id {payload.DeckCardId}!");
+            }
+        }
+
+        public void EnemyAttacked(EnemyAttackPayload data)
+        {
+            EntityCardScript attackCard = FindCardOnBoard(_enemyBoard, data.DeckCardId);
+
+            if (data.TargetDeckCardId == 0)  // If base
+            {
+                _myBase.Damage(attackCard.Attack);
+
+                ((BaseBoardLogic) attackCard.Logic).TemporaryAttackerHighlight(AttackShowMs);
+                _myBase.TemporaryTargetHighlight(AttackShowMs);
+            }
+            else   // If card
+            {
+                EntityCardScript targetCard = FindCardOnBoard(_myBoard, data.TargetDeckCardId);
+
+                targetCard.Damage(attackCard.Attack);
+                attackCard.Damage(targetCard.Attack);
+
+                ((BaseBoardLogic) attackCard.Logic).TemporaryAttackerHighlight(AttackShowMs);
+                ((BaseBoardLogic) targetCard.Logic).TemporaryTargetHighlight(AttackShowMs);
+            }
         }
 
         public async void OnEndTurnClick()
@@ -478,6 +511,16 @@ namespace RicoClient.Scripts.Game
                     case ResponseCommandType.EnemyUseAbilityResponse:
                         EnemyAbilityUsePayload enemyAbilityUseData = JsonConvert.DeserializeObject<EnemyAbilityUsePayload>(msg.Payload.ToString());
                         EnemyAbilityUsed(enemyAbilityUseData);
+                        break;
+                    case ResponseCommandType.AttackResponse:
+                        MyAttacked(msg);
+                        break;
+                    case ResponseCommandType.EnemyAttackResponse:
+                        EnemyAttackPayload enemyAttackData = JsonConvert.DeserializeObject<EnemyAttackPayload>(msg.Payload.ToString());
+                        EnemyAttacked(enemyAttackData);
+                        break;
+                    case ResponseCommandType.Finished:
+
                         break;
                 }
             }
@@ -755,14 +798,15 @@ namespace RicoClient.Scripts.Game
         private async void CardBeenChoosedForAction(BaseCardScript card)
         {
             if (_currentAttackingCard != null)
-            {
-                EntityCardScript entity = (EntityCardScript) card;
+            {EntityCardScript entity = (EntityCardScript) card;
                 entity.Damage(_currentAttackingCard.Attack);
                 _currentAttackingCard.Damage(entity.Attack);
 
                 MyBoardCardLogic attackingLogic = (MyBoardCardLogic) _currentAttackingCard.Logic;
                 attackingLogic.RemoveAimTarget();
                 attackingLogic.CanAttack = false;
+
+                await _game.SendAttackedMessage(_currentAttackingCard.DeckCardId, card.DeckCardId);
             }
             else if (_currentAbilityCard != null)
             {
@@ -820,6 +864,8 @@ namespace RicoClient.Scripts.Game
                 MyBoardCardLogic attackingLogic = (MyBoardCardLogic) _currentAttackingCard.Logic;
                 attackingLogic.RemoveAimTarget();
                 attackingLogic.CanAttack = false;
+
+                await _game.SendAttackedMessage(_currentAttackingCard.DeckCardId, 0);
             }
             else if (_currentAbilityCard != null)
             {

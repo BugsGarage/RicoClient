@@ -80,7 +80,7 @@ namespace RicoClient.Scripts.Game
             _highlightImage.enabled = false;
         }
 
-        public async void TemporaryHighlight(int intervalMs)
+        public async void TemporaryTargetHighlight(int intervalMs)
         {
             _isTemporaryHighlight = true;
             _highlightImage.color = TemporaryColor;

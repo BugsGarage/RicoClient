@@ -135,6 +135,12 @@ namespace RicoClient.Scripts.Game
             await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.CardPlayRequest, payload)));
         }
 
+        public async UniTask SendAttackedMessage(int deckCardId, int targetDeckCardId)
+        {
+            AttackedPayload payload = new AttackedPayload() { DeckCardId = deckCardId, TargetDeckCardId = targetDeckCardId };
+            await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.AttackRequest, payload)));
+        }
+
         public async UniTask SendUsedAbilityMessage(int deckCardId, int targetDeckCardId, AbilityTargetType target)
         {
             UsedAbilityPayload payload = new UsedAbilityPayload() { 

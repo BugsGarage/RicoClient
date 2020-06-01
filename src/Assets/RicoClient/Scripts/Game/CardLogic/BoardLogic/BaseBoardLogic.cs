@@ -42,15 +42,48 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
             _highlightImage.enabled = false;
         }
 
-        public async void TemporaryHighlight(int intervalMs)
+        public async void TemporaryAttackerHighlight(int intervalMs)
+        {
+            _isTemporaryHighlight = true;
+            _highlightImage.color = SelectionColor;
+            _highlightImage.enabled = true;
+
+            try
+            {
+                await UniTask.Delay(intervalMs, cancellationToken: CardScript.gameObject.GetCancellationTokenOnDestroy());
+            }
+            catch (OperationCanceledException)
+            {
+                // ? Ok..
+            }
+
+            if (CardScript.gameObject != null)
+            {
+                _highlightImage.enabled = false;
+                _isTemporaryHighlight = false;
+            }
+        }
+
+        public async void TemporaryTargetHighlight(int intervalMs)
         {
             _isTemporaryHighlight = true;
             _highlightImage.color = TemporaryColor;
             _highlightImage.enabled = true;
-            
-            await UniTask.Delay(intervalMs, cancellationToken: CardScript.gameObject.GetCancellationTokenOnDestroy());
-            _highlightImage.enabled = false;
-            _isTemporaryHighlight = false;
+
+            try
+            {
+                await UniTask.Delay(intervalMs, cancellationToken: CardScript.gameObject.GetCancellationTokenOnDestroy());
+            }
+            catch (OperationCanceledException)
+            {
+                // ? Ok..
+            }
+
+            if (CardScript.gameObject != null)
+            {
+                _highlightImage.enabled = false;
+                _isTemporaryHighlight = false;
+            }
         }
 
         public override void OnRightClick()
