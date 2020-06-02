@@ -23,6 +23,8 @@ namespace RicoClient.Scripts.Menu.Play
         [SerializeField]
         private Button _playButton = null;
         [SerializeField]
+        private Button _backButton = null;
+        [SerializeField]
         private Button _collectionButton = null;
         [SerializeField]
         private TMP_Text _playText = null;
@@ -68,6 +70,7 @@ namespace RicoClient.Scripts.Menu.Play
 
         public async void OnPlayClick()
         {
+            _backButton.interactable = false;
             DisableButtons();
 
             uint currDeckId = UserManager.DeckHeaders[_decks.value].DeckId;
@@ -81,6 +84,10 @@ namespace RicoClient.Scripts.Menu.Play
 
                 Debug.LogError(e.Message);
                 return;
+            }
+            finally
+            {
+                _backButton.interactable = true;
             }
         }
 

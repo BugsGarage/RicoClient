@@ -57,7 +57,7 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
                 // ? Ok..
             }
 
-            if (CardScript.gameObject != null)
+            if (_card != null)
             {
                 _highlightImage.enabled = false;
                 _isTemporaryHighlight = false;
@@ -79,7 +79,7 @@ namespace RicoClient.Scripts.Game.CardLogic.BoardLogic
                 // ? Ok..
             }
 
-            if (CardScript.gameObject != null)
+            if (_card != null)
             {
                 _highlightImage.enabled = false;
                 _isTemporaryHighlight = false;

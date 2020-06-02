@@ -13358,6 +13358,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _collectionMenu: {fileID: 677870952}
   _playButton: {fileID: 1413639373}
+  _backButton: {fileID: 852072741}
   _collectionButton: {fileID: 29702074}
   _playText: {fileID: 1838051354}
   _decks: {fileID: 962703694}

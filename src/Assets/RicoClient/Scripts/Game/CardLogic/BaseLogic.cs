@@ -23,52 +23,52 @@ namespace RicoClient.Scripts.Game.CardLogic
 
         public virtual void OnRightClick()
         {
-            Debug.Log("Default right click action");
+            //Debug.Log("Default right click action");
         }
 
         public virtual void OnLeftClick()
         {
-            Debug.Log("Default left click action");
+            //Debug.Log("Default left click action");
         }
 
         public virtual void OnEnter()
         {
-            Debug.Log("Default pointer enter action");
+            //Debug.Log("Default pointer enter action");
         }
 
         public virtual void OnExit()
         {
-            Debug.Log("Default pointer exit action");
+            //Debug.Log("Default pointer exit action");
         }
 
         public virtual void OnBeginDrag(PointerEventData eventData)
         {
-            Debug.Log("Default begin drag action");
+            //Debug.Log("Default begin drag action");
         }
 
         public virtual void OnEndDrag()
         {
-            Debug.Log("Default end drag action");
+            //Debug.Log("Default end drag action");
         }
 
         public virtual void OnDrag(PointerEventData eventData)
         {
-            Debug.Log("Default drag action");
+            //Debug.Log("Default drag action");
         }
 
         public virtual void OnDrop()
         {
-            Debug.Log("Default on drop action");
+            //Debug.Log("Default on drop action");
         }
 
         public virtual void CardDropped()
         {
-            Debug.Log("Default dropped");
+           //Debug.Log("Default dropped");
         }
 
         public virtual void OnUpdate()
         {
-
+            //Debug.Log("Default update");
         }
     }
 }

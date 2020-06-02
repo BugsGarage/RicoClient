@@ -121,7 +121,7 @@ namespace RicoClient.Scripts.Game
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (_areaImage.enabled)
+            if (_currentSelectedCardHolder != null)
             {
                 Destroy(_currentSelectedCardHolder);
 

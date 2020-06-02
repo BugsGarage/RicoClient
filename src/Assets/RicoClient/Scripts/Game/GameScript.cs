@@ -6,6 +6,7 @@ using RicoClient.Scripts.Game.CardLogic.BoardLogic;
 using RicoClient.Scripts.Game.CardLogic.CurrentLogic;
 using RicoClient.Scripts.Game.CardLogic.HandLogic;
 using RicoClient.Scripts.Game.InGameDeck;
+using RicoClient.Scripts.Menu.Modals;
 using RicoClient.Scripts.Network.Entities.Websocket;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,6 @@ using UniRx.Async;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.Video;
 using Zenject;
 
 namespace RicoClient.Scripts.Game
@@ -35,6 +35,8 @@ namespace RicoClient.Scripts.Game
         private const string EndTurnText = "End turn";
         private const string WaitTurnText = "Waiting";
         private const string EnemyPlayingText = "Playing";
+        private const string WinnerText = "You won against {0}, congrats!!!";
+        private const string LooserText = "You lost to {0}, good luck next time!";
 
         private const int SpellShowMs = 2500;
         private const int AbilityTargetShowMs = 2000;
@@ -45,6 +47,8 @@ namespace RicoClient.Scripts.Game
 
         [SerializeField]
         private GameObject _screenOverlayCanvas = null;
+        [SerializeField]
+        private ModalInfo _modalInfo = null;
         [SerializeField]
         private GameObject _playedSpellCardHolder = null;
         [SerializeField]
@@ -464,6 +468,24 @@ namespace RicoClient.Scripts.Game
                 ((BaseBoardLogic) attackCard.Logic).TemporaryAttackerHighlight(AttackShowMs);
                 ((BaseBoardLogic) targetCard.Logic).TemporaryTargetHighlight(AttackShowMs);
             }
+
+            RemoveAllDeadMinions();
+            CheckBasesStatus();
+        }
+
+        public void GameFinished(GameFinishPayload data)
+        {
+            string text = "";
+            if (data.IsWinner)
+            {
+                text = string.Format(WinnerText, _enemyName.text);
+            }
+            else
+            {
+                text = string.Format(LooserText, _enemyName.text);
+            }
+
+            _modalInfo.SetInfoDialog(text, OnExitClick);
         }
 
         public async void OnEndTurnClick()
@@ -473,9 +495,9 @@ namespace RicoClient.Scripts.Game
 
         public async void OnExitClick()
         {
-            await _game.CloseSocket();
-
             SceneManager.LoadSceneAsync("RicoClient/Scenes/MenuScene");
+
+            await _game.CloseSocket();
         }
 
         private void OnWebsocketMessage(WSResponse msg)
@@ -520,7 +542,8 @@ namespace RicoClient.Scripts.Game
                         EnemyAttacked(enemyAttackData);
                         break;
                     case ResponseCommandType.Finished:
-
+                        GameFinishPayload finishData = JsonConvert.DeserializeObject<GameFinishPayload>(msg.Payload.ToString());
+                        GameFinished(finishData);
                         break;
                 }
             }
