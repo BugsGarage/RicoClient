@@ -36,13 +36,10 @@ namespace RicoClient.Scripts.Cards
         public Card[] GetCardsRangeFrom(List<int> ids, int startId, int count)
         {
             Card[] cards = new Card[count];
-            for (int i = 0, j = 1; i < count; j++)
+            int lastId = startId + count;
+            for (int i = startId; i < lastId; i++)
             {
-                if (j == ids[i + startId - 1])
-                {
-                    cards[i] = AllCards[j - 1];
-                    i++;
-                }
+                cards[i - startId] = GetCardById(ids[i]);
             }
 
             return cards;
@@ -53,7 +50,7 @@ namespace RicoClient.Scripts.Cards
             Card[] cards = new Card[count];
             for (int i = 0; i < count; i++)
             {
-                cards[i] = AllCards[startId + i - 1];
+                cards[i] = AllCards[startId + i];
             }
 
             return cards;

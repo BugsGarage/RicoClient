@@ -108,8 +108,8 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
         {
             int holdersCount = _cardHolders.Length;
 
-            int firstCardOnPageId = _currPageNum * holdersCount + 1;
-            int diff = _allCardsCount - firstCardOnPageId + 1;
+            int firstCardOnPageId = _currPageNum * holdersCount;
+            int diff = _allCardsCount - firstCardOnPageId;
             int cardsOnPage = diff > holdersCount ? holdersCount : diff;
 
             Card[] currPageCards;

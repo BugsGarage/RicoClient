@@ -4,6 +4,7 @@ using RicoClient.Scripts.Menu.Collection;
 using RicoClient.Scripts.Menu.Play;
 using RicoClient.Scripts.Menu.Shop;
 using RicoClient.Scripts.User;
+using TMPro;
 using UniRx.Async;
 using UnityEngine;
 
@@ -11,6 +12,10 @@ namespace RicoClient.Scripts.Menu.Main
 {
     public class MainMenuScript : BaseMenuScript
     {
+        [SerializeField]
+        private TMP_Text _nickname = null;
+
+        [Header("Menus")]
         [SerializeField]
         private AuthorizationMenuScript _authMenu = null;
         [SerializeField]
@@ -26,6 +31,10 @@ namespace RicoClient.Scripts.Menu.Main
             {
                 _authMenu.gameObject.SetActive(true);
                 gameObject.SetActive(false);
+            }
+            else
+            {
+                _nickname.text = UserManager.Username;
             }
         }
 
