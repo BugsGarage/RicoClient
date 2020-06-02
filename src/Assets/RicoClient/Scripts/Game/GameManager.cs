@@ -115,30 +115,34 @@ namespace RicoClient.Scripts.Game
 
         public async UniTask SendConnectionMessage()
         {
-            await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.Connect, null)));
+            if (_gameWebsocket != null && _gameWebsocket.State == WebSocketState.Open)
+                await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.Connect, null)));
         }
 
         public async UniTask SendReadyMessage()
         {
-            await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.GameStartReady, null)));
+            if (_gameWebsocket != null && _gameWebsocket.State == WebSocketState.Open)
+                await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.GameStartReady, null)));
         }
 
         public async UniTask SendEndTurnMessage()
         {
-            await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.EndTurnReady, null)));
+            if (_gameWebsocket != null && _gameWebsocket.State == WebSocketState.Open)
+                await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.EndTurnReady, null)));
         }
 
         public async UniTask SendPlacedCardMessage(int deckCardId)
         {
-            Debug.Log($"Send {deckCardId}");
             PlayedCardPayload payload = new PlayedCardPayload() { DeckCardId = deckCardId };
-            await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.CardPlayRequest, payload)));
+            if (_gameWebsocket != null && _gameWebsocket.State == WebSocketState.Open)
+                await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.CardPlayRequest, payload)));
         }
 
         public async UniTask SendAttackedMessage(int deckCardId, int targetDeckCardId)
         {
             AttackedPayload payload = new AttackedPayload() { DeckCardId = deckCardId, TargetDeckCardId = targetDeckCardId };
-            await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.AttackRequest, payload)));
+            if (_gameWebsocket != null && _gameWebsocket.State == WebSocketState.Open)
+                await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.AttackRequest, payload)));
         }
 
         public async UniTask SendUsedAbilityMessage(int deckCardId, int targetDeckCardId, AbilityTargetType target)
@@ -146,8 +150,8 @@ namespace RicoClient.Scripts.Game
             UsedAbilityPayload payload = new UsedAbilityPayload() { 
                 DeckCardId = deckCardId, TargetDeckCardId = targetDeckCardId, Target = target
             };
-            Debug.Log(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.AbilityUseRequest, payload)));
-            await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.AbilityUseRequest, payload)));
+            if (_gameWebsocket != null && _gameWebsocket.State == WebSocketState.Open)
+                await _gameWebsocket.SendText(JsonConvert.SerializeObject(new WSRequest(GameAccessToken, RequestCommandType.AbilityUseRequest, payload)));
         }
 
         #region IDisposable Support

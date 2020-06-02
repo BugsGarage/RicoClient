@@ -473,7 +473,7 @@ namespace RicoClient.Scripts.Game
             CheckBasesStatus();
         }
 
-        public void GameFinished(GameFinishPayload data)
+        public async void GameFinished(GameFinishPayload data)
         {
             string text = "";
             if (data.IsWinner)
@@ -485,6 +485,7 @@ namespace RicoClient.Scripts.Game
                 text = string.Format(LooserText, _enemyName.text);
             }
 
+            await _game.CloseSocket();
             _modalInfo.SetInfoDialog(text, OnExitClick);
         }
 
