@@ -11,6 +11,8 @@ namespace RicoClient.Scripts.Menu.Collection
 {
     public class ModalCardScript : MonoBehaviour
     {
+        private const string ResourceArtDescriptionsPath = "Cards/ArtDescriptions/{0}";
+
         public event Action OnBoughtCard;
 
         private ShopManager _shop;
@@ -19,6 +21,8 @@ namespace RicoClient.Scripts.Menu.Collection
         private GameObject _bigCardHolder = null;
         [SerializeField]
         private TMP_Text _price = null;
+        [SerializeField]
+        private TMP_Text _artDescription = null;
         [SerializeField]
         private TMP_Text _playerBalance = null;
 
@@ -46,6 +50,7 @@ namespace RicoClient.Scripts.Menu.Collection
             _bigCard = Instantiate(card.gameObject, _bigCardHolder.transform);
             _cardId = card.CardId;
             _price.text = price.ToString();
+            _artDescription.text = Resources.Load<TextAsset>(string.Format(ResourceArtDescriptionsPath, _cardId))?.text;
 
             gameObject.SetActive(true);
         }

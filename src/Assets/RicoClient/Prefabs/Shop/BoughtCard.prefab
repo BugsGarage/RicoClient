@@ -519,6 +519,7 @@ MonoBehaviour:
   _unitCard: {fileID: 4671352284721672812}
   _buildingCard: {fileID: 1131252994736936853}
   _spellCard: {fileID: 4076536485465393005}
+  _wowText: {fileID: 1080628358899740295}
 --- !u!1001 &755530502902925008
 PrefabInstance:
   m_ObjectHideFlags: 0

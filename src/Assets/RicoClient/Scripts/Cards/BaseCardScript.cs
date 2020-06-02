@@ -1,19 +1,13 @@
 ﻿using RicoClient.Scripts.Cards.Entities;
-using RicoClient.Scripts.Exceptions;
 using RicoClient.Scripts.Game.CardLogic;
 using RicoClient.Scripts.Game.CardLogic.BoardLogic;
 using RicoClient.Scripts.Game.CardLogic.CurrentLogic;
 using RicoClient.Scripts.Game.CardLogic.HandLogic;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Zenject;
 
 namespace RicoClient.Scripts.Cards
 {
@@ -22,6 +16,9 @@ namespace RicoClient.Scripts.Cards
     {
         public static event Action<BaseCardScript> OnCardRightClick;
         public static event Action<BaseCardScript> OnCardLeftClick;
+
+        private const string ResourceImagesPath = "Cards/Images/{0}";
+        private const string ResourceDescriptionsPath = "Cards/Descriptions/{0}";
 
         [SerializeField]
         protected TMP_Text _name = null;
@@ -53,8 +50,8 @@ namespace RicoClient.Scripts.Cards
             _rarity.text = card.Rarity.ToString();
             _cost.text = card.Cost.ToString();
 
-            // ToDo: find image and description by cardId
-            _description.text = "Your beatiful description";
+            _image.sprite = Resources.Load<Sprite>(string.Format(ResourceImagesPath, CardId));
+            _description.text = Resources.Load<TextAsset>(string.Format(ResourceDescriptionsPath, CardId))?.text;
         }
 
         public virtual void FillCard(Card card, int deckCardId)
@@ -66,8 +63,6 @@ namespace RicoClient.Scripts.Cards
 
         public void PlaceInHand()
         {
-            // null or CurrentLogic
-
             Logic = new MyHandCardLogic(this);
         }
 

@@ -1,18 +1,24 @@
 ﻿using RicoClient.Scripts.Cards;
 using RicoClient.Scripts.Cards.Entities;
 using System;
+using TMPro;
 using UnityEngine;
 
 namespace RicoClient.Scripts.Menu.Shop
 {
     public class BoughtCardModalScript : MonoBehaviour
     {
+        private readonly string[] WowTexts = { "Nice!", "Wow!", "Super!", "Like it!", "Yeah!" };
+
         [SerializeField]
         private UnitCardScript _unitCard = null;
         [SerializeField]
         private BuildingCardScript _buildingCard = null;
         [SerializeField]
         private SpellCardScript _spellCard = null;
+
+        [SerializeField]
+        private TMP_Text _wowText = null;
 
         private BaseCardScript _activeCard;
 
@@ -44,6 +50,7 @@ namespace RicoClient.Scripts.Menu.Shop
                     throw new NotSupportedException($"Some not supported cards type ({card.Type}) arrived!");
             }
 
+            _wowText.text = WowTexts[UnityEngine.Random.Range(0, WowTexts.Length)];
             SetActive(true);
         }
     }

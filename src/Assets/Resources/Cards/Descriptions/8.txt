@@ -1,0 +1,1 @@
+<b>Warcry</b>: Give a friendly unit +2 Health.

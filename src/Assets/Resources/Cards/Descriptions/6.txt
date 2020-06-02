@@ -1,0 +1,1 @@
+<b>Warcry</b>: Give a friendly building or base +4 Health.

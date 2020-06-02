@@ -893,6 +893,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bigCardHolder: {fileID: 4616569030069605481}
   _price: {fileID: 5864913488957697989}
+  _artDescription: {fileID: 8046997408266334760}
   _playerBalance: {fileID: 7681887913676488637}
 --- !u!1 &6862085914318530076
 GameObject:
@@ -1040,7 +1041,7 @@ GameObject:
   - component: {fileID: 2806994725007199152}
   - component: {fileID: 8046997408266334760}
   m_Layer: 5
-  m_Name: FullDescriptionText
+  m_Name: ArtDescriptionText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1093,7 +1094,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Some funny description here
+  m_text: Description
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
