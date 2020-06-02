@@ -27,6 +27,7 @@ namespace RicoClient.Scripts.Menu.Modals
             _warnText.text = text;
             _okButton.onClick.AddListener(new UnityAction(okAction));
             _okButton.onClick.AddListener(new UnityAction(() => { gameObject.SetActive(false); }));
+            _cancelButton.onClick.AddListener(new UnityAction(() => { gameObject.SetActive(false); }));
 
             gameObject.SetActive(true);
         }
@@ -37,7 +38,6 @@ namespace RicoClient.Scripts.Menu.Modals
 
             SetWarnDialog(text, okAction);
             _cancelButton.onClick.AddListener(new UnityAction(cancelAction));
-            _cancelButton.onClick.AddListener(new UnityAction(() => { gameObject.SetActive(false); }));
 
             gameObject.SetActive(true);
         }

@@ -27,7 +27,7 @@
 	<SubTexture name="grey_checkmarkWhite.png" x="78" y="478" width="21" height="20"/>
 	<SubTexture name="grey_circle.png" x="185" y="469" width="36" height="36"/>
 	<SubTexture name="grey_crossGrey.png" x="120" y="478" width="18" height="18"/>
-	<SubTexture name="grey_crossWhite.png" x="190" y="318" width="17" height="18"/>
+	<SubTexture name="grey_crossWhite.png" x="191" y="318" width="16" height="18"/>
 	<SubTexture name="grey_panel.png" x="190" y="98" width="100" height="100"/>
 	<SubTexture name="grey_sliderDown.png" x="190" y="234" width="28" height="42"/>
 	<SubTexture name="grey_sliderEnd.png" x="138" y="478" width="8" height="10"/>

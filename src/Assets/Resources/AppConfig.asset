@@ -27,19 +27,19 @@ MonoBehaviour:
   - player_api
   - game_api
   _authorizationTimeoutSeconds: 300
-  _cardsServerURL: http://cards.bl9.ru/
+  _cardsServerURL: https://cards.bl9.ru/
   _allCardsEndpoint: api/v1/cards
-  _playerServerURL: http://players.bl9.ru/
+  _playerServerURL: https://players.bl9.ru/
   _entranceEndpoint: api/v1/players/entrance
   _playerInfoEndpoint: api/v1/players/self
   _newDeckEndpoint: api/v1/players/decks
-  _shopServerURL: http://shop.bl9.ru/
+  _shopServerURL: https://shop.bl9.ru/
   _specificCardEndpoint: api/v1/card/specific
   _randomCardEndpoint: api/v1/card/random
   _randomCostEndpoint: api/v1/card/random/cost
-  _paymentServerURL: http://payment.bl9.ru/
+  _paymentServerURL: https://payment.bl9.ru/
   _goldCoefEndpoint: api/v1/coefficient
   _paymentEndpoint: api/v1/payment
-  _gameServerURL: http://26.11.117.175:5015/
+  _gameServerURL: https://game.bl9.ru/
   _gameConnectEndpoint: api/v1/game
-  _gameWebsocketPath: ws://26.11.117.175:1707/ws
+  _gameWebsocketPath: ws://game.bl9.ru/ws

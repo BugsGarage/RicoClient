@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using Zenject;
 
@@ -14,13 +9,12 @@ namespace RicoClient.Scripts.Menu.Modals
         [SerializeField]
         private TMP_Text _errorText = null;
 
-        /// <summary>
-        /// Workaround, because Start() is not calling with disabled GameObject
-        /// Probably bad idea
-        /// </summary>
-        [Inject]
-        public void Init()
+        private Canvas _canvas;
+
+        public void Start()
         {
+            _canvas = GetComponent<Canvas>();
+
             Application.logMessageReceived += ErrorLog;
         }
 
@@ -34,7 +28,7 @@ namespace RicoClient.Scripts.Menu.Modals
             if (type == LogType.Error)
             {
                 _errorText.text = condition;
-                gameObject.SetActive(true);
+                _canvas.enabled = true;
             }
         }
     }

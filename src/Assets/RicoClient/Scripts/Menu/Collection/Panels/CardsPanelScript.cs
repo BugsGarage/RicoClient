@@ -75,9 +75,10 @@ namespace RicoClient.Scripts.Menu.Collection.Panels
                 _allCardsCount = _cards.AllCards.Count;
             }
 
-            _maxPageNum = _allCardsCount / _cardHolders.Length;
+            _maxPageNum = (_allCardsCount - 1) / _cardHolders.Length;
+            _maxPageNum = _maxPageNum > 0 ? _maxPageNum : 0;
             if (_currPageNum > _maxPageNum)
-                _currPageNum = 0;
+                _currPageNum = _maxPageNum;
 
             CurrPageUpdate();
         }
