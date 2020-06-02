@@ -17,6 +17,8 @@ namespace RicoClient.Scripts.Game.CardLogic.HandLogic
         {
             // Clear everything in case after MyCurrentCardLogic
             OnExit();
+
+            _canvasGroup.blocksRaycasts = true;
         }
 
         public override void OnEnter()
@@ -38,10 +40,18 @@ namespace RicoClient.Scripts.Game.CardLogic.HandLogic
 
         public override void OnBeginDrag(PointerEventData eventData)
         {
+            if (GameScript.State != GameState.MyTurn)
+                return;
+
             _canvasGroup.blocksRaycasts = false;
             _cardCanvas.overrideSorting = false;
 
             OnCardSelected?.Invoke(CardScript);
+        }
+
+        public override void OnEndDrag()
+        {
+            _canvasGroup.blocksRaycasts = true;
         }
     }
 }

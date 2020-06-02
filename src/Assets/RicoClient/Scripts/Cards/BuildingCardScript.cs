@@ -15,11 +15,20 @@ namespace RicoClient.Scripts.Cards
         [SerializeField]
         protected TMP_Text _resource = null;
 
+        public int Resource { get { return int.Parse(_resource.text); } }
+
         public override void FillCard(Card card)
         {
             base.FillCard(card);
 
             _resource.text = card.Properties.Resources.ToString();
+        }
+
+        public override void FillCard(Card card, int deckCardId)
+        {
+            FillCard(card);
+
+            DeckCardId = deckCardId;
         }
     }
 }

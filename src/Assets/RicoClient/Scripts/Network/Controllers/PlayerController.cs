@@ -75,7 +75,7 @@ namespace RicoClient.Scripts.Network.Controllers
             }
         }
 
-        public async UniTask<uint> PostNewDeckRequest(string access_token, ConfirmDeck data)
+        public async UniTask<uint> PostNewDeckRequest(string access_token, Deck data)
         {
             string deckJson = JsonConvert.SerializeObject(data);
 
@@ -96,7 +96,7 @@ namespace RicoClient.Scripts.Network.Controllers
             }
         }
 
-        public async UniTask PatchDeckByIdRequest(string access_token, uint deckId, ConfirmDeck data)
+        public async UniTask PatchDeckByIdRequest(string access_token, uint deckId, Deck data)
         {
             string editDeckEndpoint = _newDeckEndpoint + "/" + deckId.ToString();
             string deckJson = JsonConvert.SerializeObject(data);
@@ -129,26 +129,6 @@ namespace RicoClient.Scripts.Network.Controllers
 
                 if (deleteDeckRequest.isNetworkError || deleteDeckRequest.isHttpError)
                     throw new PlayersException($"Error deleting deck: {deleteDeckRequest.error}! Try later!");
-            }
-        }
-
-        private PlayerData GetPlayerInfoRequestMock()
-        {
-            using (var reader = new StreamReader("./Assets/RicoClient/Scripts/Network/RequestMocks/GetPlayerInfo.json"))
-            {
-                string playerJson = reader.ReadToEnd();
-
-                return JsonConvert.DeserializeObject<PlayerData>(playerJson);
-            }
-        }
-
-        private Deck GetDeckByIdRequestMock()
-        {
-            using (var reader = new StreamReader("./Assets/RicoClient/Scripts/Network/RequestMocks/GetDeck.json"))
-            {
-                string deckJson = reader.ReadToEnd();
-
-                return JsonConvert.DeserializeObject<Deck>(deckJson);
             }
         }
     }

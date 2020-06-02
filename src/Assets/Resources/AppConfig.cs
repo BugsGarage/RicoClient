@@ -129,7 +129,17 @@ namespace RicoClient
         [SerializeField]
         private string _gameServerURL = null;
 
+        [SerializeField]
+        private string _gameConnectEndpoint = null;
+
+        [SerializeField]
+        private string _gameWebsocketPath = null;
+
         public string GameServerURL { get { return _gameServerURL; } }
+
+        public string GameConnectEndpoint { get { return $"{_gameServerURL}{_gameConnectEndpoint}"; } }
+
+        public string GameWebsocketPath { get { return _gameWebsocketPath; } }
 
         #endregion
     }

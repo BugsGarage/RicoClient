@@ -34,8 +34,11 @@ namespace RicoClient.Scripts.Cards
         [SerializeField]
         protected TMP_Text _description = null;
 
+        public int Cost { get { return int.Parse(_cost.text); } }
+
         public BaseLogic Logic { get; private set; }
         public int CardId { get; private set; }
+        public int DeckCardId { get; protected set; }
 
         public void SetActive(bool active)
         {
@@ -54,6 +57,13 @@ namespace RicoClient.Scripts.Cards
             _description.text = "Your beatiful description";
         }
 
+        public virtual void FillCard(Card card, int deckCardId)
+        {
+            FillCard(card);
+
+            DeckCardId = deckCardId;
+        }
+
         public void PlaceInHand()
         {
             // null or CurrentLogic
@@ -66,19 +76,30 @@ namespace RicoClient.Scripts.Cards
             Logic = new MyCurrentCardLogic(this, parent);
         }
 
+        public void ActiveSpell(Transform parent, LineRenderer aimLine)
+        {
+            Logic = new MyCurrentSpellLogic(this, parent, aimLine);
+        }
+
         public void PlaceOnBoard(LineRenderer aimLine, bool isMine)
         {
             Logic?.CardDropped();
 
             if (isMine)
+            {
                 Logic = new MyBoardCardLogic(this, aimLine);
+                ((MyBoardCardLogic) Logic).CheckCardWarcry();
+            }
             else
+            {
                 Logic = new EnemyBoardCardLogic(this, aimLine);
+            }
         }
 
         public void Copy(BaseCardScript otherCard)
         {
             CardId = otherCard.CardId;
+            DeckCardId = otherCard.DeckCardId;
             Logic = otherCard.Logic;
         }
 
@@ -132,6 +153,12 @@ namespace RicoClient.Scripts.Cards
         {
             if (Logic != null)
                 Logic.OnDrop();
+        }
+
+        protected void Update()
+        {
+            if (Logic != null)
+                Logic.OnUpdate();
         }
     }
 }

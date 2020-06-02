@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using AOT;
 
 using UnityEngine;
+using UniRx.Async;
 
 namespace NativeWebSocket
 {
@@ -288,7 +289,7 @@ namespace NativeWebSocket
 				throw new ArgumentException("Unsupported protocol: " + protocol);
 		}
 
-		public async Task Connect()
+		public async UniTask Connect()
 		{
 			try
 			{
@@ -302,7 +303,10 @@ namespace NativeWebSocket
 			catch (Exception ex)
 			{
 				OnError?.Invoke(ex.Message);
-				OnClose?.Invoke(WebSocketCloseCode.Abnormal);
+
+                m_Socket.Abort();
+
+                OnClose?.Invoke(WebSocketCloseCode.Abnormal);
 			}
 		}
 
@@ -331,13 +335,13 @@ namespace NativeWebSocket
 			}
 		}
 
-		public Task Send(byte[] bytes)
+		public UniTask Send(byte[] bytes)
 		{
       // return m_Socket.SendAsync(buffer, WebSocketMessageType.Binary, true, CancellationToken.None);
       return SendMessage(sendBytesQueue, WebSocketMessageType.Binary, new ArraySegment<byte>(bytes));
 		}
 
-		public Task SendText(string message)
+		public UniTask SendText(string message)
 		{
 			var encoded = Encoding.UTF8.GetBytes(message);
 
@@ -345,10 +349,10 @@ namespace NativeWebSocket
       return SendMessage(sendTextQueue, WebSocketMessageType.Text, new ArraySegment<byte>(encoded, 0, encoded.Length));
     }
 
-    private async Task SendMessage(List<ArraySegment<byte>> queue, WebSocketMessageType messageType, ArraySegment<byte> buffer)
+    private async UniTask SendMessage(List<ArraySegment<byte>> queue, WebSocketMessageType messageType, ArraySegment<byte> buffer)
     {
       // Return control to the calling method immediately.
-      await Task.Yield();
+      await UniTask.Yield();
 
       // Make sure we have data.
       if (buffer.Count == 0)
@@ -410,7 +414,7 @@ namespace NativeWebSocket
       }
     }
 
-    private async Task HandleQueue(List<ArraySegment<byte>> queue, WebSocketMessageType messageType)
+    private async UniTask HandleQueue(List<ArraySegment<byte>> queue, WebSocketMessageType messageType)
     {
       var buffer = new ArraySegment<byte>();
       lock (Lock)
@@ -432,7 +436,7 @@ namespace NativeWebSocket
     }
 
 
-    public async Task Receive()
+    public async UniTask Receive()
 		{
 			ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[8192]);
 
@@ -475,7 +479,7 @@ namespace NativeWebSocket
 
 		}
 
-		public async Task Close()
+		public async UniTask Close()
 		{
 			if (State == WebSocketState.Open)
 			{

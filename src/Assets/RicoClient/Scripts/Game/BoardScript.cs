@@ -71,7 +71,7 @@ namespace RicoClient.Scripts.Game
             _areaImage.enabled = false;
         }
 
-        public void AddCardOnBoard(BaseCardScript card)
+        public void AddEnemyCardOnBoard(BaseCardScript card)
         {
             var cardHolder = Instantiate(_onBoardCardHolder, transform);
             PlaceCardOnBoard(card, cardHolder);
@@ -121,7 +121,7 @@ namespace RicoClient.Scripts.Game
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (_areaImage.enabled)
+            if (_currentSelectedCardHolder != null)
             {
                 Destroy(_currentSelectedCardHolder);
 

@@ -20,5 +20,12 @@ namespace RicoClient.Scripts.Cards
             base.FillCard(card);
             _initiative.text = card.Properties.Initiative.ToString();
         }
+
+        public override void FillCard(Card card, int deckCardId)
+        {
+            FillCard(card);
+
+            DeckCardId = deckCardId;
+        }
     }
 }

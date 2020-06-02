@@ -17,7 +17,6 @@ namespace RicoClient.Scripts.Cards.Entities
         Legendary
     }
 
-
     [Flags]
     public enum CardType
     {

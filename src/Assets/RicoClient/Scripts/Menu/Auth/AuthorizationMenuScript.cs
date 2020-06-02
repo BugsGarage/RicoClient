@@ -39,5 +39,10 @@ namespace RicoClient.Scripts.Menu.Auth
                 gameObject.SetActive(false); 
             }));
         }
+
+        public void OnCloseClick()
+        {
+            Application.Quit();
+        }
     }
 }

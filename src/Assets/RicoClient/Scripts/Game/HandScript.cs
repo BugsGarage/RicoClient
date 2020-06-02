@@ -14,27 +14,16 @@ namespace RicoClient.Scripts.Game
     {
         [SerializeField]
         private GameObject _inHandCardHolder = null;
-
-        public List<GameObject> InHandsCards { get; private set; }
+        [SerializeField]
+        private float _baseSpacing = 0;
 
         private HorizontalLayoutGroup _horizontalGroup;
         private CanvasGroup _canvasGroup;
 
-        private float _currAllCardsWidth;
-
         protected void Awake()
         {
-            InHandsCards = new List<GameObject>();
-
             _horizontalGroup = GetComponent<HorizontalLayoutGroup>();
             _canvasGroup = GetComponent<CanvasGroup>();
-            _currAllCardsWidth = 0;
-        }
-
-        protected void OnDestroy()
-        {
-            foreach (var handCard in InHandsCards)
-                Destroy(handCard.gameObject);
         }
 
         public void AddRevealedCardInHand(BaseCardScript card)
@@ -58,6 +47,33 @@ namespace RicoClient.Scripts.Game
             _canvasGroup.blocksRaycasts = true;
         }
 
+        public void PlayCardFromHand()
+        {
+            var playedCard = transform.GetChild(0);
+            Destroy(playedCard.gameObject);
+
+            RecalculateSpacing(1);
+        }
+
+        public void RecalculateSpacing(int isAfterDelete = 0)
+        {
+            int realChildCount = transform.childCount - isAfterDelete;
+
+            float currAllCardsWidth = 0;
+            for (int i = 0; i < realChildCount; i++)
+            {
+                RectTransform child = (RectTransform) transform.GetChild(i);
+                currAllCardsWidth += child.sizeDelta.x;
+            }
+
+            float horizontalGroupWidth = ((RectTransform) _horizontalGroup.transform).rect.width;
+            float newSpacing = -(currAllCardsWidth - horizontalGroupWidth) / (realChildCount - 1);
+            if (_baseSpacing < newSpacing)
+                _horizontalGroup.spacing = _baseSpacing;
+            else
+                _horizontalGroup.spacing = newSpacing;
+        }
+
         private void AddCardInHand(GameObject card)
         {
             var cardHolder = Instantiate(_inHandCardHolder, transform);
@@ -68,15 +84,7 @@ namespace RicoClient.Scripts.Game
             card.transform.localPosition = Vector3.zero;
             ((RectTransform) card.transform).sizeDelta = size;
 
-            _currAllCardsWidth += size.x;
-            float realAllCardsWidth = _currAllCardsWidth + _horizontalGroup.spacing * (InHandsCards.Count - 1);
-            float horizontalGroupWidth = ((RectTransform) _horizontalGroup.transform).rect.width;
-            if (realAllCardsWidth > horizontalGroupWidth)
-            {
-                _horizontalGroup.spacing = _horizontalGroup.spacing - (realAllCardsWidth - horizontalGroupWidth) / InHandsCards.Count;
-            }
-
-            InHandsCards.Add(card.gameObject);
+            RecalculateSpacing();
         }
     }
 }
