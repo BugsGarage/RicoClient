@@ -895,6 +895,7 @@ MonoBehaviour:
   _price: {fileID: 5864913488957697989}
   _artDescription: {fileID: 8046997408266334760}
   _playerBalance: {fileID: 7681887913676488637}
+  _buyButton: {fileID: 4348210297580627617}
 --- !u!1 &6862085914318530076
 GameObject:
   m_ObjectHideFlags: 0

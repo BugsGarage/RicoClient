@@ -5962,6 +5962,7 @@ MonoBehaviour:
   _goldCoef: {fileID: 584723216}
   _boughtCard: {fileID: 555300678}
   _randomCardCost: {fileID: 1607357336}
+  _buyButton: {fileID: 229813958}
 --- !u!1001 &778652087
 PrefabInstance:
   m_ObjectHideFlags: 0

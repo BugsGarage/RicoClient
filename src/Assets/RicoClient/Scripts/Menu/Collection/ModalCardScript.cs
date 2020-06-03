@@ -5,6 +5,7 @@ using RicoClient.Scripts.User;
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace RicoClient.Scripts.Menu.Collection
@@ -25,6 +26,8 @@ namespace RicoClient.Scripts.Menu.Collection
         private TMP_Text _artDescription = null;
         [SerializeField]
         private TMP_Text _playerBalance = null;
+        [SerializeField]
+        private Button _buyButton = null;
 
         private GameObject _bigCard;
         private int _cardId;
@@ -57,6 +60,7 @@ namespace RicoClient.Scripts.Menu.Collection
 
         public async void OnBuyClick()
         {
+            _buyButton.enabled = false;
             try
             {
                 await _shop.BuySpecificCard(_cardId, int.Parse(_price.text));
@@ -70,6 +74,10 @@ namespace RicoClient.Scripts.Menu.Collection
             {
                 Debug.LogError(e.Message);
                 return;
+            }
+            finally
+            {
+                _buyButton.enabled = true;
             }
 
             OnBoughtCard?.Invoke();

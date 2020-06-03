@@ -4,6 +4,7 @@ using RicoClient.Scripts.Pay;
 using RicoClient.Scripts.User;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace RicoClient.Scripts.Menu.Shop
@@ -22,6 +23,8 @@ namespace RicoClient.Scripts.Menu.Shop
         private BoughtCardModalScript _boughtCard = null;
         [SerializeField]
         private TMP_Text _randomCardCost = null;
+        [SerializeField]
+        private Button _buyButton = null;
 
         [Inject]
         public void Initialize(ShopManager pay, CardsManager cards)
@@ -60,6 +63,7 @@ namespace RicoClient.Scripts.Menu.Shop
         public async void OnRandomBuyClick()
         {
             int cardId;
+            _buyButton.enabled = false;
             try
             {
                 cardId = await _pay.BuyRandomCard(int.Parse(_randomCardCost.text));
@@ -73,6 +77,10 @@ namespace RicoClient.Scripts.Menu.Shop
             {
                 Debug.LogError(e.Message);
                 return;
+            }
+            finally
+            {
+                _buyButton.enabled = true;
             }
 
             var card = _cards.GetCardById(cardId);
