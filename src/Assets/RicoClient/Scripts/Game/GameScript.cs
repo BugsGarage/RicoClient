@@ -491,7 +491,8 @@ namespace RicoClient.Scripts.Game
 
         public async void OnEndTurnClick()
         {
-            await _game.SendEndTurnMessage();
+            if (!_aimLine.gameObject.activeSelf)
+                await _game.SendEndTurnMessage();
         }
 
         public async void OnExitClick()
